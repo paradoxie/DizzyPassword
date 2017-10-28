@@ -9,22 +9,38 @@
     android:padding="20dp">
 
    <EditText
+       android:id="@+id/et_name"
        android:layout_marginTop="20dp"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:hint="名称"/>
     <EditText
+        android:id="@+id/et_web"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="网站"/>
     <EditText
+        android:id="@+id/et_account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="账户"/>
     <EditText
+        android:id="@+id/et_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="密码"/>
+    <EditText
+        android:id="@+id/et_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="标记"/>
+
+
+    <Button
+        android:id="@+id/bt_go"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="提交"/>
 
 
 </LinearLayout>

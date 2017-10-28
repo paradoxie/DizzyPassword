@@ -3,8 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="300dp"
+    android:layout_height="500dp"
+    android:background="@color/bg_color"
     android:orientation="vertical"
     android:padding="20dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -15,13 +16,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
-        android:hint="Hello World!"/>
+        android:hint="请输入您的邮箱，这将作为登录帐号"/>
 
     <EditText
         android:id="@+id/et_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+        android:text="请输入您的密码"
+        android:inputType="textPassword"/>
 
     <Button
         android:id="@+id/bt_sign"

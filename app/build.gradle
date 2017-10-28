@@ -34,4 +34,5 @@ dependencies {
 //    compile 'com.github.lygttpod:SuperTextView:2.1.5'
     compile 'cn.bmob.android:bmob-sdk:3.5.5'
     compile 'cn.bmob.android:http-legacy:1.0'
+
 }

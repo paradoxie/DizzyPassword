@@ -1,18 +1,16 @@
 package cf.paradoxie.dizzypassword;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
-public class SignActivity extends AppCompatActivity {
+public class SignActivity extends Activity {
     private EditText et_username, et_password;
     private Button bt_sign;
     private String username, password;
@@ -21,7 +19,6 @@ public class SignActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign);
-        Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");
 
 
         et_username = (EditText) findViewById(R.id.et_username);
@@ -42,20 +39,14 @@ public class SignActivity extends AppCompatActivity {
                     @Override
                     public void done(BmobUser objectId, BmobException e) {
                         if (e == null) {
-                            toast("注册成功，用户objectId为：" + objectId);
+                            MyApplication.showToast("注册成功，用户objectId为：" + objectId);
                         } else {
-                            toast("注册失败：" + e.getMessage());
+                            MyApplication.showToast("注册失败：" + e.getMessage());
                         }
                     }
 
                 });
             }
         });
-
     }
-
-    private void toast(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-    }
-
 }
