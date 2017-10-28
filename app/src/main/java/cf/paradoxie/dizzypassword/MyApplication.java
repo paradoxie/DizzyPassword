@@ -5,7 +5,6 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 
 import static cn.bmob.v3.BmobRealTimeData.TAG;
@@ -20,10 +19,6 @@ public class MyApplication extends Application {
         super.onCreate();
         mInstance = this;
         mContext = getApplicationContext();
-
-        //初始化Bmob服务
-        Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");
-
     }
 
     //返回
@@ -33,6 +28,10 @@ public class MyApplication extends Application {
 
     public static MyApplication getInstance() {
         return mInstance;
+    }
+
+    private String getKey() {
+        return SPUtils.get("key", "") + "";
     }
 
 

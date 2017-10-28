@@ -25,17 +25,22 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 name = et_name.getText().toString().trim();
+              String  name1 = DesUtil.encrypt(name,SPUtils.getKey());
                 web = et_web.getText().toString().trim();
+                String web1 = DesUtil.encrypt(web,SPUtils.getKey());
                 acount = et_account.getText().toString().trim();
+                String acount1 = DesUtil.encrypt(acount,SPUtils.getKey());
                 password = et_password.getText().toString().trim();
+                String password1 = DesUtil.encrypt(password,SPUtils.getKey());
                 tag = et_tag.getText().toString().trim();
+                String tag1 = DesUtil.encrypt(tag,SPUtils.getKey());
 
                 AccountBean accountBean = new AccountBean();
-                accountBean.setName(name);
-                accountBean.setWebsite(web);
-                accountBean.setAccount(acount);
-                accountBean.setPassword(password);
-                accountBean.setTag(tag);
+                accountBean.setName(name1);
+                accountBean.setWebsite(web1);
+                accountBean.setAccount(acount1);
+                accountBean.setPassword(password1);
+                accountBean.setTag(tag1);
                 accountBean.setUser(MyApplication.getUser());
 
                 accountBean.save(new SaveListener<String>() {
@@ -43,6 +48,7 @@ public class AddActivity extends AppCompatActivity {
                     public void done(String objectId, BmobException e) {
                         if (e == null) {
                             MyApplication.showToast("保存成功");
+                            finish();
                         } else {
                             MyApplication.showToast("保存失败" + e.getMessage());
                         }
