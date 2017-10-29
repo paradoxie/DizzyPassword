@@ -4,43 +4,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cf.paradoxie.dizzypassword.activity.MainActivity"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="20dp"
+    tools:context="cf.paradoxie.dizzypassword.activity.MainActivity">
 
-   <EditText
-       android:id="@+id/et_name"
-       android:layout_marginTop="20dp"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:hint="名称"/>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/nameWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="名称"/>
+    </android.support.design.widget.TextInputLayout>
+
+
     <EditText
         android:id="@+id/et_web"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="网站"/>
-    <EditText
-        android:id="@+id/et_account"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="账户"/>
-    <EditText
-        android:id="@+id/et_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="密码"/>
-    <EditText
-        android:id="@+id/et_tag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="标记"/>
+        android:hint="网站"
+        android:visibility="gone"/>
 
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/accountWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp">
+
+        <EditText
+            android:id="@+id/et_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="账户"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/passwordWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp">
+
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="密码"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/tagWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp">
+
+        <EditText
+            android:id="@+id/et_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="标记"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="10dp">
+
+        <cf.paradoxie.dizzypassword.view.FlowLayout
+            android:id="@+id/flowlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="15dp">
+        </cf.paradoxie.dizzypassword.view.FlowLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/bt_go"
-        android:layout_width="wrap_content"
+        style="@style/dialog_blue_button"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="提交"/>
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="添加帐号"/>
 
 
 </LinearLayout>

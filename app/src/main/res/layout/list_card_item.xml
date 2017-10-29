@@ -19,10 +19,11 @@
             android:id="@+id/text_list_card_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
+            android:layout_margin="18dp"
             android:textColor="@android:color/white"
-            android:textSize="36sp"
+            android:textSize="28sp"
             android:textStyle="bold"
+            android:maxLines="1"
             tools:text="12"/>
 
         <LinearLayout
@@ -30,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="70dp"
             android:orientation="horizontal">
 
             <TextView
@@ -40,9 +41,9 @@
                 android:background="@drawable/search_label"
                 android:text="游戏"
                 android:textColor="#3f3e3e"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/text_list_card_tag2"
@@ -53,9 +54,9 @@
                 android:background="@drawable/search_label"
                 android:text="社交"
                 android:textColor="#3f3e3e"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/text_list_card_tag3"
@@ -67,9 +68,9 @@
                 android:background="@drawable/search_label"
                 android:text="网易"
                 android:textColor="#3f3e3e"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
         </LinearLayout>
 

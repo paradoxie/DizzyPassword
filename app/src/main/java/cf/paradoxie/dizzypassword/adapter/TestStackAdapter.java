@@ -76,19 +76,19 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTag1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MyApplication.showToast(mTag1.getText().toString());
+//                    MyApplication.showToast();
                 }
             });
             mTag2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MyApplication.showToast(mTag2.getText().toString());
+//                    MyApplication.showToast(mTag2.getText().toString());
                 }
             });
             mTag3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MyApplication.showToast(mTag3.getText().toString());
+//                    MyApplication.showToast();
                 }
             });
         }
@@ -99,12 +99,39 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         }
 
         public void onBind(Integer data, int position) {
-            mLayout.getBackground().setColorFilter(ContextCompat.getColor(getContext(), data), PorterDuff.Mode.SRC_IN);
-            mTextTitle.setText(String.valueOf(position + 1) + "：" + DesUtil.decrypt(mBeanList.get(position).getName().toString(), SPUtils.getKey()));
-            mAccount.setText("帐号：" + DesUtil.decrypt(mBeanList.get(position).getAccount().toString(), SPUtils.getKey()));
-            mPassword.setText("帐号：" + DesUtil.decrypt(mBeanList.get(position).getPassword().toString(), SPUtils.getKey()));
-        }
+            String name = DesUtil.decrypt(mBeanList.get(position).getName().toString(), SPUtils.getKey());
+            String account = DesUtil.decrypt(mBeanList.get(position).getAccount().toString(), SPUtils.getKey());
+            String password = DesUtil.decrypt(mBeanList.get(position).getPassword().toString(), SPUtils.getKey());
+            List<String> tag = mBeanList.get(position).getTag();
 
+
+            mLayout.getBackground().setColorFilter(ContextCompat.getColor(getContext(), data), PorterDuff.Mode.SRC_IN);
+            mTextTitle.setText(String.valueOf(position + 1) + "：" + name);
+            mAccount.setText("帐号：" + account);
+            mPassword.setText("密码：" + password);
+
+                if (tag.size() == 0) {
+                    return;
+                }
+                if (tag.size() == 1) {
+                    mTag1.setText(tag.get(0));
+                    mTag1.setVisibility(View.VISIBLE);
+                }
+                if (tag.size() == 2) {
+                    mTag1.setText(tag.get(0));
+                    mTag2.setText(tag.get(1));
+                    mTag1.setVisibility(View.VISIBLE);
+                    mTag2.setVisibility(View.VISIBLE);
+                }
+                if (tag.size() == 3) {
+                    mTag1.setText(tag.get(0));
+                    mTag2.setText(tag.get(1));
+                    mTag3.setText(tag.get(2));
+                    mTag1.setVisibility(View.VISIBLE);
+                    mTag2.setVisibility(View.VISIBLE);
+                    mTag3.setVisibility(View.VISIBLE);
+                }
+        }
     }
 
 }

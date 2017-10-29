@@ -144,7 +144,6 @@ public class SPUtils {
     //获取密钥
     public  static String getKey(){
         String str = SPUtils.get("password", "") + "";
-        //       String str = "1s wedgjkiuthgfddb ff";
         StringBuffer sb = null;
         int strLen = str.length();
         if (strLen < 8) {
@@ -158,6 +157,22 @@ public class SPUtils {
             str = str.substring(0, 8);
         }
         return str;
+    }
+    public  static String getKey(String s){
+
+        StringBuffer sb = null;
+        int strLen = s.length();
+        if (strLen < 8) {
+            while (strLen < 8) {
+                sb = new StringBuffer();
+                sb.append(s).append("0");//右(后)补0
+                s = sb.toString();
+                strLen = s.length();
+            }
+        } else {
+            s = s.substring(0, 8);
+        }
+        return s;
     }
 
 }

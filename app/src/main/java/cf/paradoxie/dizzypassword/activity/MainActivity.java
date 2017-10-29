@@ -9,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.loopeer.cardstack.CardStackView;
 
@@ -29,36 +31,17 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class MainActivity extends AppCompatActivity implements CardStackView.ItemExpendListener {
+public class MainActivity extends AppCompatActivity implements CardStackView.ItemExpendListener{
     private boolean optionMenuOn = true;  //显示optionmenu
     private Menu aMenu;         //获取optionmenu
     public static Integer[] TEST_DATAS = new Integer[]{
-            R.color.color_1,
-            R.color.color_2,
-            R.color.color_3,
-            R.color.color_4,
-            R.color.color_5,
-            R.color.color_6,
-            R.color.color_7,
-            R.color.color_8,
-            R.color.color_9,
-            R.color.color_10,
-            R.color.color_11,
-            R.color.color_12,
-            R.color.color_13,
-            R.color.color_14,
-            R.color.color_15,
-            R.color.color_16,
-            R.color.color_17,
-            R.color.color_18,
-            R.color.color_19,
-            R.color.color_20,
-            R.color.color_21,
-            R.color.color_22,
-            R.color.color_23,
-            R.color.color_24,
-            R.color.color_25,
-            R.color.color_26
+            R.color.color_1, R.color.color_2, R.color.color_3, R.color.color_4,
+            R.color.color_5, R.color.color_6, R.color.color_7, R.color.color_8,
+            R.color.color_9, R.color.color_10, R.color.color_11, R.color.color_12,
+            R.color.color_13, R.color.color_14, R.color.color_15, R.color.color_16,
+            R.color.color_17, R.color.color_18, R.color.color_19, R.color.color_20,
+            R.color.color_21, R.color.color_22, R.color.color_23, R.color.color_24,
+            R.color.color_25, R.color.color_26
     };
 
     private CardStackView mStackView;
@@ -66,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
     private TestStackAdapter mTestStackAdapter;
 
     private List<AccountBean> mAccountBeans;
+    private Button bt_search;
+    private EditText et_search;
+    private String mString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,12 +105,35 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
             //缓存用户对象为空时， 可打开用户注册界面…
             Intent intent = new Intent(MainActivity.this, SignActivity.class);
             startActivity(intent);
-        } else
-
-        {
+        } else {
             findDate();
         }
+        et_search = (EditText) findViewById(R.id.et_search);
+        bt_search = (Button) findViewById(R.id.bt_search);
+        bt_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchDate(et_search.getText().toString().trim());
+            }
+        });
+    }
 
+    private void searchDate(String s) {
+        BmobQuery<AccountBean> query = new BmobQuery<AccountBean>();
+        String[] search = {s};
+        query.addWhereContainsAll("tag", Arrays.asList(search));
+        query.findObjects(new FindListener<AccountBean>() {
+
+            @Override
+            public void done(List<AccountBean> object, BmobException e) {
+                if (e == null) {
+                    MyApplication.showToast("好像是成功了");
+                } else {
+                    MyApplication.showToast("不知道哪里出问题了");
+                }
+            }
+
+        });
     }
 
     @Override
@@ -151,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                 public void done(List<AccountBean> objects, BmobException e) {
                     if (objects != null) {
                         mAccountBeans = objects;
+                        MyApplication.showToast("成功");
                         mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
                         mStackView.setAdapter(mTestStackAdapter);
 
@@ -244,4 +254,5 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
     @Override
     public void onItemExpend(boolean expend) {
     }
+
 }

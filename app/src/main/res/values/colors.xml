@@ -7,6 +7,7 @@
     <color name="transparent">#00000000</color>
     <color name="bg_color">#FFFFFF</color>
     <color name="title_color">#049902</color>
+    <color name="pressed_color">#433f3f</color>
 
     <color name="color_1">#EF9A9A</color>
     <color name="color_1_1">#d95252</color>

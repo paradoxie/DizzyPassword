@@ -44,8 +44,10 @@
             android:name=".activity.SignActivity"
             android:theme="@style/myTransparent"/>
 
-        <activity android:name=".activity.AddActivity"/>
-        <activity android:name=".activity.TeachActivity"/>
+        <activity android:name=".activity.AddActivity"
+                  android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activity.TeachActivity"
+                  android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>

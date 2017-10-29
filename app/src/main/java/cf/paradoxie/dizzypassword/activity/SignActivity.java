@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -35,9 +36,10 @@ public class SignActivity extends Activity {
                 username = et_username.getText().toString().trim();
                 password = et_password.getText().toString().trim();
                 BmobUser user = new BmobUser();
-                user.setUsername(username);
+
+                String username1 = DesUtil.encrypt(username,password);
+                user.setUsername(username1);
                 user.setPassword(password);
-                user.setEmail(username);
                 user.signUp(new SaveListener<BmobUser>() {
                     @Override
                     public void done(BmobUser objectId, BmobException e) {
@@ -58,7 +60,8 @@ public class SignActivity extends Activity {
                 username = et_username.getText().toString().trim();
                 password = et_password.getText().toString().trim();
                 BmobUser bu2 = new BmobUser();
-                bu2.setUsername(username);
+                String username1 = DesUtil.encrypt(username,password);
+                bu2.setUsername(username1);
                 bu2.setPassword(password);
                 bu2.login(new SaveListener<BmobUser>() {
 

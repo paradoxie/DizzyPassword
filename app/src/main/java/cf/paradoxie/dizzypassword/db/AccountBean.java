@@ -1,5 +1,7 @@
 package cf.paradoxie.dizzypassword.db;
 
+import java.util.List;
+
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobUser;
 
@@ -12,7 +14,16 @@ public class AccountBean extends BmobObject {
     private String website;//网站
     private String account;//帐号
     private String password;//密码
-    private String tag;//标记
+
+    public List<String> getTag() {
+        return tag;
+    }
+
+    public void setTag(List<String> tag) {
+        this.tag = tag;
+    }
+
+    private List<String> tag;//标记
 
     private BmobUser user;//需要关联的一个用户
 
@@ -48,13 +59,7 @@ public class AccountBean extends BmobObject {
         this.password = password;
     }
 
-    public String getTag() {
-        return tag;
-    }
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
 
     public BmobUser getUser() {
         return user;
