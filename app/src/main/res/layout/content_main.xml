@@ -23,7 +23,7 @@
             android:layout_weight="1"
             android:layout_gravity="bottom"
             android:paddingLeft="5dp"
-            android:hint="Hello World!"/>
+            android:hint="点击tag可搜索相关的帐号信息"/>
         <Button
             android:id="@+id/bt_search"
             android:layout_width="wrap_content"

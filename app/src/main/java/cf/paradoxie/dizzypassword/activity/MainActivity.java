@@ -1,6 +1,7 @@
 package cf.paradoxie.dizzypassword.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -36,7 +37,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements CardStackView.ItemExpendListener{
+public class MainActivity extends AppCompatActivity implements CardStackView.ItemExpendListener {
     private boolean optionMenuOn = true;  //显示optionmenu
     private Menu aMenu;         //获取optionmenu
     public static Integer[] TEST_DATAS = new Integer[]{
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
     private List<AccountBean> mAccountBeans;
     private Button bt_search;
     private EditText et_search;
+    SweetAlertDialog pDialog = null;
     BmobUser user = new BmobUser();
 
     @Override
@@ -88,30 +90,24 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
             }
         });
 
+        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Loading");
+        pDialog.setCancelable(false);
+
         mStackView = (CardStackView) findViewById(R.id.stackview_main);
-        //        mActionButtonContainer = (LinearLayout) findViewById(R.id.button_container);
         mStackView.setItemExpendListener(this);
 
 
-        if (SPUtils.get("key", "") + "" == "")
-
-        {
+        if (SPUtils.get("key", "") + "" == "") {
             Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");
-            //        MyApplication.showToast("啥意思");
-        } else
-
-        {
+        } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
-            //        MyApplication.showToast("现在是新的key");
         }
-        if (!MyApplication.isSign())
-
-        {
+        if (!MyApplication.isSign()) {
             //缓存用户对象为空时， 可打开用户注册界面…
             Intent intent = new Intent(MainActivity.this, SignActivity.class);
             startActivity(intent);
-        } else {
-            findDate();
         }
         et_search = (EditText) findViewById(R.id.et_search);
         bt_search = (Button) findViewById(R.id.bt_search);
@@ -134,36 +130,41 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
     }
 
     private void searchDate(String s) {
-        BmobQuery<AccountBean> query = new BmobQuery<AccountBean>();
-        String[] search = {s};
-        query.addWhereContainsAll("tag", Arrays.asList(search));
-        query.addWhereEqualTo("user", new BmobPointer(user));
-        query.findObjects(new FindListener<AccountBean>() {
+        if (s.equals("")) {
+            findDate();
+        } else {
+            pDialog.show();
+            BmobQuery<AccountBean> query = new BmobQuery<AccountBean>();
+            String[] search = {s};
+            query.addWhereContainsAll("tag", Arrays.asList(search));
+            query.addWhereEqualTo("user", new BmobPointer(user));
+            query.findObjects(new FindListener<AccountBean>() {
 
-            @Override
-            public void done(List<AccountBean> object, BmobException e) {
-                if (e == null) {
-                    MyApplication.showToast("好像是成功了");
-                    mAccountBeans = object;
-                    mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
-                    mStackView.setAdapter(mTestStackAdapter);
-//                    mTestStackAdapter.notifyDataSetChanged();
-                    new Handler().postDelayed(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
-                                    mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
+                @Override
+                public void done(List<AccountBean> object, BmobException e) {
+                    if (e == null) {
+                        mAccountBeans = object;
+                        mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
+                        mStackView.setAdapter(mTestStackAdapter);
+                        //                    mTestStackAdapter.notifyDataSetChanged();
+                        new Handler().postDelayed(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
+                                        mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
+                                    }
                                 }
-                            }
-                            , 200
-                    );
-                } else {
-                    MyApplication.showToast("不知道哪里出问题了");
+                                , 100
+                        );
+                        pDialog.dismiss();
+                    } else {
+                        MyApplication.showToast("不知道哪里出问题了" + e);
+                    }
                 }
-            }
 
-        });
+            });
+        }
     }
 
     @Override
@@ -177,8 +178,8 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
     }
 
     private void findDate() {
+        pDialog.show();
         BmobQuery<AccountBean> query = new BmobQuery<>();
-
         if (MyApplication.getUser() != null) {
             String id = MyApplication.getUser().getObjectId();
 
@@ -190,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                 public void done(List<AccountBean> objects, BmobException e) {
                     if (objects != null) {
                         mAccountBeans = objects;
-                        MyApplication.showToast("成功");
+                        //                        MyApplication.showToast("成功");
                         mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
                         mStackView.setAdapter(mTestStackAdapter);
 
@@ -202,8 +203,9 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                                         mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
                                     }
                                 }
-                                , 200
+                                , 100
                         );
+                        pDialog.dismiss();
                     }
                 }
             });

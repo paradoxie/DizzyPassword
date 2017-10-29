@@ -1,5 +1,6 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.view.FlowLayout;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class AddActivity extends AppCompatActivity {
     private EditText et_name, et_web, et_account, et_password, et_tag;
@@ -27,6 +29,7 @@ public class AddActivity extends AppCompatActivity {
     private String name, web, acount, password, tag;
     private FlowLayout mFlowLayout;
     private LayoutInflater mInflater;
+    private SweetAlertDialog pDialog = null;
     private String[] mVals = new String[]{//常用tag
             "酷安", "腾讯", "游戏", "社交", "新闻", "公司"
             , "家庭", "WIFI", "购物", "京东", "亚马逊", "当当", "小米", "Google"
@@ -40,11 +43,16 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add);
         init();
         initFlowView();
-
+        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Loading");
+        pDialog.setCancelable(false);
 
         bt_go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pDialog.show();
+
                 name = et_name.getText().toString().trim();
                 String name1 = DesUtil.encrypt(name, SPUtils.getKey());
                 web = et_web.getText().toString().trim();
@@ -54,7 +62,7 @@ public class AddActivity extends AppCompatActivity {
                 password = et_password.getText().toString().trim();
                 String password1 = DesUtil.encrypt(password, SPUtils.getKey());
                 tag = et_tag.getText().toString().trim();
-//                String tag1 = DesUtil.encrypt(tag, SPUtils.getKey());
+                //                String tag1 = DesUtil.encrypt(tag, SPUtils.getKey());
                 String[] arr = tag.split("\\s+");
                 List<String> tag1 = Arrays.asList(arr);
 
@@ -75,6 +83,7 @@ public class AddActivity extends AppCompatActivity {
                         } else {
                             MyApplication.showToast("保存失败" + e.getMessage());
                         }
+                        pDialog.dismiss();
                     }
                 });
             }
@@ -133,7 +142,6 @@ public class AddActivity extends AppCompatActivity {
                         MyApplication.showToast("最多支持添加3个tag哟~");
                         return;
                     }
-                    MyApplication.showToast(str);
                     et_tag.setText(string + " " + str);
                     tv.setTextSize(10);
                     tv.setTextColor(getResources().getColor(R.color.pressed_color));
