@@ -30,7 +30,7 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
 
-//    compile 'com.loopeer.library:cardstack:1.0.2'
+    compile 'com.loopeer.library:cardstack:1.0.2'
 //    compile 'com.github.lygttpod:SuperTextView:2.1.5'
     compile 'cn.bmob.android:bmob-sdk:3.5.5'
     compile 'cn.bmob.android:http-legacy:1.0'

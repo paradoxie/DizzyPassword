@@ -22,20 +22,32 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="bottom"
-            android:text="Hello World!"/>
+            android:paddingLeft="5dp"
+            android:hint="Hello World!"/>
         <Button
             android:id="@+id/bt_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="检索"/>
+            style="@style/dialog_blue_button"
+            android:text="检索"
+            android:padding="5dp"/>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/ls_show"
-        android:layout_margin="15dp"
+    <!--<ListView-->
+        <!--android:id="@+id/ls_show"-->
+        <!--android:layout_margin="15dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+    <!--</ListView>-->
+    <com.loopeer.cardstack.CardStackView
+        android:id="@+id/stackview_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </ListView>
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:clipToPadding="false"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="12dp"/>
 
 
 </LinearLayout>
