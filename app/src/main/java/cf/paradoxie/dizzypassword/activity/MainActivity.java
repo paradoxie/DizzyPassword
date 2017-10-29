@@ -21,7 +21,9 @@ import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.adapter.TestStackAdapter;
 import cf.paradoxie.dizzypassword.db.AccountBean;
+import cf.paradoxie.dizzypassword.db.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
+import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
@@ -30,6 +32,9 @@ import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements CardStackView.ItemExpendListener{
     private boolean optionMenuOn = true;  //显示optionmenu
@@ -51,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
     private List<AccountBean> mAccountBeans;
     private Button bt_search;
     private EditText et_search;
-    private String mString;
+    BmobUser user = new BmobUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,18 +121,43 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                 searchDate(et_search.getText().toString().trim());
             }
         });
+
+        RxBus.getInstance().toObserverable(RxBean.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<RxBean>() {
+                    @Override
+                    public void call(RxBean rxBean) {
+                        et_search.setText(rxBean.getMessage());
+                    }
+                });
     }
 
     private void searchDate(String s) {
         BmobQuery<AccountBean> query = new BmobQuery<AccountBean>();
         String[] search = {s};
         query.addWhereContainsAll("tag", Arrays.asList(search));
+        query.addWhereEqualTo("user", new BmobPointer(user));
         query.findObjects(new FindListener<AccountBean>() {
 
             @Override
             public void done(List<AccountBean> object, BmobException e) {
                 if (e == null) {
                     MyApplication.showToast("好像是成功了");
+                    mAccountBeans = object;
+                    mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
+                    mStackView.setAdapter(mTestStackAdapter);
+//                    mTestStackAdapter.notifyDataSetChanged();
+                    new Handler().postDelayed(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
+                                    mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
+                                }
+                            }
+                            , 200
+                    );
                 } else {
                     MyApplication.showToast("不知道哪里出问题了");
                 }
@@ -148,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
 
     private void findDate() {
         BmobQuery<AccountBean> query = new BmobQuery<>();
-        BmobUser user = new BmobUser();
+
         if (MyApplication.getUser() != null) {
             String id = MyApplication.getUser().getObjectId();
 

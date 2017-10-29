@@ -13,10 +13,11 @@ import com.loopeer.cardstack.StackAdapter;
 
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.db.AccountBean;
+import cf.paradoxie.dizzypassword.db.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
+import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 
 public class TestStackAdapter extends StackAdapter<Integer> {
@@ -70,25 +71,29 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTextTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MyApplication.showToast("别动啊");
+//                    MyApplication.showToast("别动啊");
                 }
             });
+            final RxBean rxEvent = new RxBean();
             mTag1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    MyApplication.showToast();
+                    rxEvent.setMessage(mTag1.getText().toString().trim());
+                    RxBus.getInstance().post(rxEvent);
                 }
             });
             mTag2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    MyApplication.showToast(mTag2.getText().toString());
+                    rxEvent.setMessage(mTag2.getText().toString().trim());
+                    RxBus.getInstance().post(rxEvent);
                 }
             });
             mTag3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    MyApplication.showToast();
+                    rxEvent.setMessage(mTag3.getText().toString().trim());
+                    RxBus.getInstance().post(rxEvent);
                 }
             });
         }
