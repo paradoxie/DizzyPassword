@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cn.bmob.v3.BmobUser;
 
 import static cn.bmob.v3.BmobRealTimeData.TAG;

@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword;
+package cf.paradoxie.dizzypassword.utils;
 
 import java.security.SecureRandom;
 

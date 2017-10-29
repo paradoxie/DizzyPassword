@@ -1,10 +1,12 @@
-package cf.paradoxie.dizzypassword;
+package cf.paradoxie.dizzypassword.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import cf.paradoxie.dizzypassword.MyApplication;
 
 public class SPUtils {
     /**
@@ -138,6 +140,8 @@ public class SPUtils {
             editor.commit();
         }
     }
+
+    //获取密钥
     public  static String getKey(){
         String str = SPUtils.get("password", "") + "";
         //       String str = "1s wedgjkiuthgfddb ff";
@@ -146,7 +150,6 @@ public class SPUtils {
         if (strLen < 8) {
             while (strLen < 8) {
                 sb = new StringBuffer();
-                //            sb.append("0").append(str);// 左(前)补0
                 sb.append(str).append("0");//右(后)补0
                 str = sb.toString();
                 strLen = str.length();

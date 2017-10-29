@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:padding="20dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="cf.paradoxie.dizzypassword.SignActivity">
+    tools:context="cf.paradoxie.dizzypassword.activity.SignActivity">
 
     <EditText
         android:id="@+id/et_username"
