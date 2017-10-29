@@ -1,6 +1,12 @@
 package cf.paradoxie.dizzypassword.utils;
 
+import android.util.Log;
+
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -91,7 +97,7 @@ public class DesUtil {
      * @return
      * @throws Exception
      */
-    public final static String decrypt(String data,String key) {
+    public final static String decrypt(String data, String key) {
 
         try {
             return new String(decrypt(hex2byte(data.getBytes()), key.getBytes()));
@@ -108,7 +114,7 @@ public class DesUtil {
      * @return
      * @throws Exception
      */
-    public final static String encrypt(String password,String key) {
+    public final static String encrypt(String password, String key) {
         try {
             return byte2hex(encrypt(password.getBytes(), key.getBytes()));
         } catch (Exception e) {
@@ -150,15 +156,65 @@ public class DesUtil {
     }
 
     // 测试用例，不需要传递任何参数，直接执行即可。
-//    public static void main(String[] args) {
-//        String basestr = "this is 我的 #$%^&()first encrypt program 知道吗?DES算法要求有一个可信任的随机数源 --//*。@@@1";
-//        String str1 = encrypt(basestr);
-//
-//        System.out.println("密钥: " + getKey());
-//        System.out.println("原始值: " + basestr);
-//        System.out.println("加密后: " + str1);
-//        System.out.println("解密后: " + decrypt(str1));
-//        System.out.println("为空时 is : " + decrypt(encrypt("")));
-//    }
+    //    public static void main(String[] args) {
+    //        String basestr = "this is 我的 #$%^&()first encrypt program 知道吗?DES算法要求有一个可信任的随机数源 --//*。@@@1";
+    //        String str1 = encrypt(basestr);
+    //
+    //        System.out.println("密钥: " + getKey());
+    //        System.out.println("原始值: " + basestr);
+    //        System.out.println("加密后: " + str1);
+    //        System.out.println("解密后: " + decrypt(str1));
+    //        System.out.println("为空时 is : " + decrypt(encrypt("")));
+    //    }
 
+    /**
+     * 从数组总随机取出一定数量的值，组成新的数组
+     *
+     * @param array 原始数组
+     * @param count 需要的数量
+     * @return
+     */
+    public static Integer[] getRandomFromArray(Integer[] array, int count) {
+        // ArrayList<Integer>arrayList =null;
+        Integer[] a = array;
+        Integer[] result = new Integer[count];
+        Random random = new Random();
+        int m = count; // 要随机取的元素个数
+        if (m > a.length) {
+            a = getMoreArray(a, m);
+        }
+        boolean r[] = new boolean[a.length];
+        int n = 0;
+        while (true) {
+            int temp = random.nextInt(a.length);
+            if (!r[temp]) {
+                if (n == m) // 取到足量随机数后退出循环
+                    break;
+                n++;
+                System.out.println("得到的第" + n + "个随机数为：" + a[temp]);
+                result[n - 1] = a[temp];
+                r[temp] = true;
+            }
+        }
+        Log.i("array", String.valueOf(result.length));
+        return result;
+
+    }
+
+    private static Integer[] getMoreArray(Integer[] array, int count) {
+        // ArrayList<Integer>arrayList =null;
+        Random r = new Random(array.length);
+        List list = Arrays.asList(array);
+        ArrayList newList = new ArrayList<>(list);
+        if (count > newList.size()) {
+            newList.addAll(newList);
+            newList.addAll(newList);
+            newList.addAll(newList);
+            newList.addAll(newList);
+            newList.addAll(newList);
+            newList.addAll(newList);
+        }
+        Integer[] a = (Integer[]) newList.toArray(new Integer[newList.size()]);
+        return a;
+    }
 }

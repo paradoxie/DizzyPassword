@@ -19,6 +19,7 @@ import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.adapter.TestStackAdapter;
 import cf.paradoxie.dizzypassword.db.AccountBean;
+import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
@@ -32,33 +33,32 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
     private boolean optionMenuOn = true;  //显示optionmenu
     private Menu aMenu;         //获取optionmenu
     public static Integer[] TEST_DATAS = new Integer[]{
-            R.color.color_1
-//            ,
-//            R.color.color_2,
-//            R.color.color_3,
-//            R.color.color_4,
-//            R.color.color_5,
-//            R.color.color_6,
-//            R.color.color_7,
-//            R.color.color_8,
-//            R.color.color_9,
-//            R.color.color_10,
-//            R.color.color_11,
-//            R.color.color_12,
-//            R.color.color_13,
-//            R.color.color_14,
-//            R.color.color_15,
-//            R.color.color_16,
-//            R.color.color_17,
-//            R.color.color_18,
-//            R.color.color_19,
-//            R.color.color_20,
-//            R.color.color_21,
-//            R.color.color_22,
-//            R.color.color_23,
-//            R.color.color_24,
-//            R.color.color_25,
-//            R.color.color_26
+            R.color.color_1,
+            R.color.color_2,
+            R.color.color_3,
+            R.color.color_4,
+            R.color.color_5,
+            R.color.color_6,
+            R.color.color_7,
+            R.color.color_8,
+            R.color.color_9,
+            R.color.color_10,
+            R.color.color_11,
+            R.color.color_12,
+            R.color.color_13,
+            R.color.color_14,
+            R.color.color_15,
+            R.color.color_16,
+            R.color.color_17,
+            R.color.color_18,
+            R.color.color_19,
+            R.color.color_20,
+            R.color.color_21,
+            R.color.color_22,
+            R.color.color_23,
+            R.color.color_24,
+            R.color.color_25,
+            R.color.color_26
     };
 
     private CardStackView mStackView;
@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
         if (!(Boolean) SPUtils.get("optionMenuOn", true)) {
             optionMenuOn = false;
             checkOptionMenu();
-            //            MyApplication.showToast(SPUtils.get("optionMenuOn",true)+"");
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -103,33 +102,30 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
         mStackView.setItemExpendListener(this);
 
 
+        if (SPUtils.get("key", "") + "" == "")
 
+        {
+            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");
+            //        MyApplication.showToast("啥意思");
+        } else
 
+        {
+            Bmob.initialize(this, SPUtils.get("key", "") + "");
+            //        MyApplication.showToast("现在是新的key");
+        }
+        if (!MyApplication.isSign())
 
-        if(SPUtils.get("key","")+""=="")
+        {
+            //缓存用户对象为空时， 可打开用户注册界面…
+            Intent intent = new Intent(MainActivity.this, SignActivity.class);
+            startActivity(intent);
+        } else
 
-    {
-        Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");
-//        MyApplication.showToast("啥意思");
-    } else
+        {
+            findDate();
+        }
 
-    {
-        Bmob.initialize(this, SPUtils.get("key", "") + "");
-//        MyApplication.showToast("现在是新的key");
     }
-        if(!MyApplication.isSign())
-
-    {
-        //缓存用户对象为空时， 可打开用户注册界面…
-        Intent intent = new Intent(MainActivity.this, SignActivity.class);
-        startActivity(intent);
-    } else
-
-    {
-        findDate();
-    }
-
-}
 
     @Override
     protected void onResume() {
@@ -155,14 +151,15 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                 public void done(List<AccountBean> objects, BmobException e) {
                     if (objects != null) {
                         mAccountBeans = objects;
-                        mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(),mAccountBeans);
+                        mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
                         mStackView.setAdapter(mTestStackAdapter);
 
                         new Handler().postDelayed(
                                 new Runnable() {
                                     @Override
                                     public void run() {
-                                        mTestStackAdapter.updateData(Arrays.asList(TEST_DATAS));
+                                        //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
+                                        mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
                                     }
                                 }
                                 , 200

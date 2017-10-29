@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.loopeer.cardstack.CardStackView;
@@ -50,13 +51,19 @@ public class TestStackAdapter extends StackAdapter<Integer> {
     static class ColorItemViewHolder extends CardStackView.ViewHolder {
         View mLayout;
         View mContainerContent;
-        TextView mTextTitle, mTag1, mTag2, mTag3;
+        TextView mTextTitle, mTag1, mTag2, mTag3, mAccount, mPassword;
+        Button mChange, mDelete;
 
         public ColorItemViewHolder(View view) {
             super(view);
             mLayout = view.findViewById(R.id.frame_list_card_item);
             mContainerContent = view.findViewById(R.id.container_list_content);
             mTextTitle = (TextView) view.findViewById(R.id.text_list_card_title);
+            mAccount = (TextView) view.findViewById(R.id.tv_account);
+            mPassword = (TextView) view.findViewById(R.id.tv_password);
+            mChange = (Button) view.findViewById(R.id.bt_change);
+            mDelete = (Button) view.findViewById(R.id.bt_delete);
+
             mTag1 = (TextView) view.findViewById(R.id.text_list_card_tag1);
             mTag2 = (TextView) view.findViewById(R.id.text_list_card_tag2);
             mTag3 = (TextView) view.findViewById(R.id.text_list_card_tag3);
@@ -93,7 +100,9 @@ public class TestStackAdapter extends StackAdapter<Integer> {
 
         public void onBind(Integer data, int position) {
             mLayout.getBackground().setColorFilter(ContextCompat.getColor(getContext(), data), PorterDuff.Mode.SRC_IN);
-            mTextTitle.setText(String.valueOf(position + 1) + "："+DesUtil.decrypt(mBeanList.get(position).getName().toString(), SPUtils.getKey()));
+            mTextTitle.setText(String.valueOf(position + 1) + "：" + DesUtil.decrypt(mBeanList.get(position).getName().toString(), SPUtils.getKey()));
+            mAccount.setText("帐号：" + DesUtil.decrypt(mBeanList.get(position).getAccount().toString(), SPUtils.getKey()));
+            mPassword.setText("帐号：" + DesUtil.decrypt(mBeanList.get(position).getPassword().toString(), SPUtils.getKey()));
         }
 
     }

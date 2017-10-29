@@ -79,26 +79,28 @@
         android:id="@+id/container_list_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:layout_marginTop="40dp"
-        android:orientation="vertical"
         android:layout_gravity="center"
-        android:background="@drawable/shape_rectangle_with_radius">
+        android:layout_marginTop="20dp"
+        android:animateLayoutChanges="true"
+        android:background="@drawable/shape_rectangle_with_radius"
+        android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:padding="12dp"
             android:gravity="center"
+            android:padding="12dp"
             android:text="帐号：xzq351107836@163.com"
             android:textSize="16sp"/>
 
         <TextView
+            android:id="@+id/tv_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp"
             android:gravity="center"
+            android:padding="12dp"
             android:text="密码：yinfengzhoumian"
             android:textSize="16sp"/>
 
@@ -109,24 +111,28 @@
             android:background="@drawable/bg_dotted_line"
             android:layerType="software">
         </View>
+
         <LinearLayout
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:orientation="horizontal"
             android:padding="20dp">
 
             <Button
+                android:id="@+id/bt_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="修改"
-                android:background="@drawable/search_label"/>
+                android:background="@drawable/search_label"
+                android:text="修改"/>
+
             <Button
+                android:id="@+id/bt_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="删除"
+                android:layout_marginLeft="50dp"
                 android:background="@drawable/search_label_delete"
-                android:layout_marginLeft="50dp"/>
+                android:text="删除"/>
 
         </LinearLayout>
 
