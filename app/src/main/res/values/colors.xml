@@ -9,6 +9,7 @@
     <color name="title_color">#049902</color>
 
     <color name="color_1">#EF9A9A</color>
+    <color name="color_1_1">#d95252</color>
     <color name="color_2">#E53935</color>
     <color name="color_3">#F8BBD0</color>
     <color name="color_4">#D81B60</color>
@@ -23,6 +24,7 @@
     <color name="color_13">#29B6F6</color>
     <color name="color_14">#26C6DA</color>
     <color name="color_15">#26A69A</color>
+    <color name="color_15_1">#39cfc1</color>
     <color name="color_16">#4CAF50</color>
     <color name="color_17">#8BC34A</color>
     <color name="color_18">#CDDC39</color>
