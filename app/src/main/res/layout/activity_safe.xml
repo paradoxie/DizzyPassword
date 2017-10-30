@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/activity_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="16dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="16dp">
+                style="@style/AppTheme.NoActionBar"
+                tools:context=".activity.SafeActivity">
+
+    <include layout="@layout/toolbar_layout"/>
 
     <RelativeLayout
         android:id="@+id/rl_support_finger"
@@ -49,14 +50,26 @@
         android:id="@+id/rl_unsupport_finger"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="120dp"
+        android:visibility="visible">
 
         <EditText
             android:id="@+id/et_pwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="输入您要设置6位数的密码"/>
+            android:hint="输入您要设置6位数的密码"
+            android:visibility="gone"/>
+
+        <cf.paradoxie.dizzypassword.view.PswInputView
+            android:id="@+id/psw_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_marginBottom="40dp"
+            app:count="6"/>
 
         <Button
             android:id="@+id/bt_pwd"
@@ -65,15 +78,16 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/et_pwd"
             android:layout_centerInParent="true"
-            android:text="验证"/>
+            android:text="验证"
+            android:visibility="gone"/>
+
         <TextView
             android:id="@+id/tv_message"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/bt_pwd"
+            android:layout_height="40dp"
+            android:layout_below="@+id/psw_input"
             android:layout_centerInParent="true"
-            android:layout_marginTop="20dp"
-            android:text="验证"/>
+            android:text="验证提示信息"/>
 
     </RelativeLayout>
 

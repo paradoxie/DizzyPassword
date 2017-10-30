@@ -13,6 +13,8 @@ import static cn.bmob.v3.BmobRealTimeData.TAG;
 public class MyApplication extends Application {
     public static MyApplication mInstance;
     public static Context mContext;
+    public static boolean isShow = true;
+    private static Toast mToast;
 
     @Override
     public void onCreate() {
@@ -36,8 +38,31 @@ public class MyApplication extends Application {
     }
 
 
-    public static void showToast(String s) {
-        Toast.makeText(MyApplication.getContext(), s, Toast.LENGTH_SHORT).show();
+    public static void showToast(Context context,CharSequence message) {
+
+        if (isShow && message != null && !MyApplication.isStrNull(message + ""))
+            if (mToast == null) {
+                mToast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+            } else {
+                mToast.setText(message);
+            }
+        mToast.show();
+    }
+    /**
+     * 判断为空,可以empty替换??
+     * @param str
+     * @return
+     */
+    public static boolean isStrNull(String str) {
+        if (null == str) {
+            return true;
+        } else if ("".equals(str.trim())) {
+            return true;
+        } else if ("null".equals(str.trim())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //检验是否存在本地用户，返回true/false

@@ -70,8 +70,10 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
             optionMenuOn = false;
             checkOptionMenu();
         }
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (SPUtils.get("name", "") != "") {
+            toolbar.setTitle(String.valueOf(SPUtils.get("name", "")));
+        }
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

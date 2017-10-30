@@ -1,13 +1,14 @@
 package cf.paradoxie.dizzypassword.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.view.FingerPrinterView;
+import cf.paradoxie.dizzypassword.view.PswInputView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import rx.Subscriber;
 import rx.Subscription;
@@ -33,15 +35,13 @@ import static zwh.com.lib.CodeException.PERMISSION_DENIED_ERROE;
  */
 
 public class SafeActivity extends AppCompatActivity {
-
+    private PswInputView view;
     private FingerPrinterView fingerPrinterView;
     private int fingerErrorNum = 0; // 指纹错误次数
-    RxFingerPrinter rxfingerPrinter;
+    private RxFingerPrinter rxfingerPrinter;
     private RelativeLayout rl_support_finger, rl_unsupport_finger;
-    private EditText et_pwd;
-    private Button bt_pwd;
     private TextView tv_message;
-    int code = 999;
+    private int code = 999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,9 @@ public class SafeActivity extends AppCompatActivity {
         rl_support_finger = (RelativeLayout) findViewById(R.id.rl_support_finger);
         rl_unsupport_finger = (RelativeLayout) findViewById(R.id.rl_unsupport_finger);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("安全验证");
+        setSupportActionBar(toolbar);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {//sdk23以下的版本直接数字码验证
             codeCheck();
             tv_message.setText("当前设备版本过低，请使用6位数字码进行安全验证");
@@ -68,11 +71,9 @@ public class SafeActivity extends AppCompatActivity {
                 } else if (code == FINGERPRINTERS_FAILED_ERROR) {
                     tv_message.setText("指纹认证失败，将使用6位数字码进行安全验证");
                 }
-
             } else {
                 rl_support_finger.setVisibility(View.VISIBLE);
             }
-
         }
     }
 
@@ -99,8 +100,6 @@ public class SafeActivity extends AppCompatActivity {
         });
         rxfingerPrinter = new RxFingerPrinter(this);
         startFinger();
-
-
     }
 
     /*
@@ -109,49 +108,65 @@ public class SafeActivity extends AppCompatActivity {
     private void codeCheck() {
         final String str = SPUtils.get("pwd", "") + "";
         rl_unsupport_finger.setVisibility(View.VISIBLE);
-        et_pwd = (EditText) findViewById(R.id.et_pwd);
-        bt_pwd = (Button) findViewById(R.id.bt_pwd);
         tv_message = (TextView) findViewById(R.id.tv_message);
-        bt_pwd.setOnClickListener(new View.OnClickListener() {
+        view = (PswInputView) findViewById(R.id.psw_input);
+        view.setInputCallBack(new PswInputView.InputCallBack() {
             @Override
-            public void onClick(View view) {
-                final String pwd = et_pwd.getText().toString().trim();
-                if (str.equals("")) {//还没有设置安全码
-
-                    new SweetAlertDialog(SafeActivity.this, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("安全码设置")
-                            .setContentText("您正在进行首次安全码设置，以后进入APP都将使用此安全码进行验证，您的安全码为\n" + pwd)
-                            .setCancelText("我再想想")
-                            .setConfirmText("确定")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    SPUtils.put("pwd", pwd);
-                                    sDialog.dismissWithAnimation();
-                                    startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
-                                    finish();
-                                }
-                            })
-                            .showCancelButton(true)
-                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    sDialog.cancel();
-                                }
-                            })
-                            .show();
-                } else {//设置了安全码，开始比对
-                    if (pwd.equals(str)) {
-                        MyApplication.showToast("验证成功");
-                        startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
-                        finish();
-                    } else {
-                        MyApplication.showToast("安全码验证错误，请重新尝试");
-                    }
-                }
+            public void onInputFinish(String result) {
+                checkCode(str, result);
+                hideInputWindow();
             }
         });
+        //        bt_pwd.setOnClickListener(new View.OnClickListener() {
+        //            @Override
+        //            public void onClick(View view) {
+        //                final String pwd = et_pwd.getText().toString().trim();
+        //
+        //            }
+        //        });
     }
+
+    /**
+     * 校验安全码
+     *
+     * @param str 手机中保存的安全码
+     * @param pwd 本次输入的安全码
+     */
+    private void checkCode(String str, final String pwd) {
+        if (str.equals("")) {//还没有设置安全码
+            new SweetAlertDialog(SafeActivity.this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("安全码设置")
+                    .setContentText("您正在进行首次安全码设置，以后进入APP都将使用此安全码进行验证，您的安全码为\n" + pwd)
+                    .setCancelText("我再想想")
+                    .setConfirmText("确定")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            SPUtils.put("pwd", pwd);
+                            sDialog.dismissWithAnimation();
+                            startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
+                            finish();
+                        }
+                    })
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.cancel();
+                        }
+                    })
+                    .show();
+        } else {//设置了安全码，开始比对
+            if (pwd.equals(str)) {
+                MyApplication.showToast("验证成功");
+                startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
+                finish();
+            } else {
+                MyApplication.showToast("安全码验证错误，请重新尝试");
+            }
+        }
+    }
+
 
     private void startFinger() {
         fingerErrorNum = 0;
@@ -202,5 +217,13 @@ public class SafeActivity extends AppCompatActivity {
         if (rxfingerPrinter != null) {
             rxfingerPrinter.unSubscribe(this);
         }
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    private void hideInputWindow() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
     }
 }

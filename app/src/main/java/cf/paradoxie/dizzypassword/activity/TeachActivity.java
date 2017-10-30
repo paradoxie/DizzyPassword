@@ -1,12 +1,17 @@
 package cf.paradoxie.dizzypassword.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
@@ -17,19 +22,61 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Created by xiehehe on 2017/10/28.
  */
 
-public class TeachActivity extends Activity {
+public class TeachActivity extends AppCompatActivity {
     private EditText et_key;
     private Button bt_go;
     private String key;
+    private WebView wb;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teach);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("修改教程");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         init();
     }
 
     private void init() {
+        final ProgressBar bar = (ProgressBar)findViewById(R.id.myProgressBar);
+        wb = (WebView) findViewById(R.id.web);
+        wb.getSettings().setJavaScriptEnabled(true);//支持js
+        wb.setWebViewClient(new WebViewClient() {//屏蔽自动浏览器打开
+            // Load opened URL in the application instead of standard browser
+            // application
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+        wb.getSettings().setUseWideViewPort(true);//自适应屏幕
+        wb.getSettings().setSupportZoom(true); //支持缩放
+        wb.getSettings().setDefaultTextEncodingName("utf-8");//设置编码
+        wb.requestFocus();
+        wb.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                if (newProgress == 100) {
+                    bar.setVisibility(View.INVISIBLE);
+                } else {
+                    if (View.INVISIBLE == bar.getVisibility()) {
+                        bar.setVisibility(View.VISIBLE);
+                    }
+                    bar.setProgress(newProgress);
+                }
+                super.onProgressChanged(view, newProgress);
+            }
+        });
+        wb.loadUrl("http://xiehehe.coding.me/2017/07/20/%E5%88%9D%E8%B0%88%E4%B8%89%E8%A7%82/");
 
 
         et_key = (EditText) findViewById(R.id.et_key);

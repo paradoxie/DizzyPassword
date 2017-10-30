@@ -4,6 +4,14 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+    <include layout="@layout/toolbar_layout"/>
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:id="@+id/myProgressBar"
+        android:layout_width="match_parent"
+        android:background="@color/color_15"
+        android:layout_height="5px"/>
+
     <WebView
         android:id="@+id/web"
         android:layout_width="match_parent"
@@ -23,16 +31,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="1"
-            android:text="8801d750beae37dd2831517b9f869b0c"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:text="8801d750beae37dd2831517b9f869b0c"/>
 
         <Button
             android:id="@+id/bt_go"
+            style="@style/dialog_blue_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/dialog_blue_button"
-            android:text="配置"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:text="配置"/>
     </LinearLayout>
 
 </LinearLayout>

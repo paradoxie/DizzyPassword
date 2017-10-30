@@ -70,6 +70,7 @@ public class SignActivity extends Activity {
                         if (e == null) {
                             MyApplication.showToast("登录成功");
                             SPUtils.put("password",password);
+                            SPUtils.put("name",username);
                             finish();
                         } else {
                             MyApplication.showToast("登录失败：" + e);
