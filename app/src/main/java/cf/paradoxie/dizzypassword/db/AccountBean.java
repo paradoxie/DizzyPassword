@@ -11,12 +11,20 @@ import cn.bmob.v3.BmobUser;
 
 public class AccountBean extends BmobObject {
     private String name;//名字
-    private String website;//网站
+    private String note;//备注
     private String account;//帐号
     private String password;//密码
 
     public List<String> getTag() {
         return tag;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public void setTag(List<String> tag) {
@@ -35,13 +43,6 @@ public class AccountBean extends BmobObject {
         this.name = name;
     }
 
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
 
     public String getAccount() {
         return account;

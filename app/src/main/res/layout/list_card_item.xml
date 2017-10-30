@@ -104,6 +104,14 @@
             android:padding="12dp"
             android:text="密码：yinfengzhoumian"
             android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/tv_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="备注：这里是备注信息"
+            android:textSize="16sp"/>
 
         <View
             android:layout_width="match_parent"

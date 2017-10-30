@@ -24,9 +24,9 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class AddActivity extends AppCompatActivity {
-    private EditText et_name, et_web, et_account, et_password, et_tag;
+    private EditText et_name, et_note, et_account, et_password, et_tag;
     private Button bt_go;
-    private String name, web, acount, password, tag;
+    private String name, note, acount, password, tag;
     private FlowLayout mFlowLayout;
     private LayoutInflater mInflater;
     private SweetAlertDialog pDialog = null;
@@ -55,8 +55,8 @@ public class AddActivity extends AppCompatActivity {
 
                 name = et_name.getText().toString().trim();
                 String name1 = DesUtil.encrypt(name, SPUtils.getKey());
-                web = et_web.getText().toString().trim();
-                String web1 = DesUtil.encrypt(web, SPUtils.getKey());
+                note = et_note.getText().toString().trim();
+                String note1 = DesUtil.encrypt(note, SPUtils.getKey());
                 acount = et_account.getText().toString().trim();
                 String acount1 = DesUtil.encrypt(acount, SPUtils.getKey());
                 password = et_password.getText().toString().trim();
@@ -68,7 +68,7 @@ public class AddActivity extends AppCompatActivity {
 
                 AccountBean accountBean = new AccountBean();
                 accountBean.setName(name1);
-                accountBean.setWebsite(web1);
+                accountBean.setNote(note1);
                 accountBean.setAccount(acount1);
                 accountBean.setPassword(password1);
                 accountBean.setTag(tag1);
@@ -100,15 +100,17 @@ public class AddActivity extends AppCompatActivity {
         final TextInputLayout nameWrapper = (TextInputLayout) findViewById(R.id.nameWrapper);
         final TextInputLayout accountWrapper = (TextInputLayout) findViewById(R.id.accountWrapper);
         final TextInputLayout passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
+        final TextInputLayout noteWrapper = (TextInputLayout) findViewById(R.id.noteWrapper);
         final TextInputLayout tagWrapper = (TextInputLayout) findViewById(R.id.tagWrapper);
         nameWrapper.setHint("输入您所记录帐号的名称，比如酷安、酷安小号、酷安女号等");
         accountWrapper.setHint("请输入帐号信息");
         passwordWrapper.setHint("请输入密码信息");
+        noteWrapper.setHint("请输入备注信息");
         tagWrapper.setHint("标记信息最多可选三个，手动输入请用空格隔开");
 
 
         et_name = (EditText) findViewById(R.id.et_name);
-        et_web = (EditText) findViewById(R.id.et_web);
+        et_note = (EditText) findViewById(R.id.et_web);
         et_account = (EditText) findViewById(R.id.et_account);
         et_password = (EditText) findViewById(R.id.et_password);
         et_tag = (EditText) findViewById(R.id.et_tag);

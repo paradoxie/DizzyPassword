@@ -182,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
         BmobQuery<AccountBean> query = new BmobQuery<>();
         if (MyApplication.getUser() != null) {
             String id = MyApplication.getUser().getObjectId();
-
             user.setObjectId(id);
             query.addWhereEqualTo("user", new BmobPointer(user));
             query.findObjects(new FindListener<AccountBean>() {
@@ -235,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("隐藏key配置入口")
                     .setContentText("点击确定后将使用此刻配置中的key，右上角的三个点将消失")
-                    .setCancelText("我再看看吧")
+                    .setCancelText("我再看看")
                     .setConfirmText("确定")
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override

@@ -52,7 +52,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
     static class ColorItemViewHolder extends CardStackView.ViewHolder {
         View mLayout;
         View mContainerContent;
-        TextView mTextTitle, mTag1, mTag2, mTag3, mAccount, mPassword;
+        TextView mTextTitle, mTag1, mTag2, mTag3, mAccount, mPassword, mNote;
         Button mChange, mDelete;
 
         public ColorItemViewHolder(View view) {
@@ -62,6 +62,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTextTitle = (TextView) view.findViewById(R.id.text_list_card_title);
             mAccount = (TextView) view.findViewById(R.id.tv_account);
             mPassword = (TextView) view.findViewById(R.id.tv_password);
+            mNote = (TextView) view.findViewById(R.id.tv_note);
             mChange = (Button) view.findViewById(R.id.bt_change);
             mDelete = (Button) view.findViewById(R.id.bt_delete);
 
@@ -71,7 +72,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTextTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    MyApplication.showToast("别动啊");
+                    //                    MyApplication.showToast("别动啊");
                 }
             });
             final RxBean rxEvent = new RxBean();
@@ -107,6 +108,10 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             String name = DesUtil.decrypt(mBeanList.get(position).getName().toString(), SPUtils.getKey());
             String account = DesUtil.decrypt(mBeanList.get(position).getAccount().toString(), SPUtils.getKey());
             String password = DesUtil.decrypt(mBeanList.get(position).getPassword().toString(), SPUtils.getKey());
+            String note=mBeanList.get(position).getNote().toString();
+            if (note != null) {
+                note = DesUtil.decrypt(mBeanList.get(position).getNote().toString(), SPUtils.getKey());
+            }
             List<String> tag = mBeanList.get(position).getTag();
 
 
@@ -114,28 +119,30 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTextTitle.setText(String.valueOf(position + 1) + "：" + name);
             mAccount.setText("帐号：" + account);
             mPassword.setText("密码：" + password);
+            mNote.setText("备注：" + note);
 
-                if (tag.size() == 0) {
-                    return;
-                }
-                if (tag.size() == 1) {
-                    mTag1.setText(tag.get(0));
-                    mTag1.setVisibility(View.VISIBLE);
-                }
-                if (tag.size() == 2) {
-                    mTag1.setText(tag.get(0));
-                    mTag2.setText(tag.get(1));
-                    mTag1.setVisibility(View.VISIBLE);
-                    mTag2.setVisibility(View.VISIBLE);
-                }
-                if (tag.size() == 3) {
-                    mTag1.setText(tag.get(0));
-                    mTag2.setText(tag.get(1));
-                    mTag3.setText(tag.get(2));
-                    mTag1.setVisibility(View.VISIBLE);
-                    mTag2.setVisibility(View.VISIBLE);
-                    mTag3.setVisibility(View.VISIBLE);
-                }
+
+            if (tag.size() == 0) {
+                return;
+            }
+            if (tag.size() == 1) {
+                mTag1.setText(tag.get(0));
+                mTag1.setVisibility(View.VISIBLE);
+            }
+            if (tag.size() == 2) {
+                mTag1.setText(tag.get(0));
+                mTag2.setText(tag.get(1));
+                mTag1.setVisibility(View.VISIBLE);
+                mTag2.setVisibility(View.VISIBLE);
+            }
+            if (tag.size() == 3) {
+                mTag1.setText(tag.get(0));
+                mTag2.setText(tag.get(1));
+                mTag3.setText(tag.get(2));
+                mTag1.setVisibility(View.VISIBLE);
+                mTag2.setVisibility(View.VISIBLE);
+                mTag3.setVisibility(View.VISIBLE);
+            }
         }
     }
 
