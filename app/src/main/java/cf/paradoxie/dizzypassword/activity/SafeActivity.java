@@ -71,6 +71,7 @@ public class SafeActivity extends BaseActivity {
                     tv_message.setText("指纹认证失败，将使用6位数字码进行安全验证");
                 }
             } else {
+                rl_unsupport_finger.setVisibility(View.GONE);
                 rl_support_finger.setVisibility(View.VISIBLE);
             }
         }
@@ -116,18 +117,11 @@ public class SafeActivity extends BaseActivity {
                 hideInputWindow();
             }
         });
-        //        bt_pwd.setOnClickListener(new View.OnClickListener() {
-        //            @Override
-        //            public void onClick(View view) {
-        //                final String pwd = et_pwd.getText().toString().trim();
-        //
-        //            }
-        //        });
+
     }
 
     /**
      * 校验安全码
-     *
      * @param str 手机中保存的安全码
      * @param pwd 本次输入的安全码
      */

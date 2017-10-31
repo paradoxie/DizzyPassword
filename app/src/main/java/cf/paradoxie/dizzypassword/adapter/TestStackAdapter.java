@@ -29,7 +29,6 @@ import cn.bmob.v3.listener.UpdateListener;
 public class TestStackAdapter extends StackAdapter<Integer> {
     private static List<AccountBean> mBeanList;
 
-
     public TestStackAdapter(Context context, List list) {
         super(context);
         this.mBeanList = list;
@@ -48,7 +47,6 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         View view;
         view = getLayoutInflater().inflate(R.layout.list_card_item, parent, false);
         return new ColorItemViewHolder(view);
-
     }
 
     @Override
@@ -88,8 +86,6 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTextTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //                    rxEvent.setName(mTextTitle.getText().toString().trim());
-                    //                    RxBus.getInstance().post(rxEvent);
                 }
             });
 
@@ -143,7 +139,6 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             final String account = DesUtil.decrypt(mBeanList.get(position).getAccount().toString(), SPUtils.getKey());
             final String password = DesUtil.decrypt(mBeanList.get(position).getPassword().toString(), SPUtils.getKey());
             String note = mBeanList.get(position).getNote().toString();
-            final String note1 = note;
             if (note != null) {
                 note = DesUtil.decrypt(mBeanList.get(position).getNote().toString(), SPUtils.getKey());
             }
@@ -152,7 +147,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
 
             mLayout.getBackground().setColorFilter(ContextCompat.getColor(getContext(), data), PorterDuff.Mode.SRC_IN);
             mTextTitle.setText(name);
-            mNum.setText(mBeanList.size() + "-" + String.valueOf(position + 1));
+            mNum.setText(String.valueOf(position + 1) + "-" + mBeanList.size());
             mTime.setText(time);
             mAccount.setText("帐号：" + account);
             mPassword.setText("密码：" + password);
@@ -190,7 +185,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 public void onClick(View view) {
                     if (mAccount.getText().length() > 0 || mPassword.getText().length() > 0) {
                         ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                        cm.setText(mAccount.getText()+"\n"+mPassword.getText());
+                        cm.setText(mAccount.getText() + "\n" + mPassword.getText());
                         Snackbar.make(view, R.string.copy, Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     } else {

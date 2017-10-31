@@ -16,7 +16,6 @@ public class RxBean {
 
 
     private String message;
-    private boolean delete;
     private String id;
     private String name;
 
@@ -36,11 +35,4 @@ public class RxBean {
         this.id = id;
     }
 
-    public boolean isDelete() {
-        return delete;
-    }
-
-    public void setDelete(boolean delete) {
-        this.delete = delete;
-    }
 }

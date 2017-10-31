@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -52,35 +50,7 @@ public class TeachActivity extends BaseActivity {
     private void init() {
         final ProgressBar bar = (ProgressBar) findViewById(R.id.myProgressBar);
         wb = (WebView) findViewById(R.id.web);
-        wb.getSettings().setJavaScriptEnabled(true);//支持js
-        wb.setWebViewClient(new WebViewClient() {//屏蔽自动浏览器打开
-            // Load opened URL in the application instead of standard browser
-            // application
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });
-        wb.getSettings().setUseWideViewPort(true);//自适应屏幕
-        wb.getSettings().setSupportZoom(true); //支持缩放
-        wb.getSettings().setDefaultTextEncodingName("utf-8");//设置编码
-        wb.requestFocus();
-        wb.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress == 100) {
-                    bar.setVisibility(View.INVISIBLE);
-                } else {
-                    if (View.INVISIBLE == bar.getVisibility()) {
-                        bar.setVisibility(View.VISIBLE);
-                    }
-                    bar.setProgress(newProgress);
-                }
-                super.onProgressChanged(view, newProgress);
-            }
-        });
-        wb.loadUrl("http://xiehehe.coding.me/2017/07/20/%E5%88%9D%E8%B0%88%E4%B8%89%E8%A7%82/");
-
+        MyApplication.loadUri(wb, R.string.web_site, bar);
 
         et_key = (EditText) findViewById(R.id.et_key);
         bt_go = (Button) findViewById(R.id.bt_go);
@@ -104,24 +74,18 @@ public class TeachActivity extends BaseActivity {
                                 public void onClick(SweetAlertDialog sDialog) {
                                     SPUtils.put("key", key);
                                     sDialog.setTitleText("配置完成!")
-                                            .setContentText("点击重启，app将自动关闭后重新启动\n请莫方😁")
+                                            .setContentText("点击重启，app自动关闭后将重新启动\n请莫方😁")
                                             .setConfirmText("重启")
                                             .showCancelButton(false)
                                             .setCancelClickListener(null)
                                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                                 @Override
                                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                    //重新启动app
-//                                                    AppManager.getAppManager().finishActivity(MainActivity.class);
-//                                                    AppManager.getAppManager().finishAllActivity();
-//                                                    Intent i = getBaseContext().getPackageManager()
-//                                                            .getLaunchIntentForPackage(getBaseContext().getPackageName());
-//                                                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                                    startActivity(i);
+                                                    //重启APP
                                                     Intent intent = getBaseContext().getPackageManager()
                                                             .getLaunchIntentForPackage(getBaseContext().getPackageName());
                                                     PendingIntent restartIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-                                                    AlarmManager mgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+                                                    AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                                                     mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, restartIntent); // 1秒钟后重启应用
                                                     AppManager.getAppManager().finishAllActivity();
                                                     System.exit(0);
@@ -132,7 +96,7 @@ public class TeachActivity extends BaseActivity {
                                 }
                             })
                             .show();
-                }else {
+                } else {
                     MyApplication.showToast("您已经修改过Application ID啦~");
                 }
             }

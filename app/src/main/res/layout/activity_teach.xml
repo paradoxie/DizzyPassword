@@ -5,12 +5,13 @@
               android:orientation="vertical">
 
     <include layout="@layout/toolbar_layout"/>
+
     <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
         android:id="@+id/myProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:background="@color/color_15"
-        android:layout_height="5px"/>
+        android:layout_height="5px"
+        android:background="@color/color_22"/>
 
     <WebView
         android:id="@+id/web"
@@ -31,8 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="1"
-            android:maxLines="1"
-            android:hint="Bmob新建项目的Application ID"/>
+            android:hint="Bmob新建项目的Application ID"
+            android:maxLines="1"/>
 
         <Button
             android:id="@+id/bt_go"

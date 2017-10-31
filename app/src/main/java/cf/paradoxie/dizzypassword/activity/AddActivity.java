@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.List;
 
+import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.db.AccountBean;
@@ -25,7 +26,7 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class AddActivity extends BaseActivity {
-    TextInputLayout nameWrapper, accountWrapper, passwordWrapper, tagWrapper, noteWrapper;
+    private TextInputLayout nameWrapper, accountWrapper, passwordWrapper, tagWrapper, noteWrapper;
     private EditText et_name, et_note, et_account, et_password, et_tag;
     private Button bt_go;
     private String name, note, acount, password, tag;
@@ -121,6 +122,7 @@ public class AddActivity extends BaseActivity {
                     public void done(String objectId, BmobException e) {
                         if (e == null) {
                             MyApplication.showToast("保存成功");
+                            AppManager.getAppManager().finishActivity(MainActivity.class);
                             Intent intent = new Intent(AddActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();

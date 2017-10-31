@@ -23,7 +23,6 @@ public class RxBus {
      * @return
      */
     public static RxBus getInstance() {
-
         RxBus rxBus2 = mInstance;
         if (mInstance == null) {
             synchronized (RxBus.class) {
@@ -45,7 +44,6 @@ public class RxBus {
      * @param object
      */
     public void post(Object object) {
-
         bus.onNext(object);
 
     }

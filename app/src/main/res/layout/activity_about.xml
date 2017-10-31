@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_color">
+
+    <include layout="@layout/toolbar_layout"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_marginTop="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@mipmap/ic_logo"/>
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/logo"
+            android:layout_centerHorizontal="true"
+            android:textColor="#000000"
+            android:textSize="22sp"
+            android:layout_marginTop="5dp"
+            android:text="@string/app_name"/>
+        <TextView
+            android:id="@+id/version_info"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name"
+            android:textSize="18sp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/app_name"/>
+        <TextView
+            android:id="@+id/right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="40dp"
+            android:text="Copyright © 2017 Paradoxie"/>
+
+        <TextView
+            android:layout_above="@+id/right"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:text="项目源码查看我的github主页:\n https://github.com/paradoxie"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

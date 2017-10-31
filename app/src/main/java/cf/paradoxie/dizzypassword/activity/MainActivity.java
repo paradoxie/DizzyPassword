@@ -91,17 +91,15 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 if (id == R.id.action_share) {
                     DesUtil.share(MyApplication.getContext(), getString(R.string.share_note));
                 }
-
                 if (id == R.id.action_change) {
                     // 跳转到一个web页面，获取并修改Bmob的key的教程
                     Intent intent = new Intent(MainActivity.this, TeachActivity.class);
                     startActivity(intent);
                 }
                 if (id == R.id.action_delete) {
-
                     //跳转到关于页面
-                    MyApplication.showToast("跳转关于页面");
-
+                    Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+                    startActivity(intent);
                 }
                 return false;
             }
@@ -125,10 +123,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             }
         });
 
-
         mStackView = (CardStackView) findViewById(R.id.stackview_main);
         mStackView.setItemExpendListener(this);
-
 
         if (SPUtils.get("key", "") + "" == "") {
             Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");
@@ -160,7 +156,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         }
                     }
                 });
-
     }
 
 
@@ -211,7 +206,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         if (SPUtils.get("key", "") + "" != "") {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
-
     }
 
     private void findDate() {
@@ -231,7 +225,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     if (objects != null) {
                         mAccountBeans = objects;
                         tip.setVisibility(View.GONE);
-                        //                        MyApplication.showToast("成功");
                         mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
                         mStackView.setAdapter(mTestStackAdapter);
                         mTestStackAdapter.notifyDataSetChanged();
@@ -264,9 +257,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-
         if (id == R.id.action_change) {
             // 跳转到一个web页面，获取并修改Bmob的key的教程
             Intent intent = new Intent(MainActivity.this, TeachActivity.class);
@@ -274,28 +265,28 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
         if (id == R.id.action_delete) {
             //            MyApplication.showToast(R.string.action_delete + "");
-            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("隐藏key配置入口")
-                    .setContentText("点击确定后将使用此刻配置中的key，右上角的三个点将消失")
-                    .setCancelText("我再看看")
-                    .setConfirmText("确定")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            optionMenuOn = false;
-                            SPUtils.put("optionMenuOn", optionMenuOn);
-                            checkOptionMenu();
-                            sDialog.dismissWithAnimation();
-                        }
-                    })
-                    .showCancelButton(true)
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            sDialog.cancel();
-                        }
-                    })
-                    .show();
+//            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+//                    .setTitleText("隐藏key配置入口")
+//                    .setContentText("点击确定后将使用此刻配置中的key，右上角的三个点将消失")
+//                    .setCancelText("我再看看")
+//                    .setConfirmText("确定")
+//                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                        @Override
+//                        public void onClick(SweetAlertDialog sDialog) {
+//                            optionMenuOn = false;
+//                            SPUtils.put("optionMenuOn", optionMenuOn);
+//                            checkOptionMenu();
+//                            sDialog.dismissWithAnimation();
+//                        }
+//                    })
+//                    .showCancelButton(true)
+//                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                        @Override
+//                        public void onClick(SweetAlertDialog sDialog) {
+//                            sDialog.cancel();
+//                        }
+//                    })
+//                    .show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -339,7 +330,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         if (!isExit) {
             isExit = true;
             // 准备退出
-            //            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
             MyApplication.showToast("再按一次退出程序");
             tExit = new Timer();
             tExit.schedule(new TimerTask() {

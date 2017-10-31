@@ -45,13 +45,11 @@ public class SignActivity extends BaseActivity {
         pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("进行中...");
-        //        pDialog.setCancelable(false);
 
         nameWrapper = (TextInputLayout) findViewById(R.id.nameWrapper);
         passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
         et_username = (EditText) findViewById(R.id.et_username);
         et_password = (EditText) findViewById(R.id.et_password);
-
         bt_sign_on = (Button) findViewById(R.id.bt_sign_on);
 
         bt_sign_on.setOnClickListener(new View.OnClickListener() {

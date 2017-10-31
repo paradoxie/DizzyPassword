@@ -69,8 +69,6 @@ public class AccountBean extends BmobObject {
         this.password = password;
     }
 
-
-
     public BmobUser getUser() {
         return user;
     }
