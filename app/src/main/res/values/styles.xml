@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/color_13</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/color_13_1</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>

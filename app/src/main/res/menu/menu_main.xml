@@ -2,7 +2,17 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="cf.paradoxie.dizzypassword.activity.MainActivity">
+    <item android:id="@+id/action_edit"
+          android:title="刷新"
+          android:orderInCategory="80"
+          android:icon="@drawable/refresh"
+          app:showAsAction="ifRoom" />
 
+    <item android:id="@+id/action_share"
+          android:title="分享"
+          android:orderInCategory="90"
+          android:icon="@drawable/share"
+          app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_change"
         android:orderInCategory="100"

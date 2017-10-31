@@ -38,18 +38,20 @@ public class MyApplication extends Application {
     }
 
 
-    public static void showToast(Context context,CharSequence message) {
+    public static void showToast(CharSequence message) {
 
         if (isShow && message != null && !MyApplication.isStrNull(message + ""))
             if (mToast == null) {
-                mToast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+                mToast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
             } else {
                 mToast.setText(message);
             }
         mToast.show();
     }
+
     /**
      * 判断为空,可以empty替换??
+     *
      * @param str
      * @return
      */

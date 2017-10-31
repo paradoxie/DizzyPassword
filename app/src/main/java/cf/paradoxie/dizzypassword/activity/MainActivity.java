@@ -12,11 +12,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.loopeer.cardstack.CardStackView;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
@@ -57,7 +60,9 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
     private List<AccountBean> mAccountBeans;
     private Button bt_search;
     private EditText et_search;
+    private TextView tip;
     SweetAlertDialog pDialog = null;
+    private static Boolean isExit = false;
     BmobUser user = new BmobUser();
 
     @Override
@@ -72,10 +77,61 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (SPUtils.get("name", "") != "") {
-            toolbar.setTitle(String.valueOf(SPUtils.get("name", "")));
+            toolbar.setSubtitle((String.valueOf(SPUtils.get("name", ""))));
         }
         setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.action_edit) {
+                    findDate();
+                    if (mStackView.isSelected()) {
+                        mStackView.clearSelectPosition();
+                    }
+                }
+                if (id == R.id.action_share) {
+                    DesUtil.share(MyApplication.getContext(),getString(R.string.share_note));
+                }
 
+                if (id == R.id.action_change) {
+                    // 跳转到一个web页面，获取并修改Bmob的key的教程
+                    Intent intent = new Intent(MainActivity.this, TeachActivity.class);
+                    startActivity(intent);
+                }
+                if (id == R.id.action_delete) {
+                    //            MyApplication.showToast(R.string.action_delete + "");
+                    //                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
+                    //                            .setTitleText("隐藏key配置入口")
+                    //                            .setContentText("点击确定后将使用此刻配置中的key，右上角的三个点将消失")
+                    //                            .setCancelText("我再看看")
+                    //                            .setConfirmText("确定")
+                    //                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    //                                @Override
+                    //                                public void onClick(SweetAlertDialog sDialog) {
+                    //                                    optionMenuOn = false;
+                    //                                    SPUtils.put("optionMenuOn", optionMenuOn);
+                    //                                    checkOptionMenu();
+                    //                                    sDialog.dismissWithAnimation();
+                    //                                }
+                    //                            })
+                    //                            .showCancelButton(true)
+                    //                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    //                                @Override
+                    //                                public void onClick(SweetAlertDialog sDialog) {
+                    //                                    sDialog.cancel();
+                    //                                }
+                    //                            })
+                    //                            .show();
+                    //跳转到关于页面
+                    MyApplication.showToast("跳转关于页面");
+
+                }
+                return false;
+            }
+        });
+
+        tip = (TextView) findViewById(R.id.tip);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,14 +144,12 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                     //缓存用户对象为空时， 可打开用户注册界面…
                     Intent intent = new Intent(MainActivity.this, SignActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
 
-        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Loading");
-        pDialog.setCancelable(false);
+
 
         mStackView = (CardStackView) findViewById(R.id.stackview_main);
         mStackView.setItemExpendListener(this);
@@ -107,9 +161,9 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
         if (!MyApplication.isSign()) {
-            //缓存用户对象为空时， 可打开用户注册界面…
-            Intent intent = new Intent(MainActivity.this, SignActivity.class);
-            startActivity(intent);
+            tip.setVisibility(View.VISIBLE);
+        }else {
+            findDate();
         }
         et_search = (EditText) findViewById(R.id.et_search);
         bt_search = (Button) findViewById(R.id.bt_search);
@@ -126,60 +180,69 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                 .subscribe(new Action1<RxBean>() {
                     @Override
                     public void call(RxBean rxBean) {
-                        et_search.setText(rxBean.getMessage());
+                        if (rxBean.getMessage() != "") {
+                            searchDate(rxBean.getMessage());
+                        }
                     }
                 });
+
     }
 
+
     private void searchDate(String s) {
-        if (s.equals("")) {
-            findDate();
-        } else {
+        pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("加载中");
+        if (!MainActivity.this.isFinishing()) {
             pDialog.show();
-            BmobQuery<AccountBean> query = new BmobQuery<AccountBean>();
-            String[] search = {s};
-            query.addWhereContainsAll("tag", Arrays.asList(search));
-            query.addWhereEqualTo("user", new BmobPointer(user));
-            query.findObjects(new FindListener<AccountBean>() {
-
-                @Override
-                public void done(List<AccountBean> object, BmobException e) {
-                    if (e == null) {
-                        mAccountBeans = object;
-                        mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
-                        mStackView.setAdapter(mTestStackAdapter);
-                        //                    mTestStackAdapter.notifyDataSetChanged();
-                        new Handler().postDelayed(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
-                                        mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
-                                    }
-                                }
-                                , 100
-                        );
-                        pDialog.dismiss();
-                    } else {
-                        MyApplication.showToast("不知道哪里出问题了" + e);
-                    }
-                }
-
-            });
         }
+        BmobQuery<AccountBean> query = new BmobQuery<AccountBean>();
+        String[] search = {s};
+        query.addWhereContainsAll("tag", Arrays.asList(search));
+        query.addWhereEqualTo("user", new BmobPointer(user));
+        query.findObjects(new FindListener<AccountBean>() {
+
+            @Override
+            public void done(List<AccountBean> object, BmobException e) {
+                if (e == null) {
+                    mAccountBeans = object;
+                    mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
+                    mStackView.setAdapter(mTestStackAdapter);
+                    mTestStackAdapter.notifyDataSetChanged();
+                    new Handler().postDelayed(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
+                                    mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
+                                }
+                            }
+                            , 100
+                    );
+                    pDialog.dismiss();
+                } else {
+                    MyApplication.showToast("不知道哪里出问题了" + e);
+                }
+            }
+
+        });
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (SPUtils.get("key", "") + "" != null) {
-            Bmob.initialize(this, SPUtils.get("key", "") + "");
-            findDate();
-        }
+//        if (SPUtils.get("key", "") + "" != null) {
+//            Bmob.initialize(this, SPUtils.get("key", "") + "");
+//            findDate();
+//        }
 
     }
 
     private void findDate() {
+        pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("加载中");
         pDialog.show();
         BmobQuery<AccountBean> query = new BmobQuery<>();
         if (MyApplication.getUser() != null) {
@@ -195,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                         //                        MyApplication.showToast("成功");
                         mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
                         mStackView.setAdapter(mTestStackAdapter);
-
+                        mTestStackAdapter.notifyDataSetChanged();
                         new Handler().postDelayed(
                                 new Runnable() {
                                     @Override
@@ -286,6 +349,31 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
 
     @Override
     public void onItemExpend(boolean expend) {
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitBy2Click();
+    }
+
+    private void exitBy2Click() {
+        Timer tExit = null;
+        if (!isExit) {
+            isExit = true;
+            // 准备退出
+            //            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            MyApplication.showToast("再按一次退出程序");
+            tExit = new Timer();
+            tExit.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    isExit = false;
+                }
+            }, 2000);
+        } else {
+            finish();
+            System.exit(0);
+        }
     }
 
 }

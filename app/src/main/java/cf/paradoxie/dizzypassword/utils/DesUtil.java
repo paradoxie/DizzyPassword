@@ -1,12 +1,15 @@
 package cf.paradoxie.dizzypassword.utils;
 
-import android.util.Log;
+import android.content.Context;
+import android.content.Intent;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -191,12 +194,12 @@ public class DesUtil {
                 if (n == m) // 取到足量随机数后退出循环
                     break;
                 n++;
-                System.out.println("得到的第" + n + "个随机数为：" + a[temp]);
+//                System.out.println("得到的第" + n + "个随机数为：" + a[temp]);
                 result[n - 1] = a[temp];
                 r[temp] = true;
             }
         }
-        Log.i("array", String.valueOf(result.length));
+//        Log.i("array", String.valueOf(result.length));
         return result;
 
     }
@@ -216,5 +219,33 @@ public class DesUtil {
         }
         Integer[] a = (Integer[]) newList.toArray(new Integer[newList.size()]);
         return a;
+    }
+
+    /**
+     * 验证邮箱的合法性
+     * @param email
+     * @return
+     */
+    public static boolean isEmail(String email) {
+        String regex = "[a-zA-Z_]{1,}[0-9]{0,}@(([a-zA-z0-9]-*){1,}\\.){1,3}[a-zA-z\\-]{1,}" ;
+        return match(regex ,email);
+    }
+    private static boolean match( String regex ,String str ){
+        Pattern pattern = Pattern.compile(regex);
+        Matcher  matcher = pattern.matcher( str );
+        return matcher.matches();
+    }
+
+    /**
+     * 分享功能
+     * @param context
+     * @param Title
+     */
+    public static void share(Context context, String Title) {
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        share.putExtra(Intent.EXTRA_TEXT, Title);
+        context.startActivity(Intent.createChooser(share, "分享到"));
     }
 }

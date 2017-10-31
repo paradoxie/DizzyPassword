@@ -1,5 +1,6 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -25,6 +26,7 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class AddActivity extends AppCompatActivity {
+    TextInputLayout nameWrapper, accountWrapper, passwordWrapper, tagWrapper, noteWrapper;
     private EditText et_name, et_note, et_account, et_password, et_tag;
     private Button bt_go;
     private String name, note, acount, password, tag;
@@ -51,6 +53,8 @@ public class AddActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(AddActivity.this, MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -61,21 +65,47 @@ public class AddActivity extends AppCompatActivity {
         pDialog.setTitleText("Loading");
         pDialog.setCancelable(false);
 
+
         bt_go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pDialog.show();
 
                 name = et_name.getText().toString().trim();
-                String name1 = DesUtil.encrypt(name, SPUtils.getKey());
                 note = et_note.getText().toString().trim();
-                String note1 = DesUtil.encrypt(note, SPUtils.getKey());
                 acount = et_account.getText().toString().trim();
-                String acount1 = DesUtil.encrypt(acount, SPUtils.getKey());
                 password = et_password.getText().toString().trim();
-                String password1 = DesUtil.encrypt(password, SPUtils.getKey());
                 tag = et_tag.getText().toString().trim();
-                //                String tag1 = DesUtil.encrypt(tag, SPUtils.getKey());
+
+                if (name.isEmpty()) {
+                    nameWrapper.setErrorEnabled(true);
+                    nameWrapper.setError("记录的标题名称不能为空哦~");
+                    return;
+                } else if (acount.isEmpty()) {
+                    accountWrapper.setErrorEnabled(true);
+                    accountWrapper.setError("帐号不能为空哦~");
+                    return;
+                } else if (password.isEmpty()) {
+                    passwordWrapper.setErrorEnabled(true);
+                    passwordWrapper.setError("密码不能为空哦~");
+                    return;
+                } else if (tag.isEmpty()) {
+                    tagWrapper.setErrorEnabled(true);
+                    tagWrapper.setError("请至少选择一个Tag");
+                    return;
+                } else {
+                    nameWrapper.setError("");// 必须加上这个，否则会导致内容删除后，error信息显示为空白
+                    nameWrapper.setErrorEnabled(false);
+                    accountWrapper.setError("");
+                    accountWrapper.setErrorEnabled(false);
+                    passwordWrapper.setError("");
+                    passwordWrapper.setErrorEnabled(false);
+                    tagWrapper.setError("");
+                    tagWrapper.setErrorEnabled(false);
+                }
+                String note1 = DesUtil.encrypt(note, SPUtils.getKey());
+                String name1 = DesUtil.encrypt(name, SPUtils.getKey());
+                String acount1 = DesUtil.encrypt(acount, SPUtils.getKey());
+                String password1 = DesUtil.encrypt(password, SPUtils.getKey());
                 String[] arr = tag.split("\\s+");
                 List<String> tag1 = Arrays.asList(arr);
 
@@ -86,12 +116,14 @@ public class AddActivity extends AppCompatActivity {
                 accountBean.setPassword(password1);
                 accountBean.setTag(tag1);
                 accountBean.setUser(MyApplication.getUser());
-
+                pDialog.show();
                 accountBean.save(new SaveListener<String>() {
                     @Override
                     public void done(String objectId, BmobException e) {
                         if (e == null) {
                             MyApplication.showToast("保存成功");
+                            Intent intent = new Intent(AddActivity.this, MainActivity.class);
+                            startActivity(intent);
                             finish();
                         } else {
                             MyApplication.showToast("保存失败" + e.getMessage());
@@ -110,16 +142,16 @@ public class AddActivity extends AppCompatActivity {
     }
 
     private void init() {
-        final TextInputLayout nameWrapper = (TextInputLayout) findViewById(R.id.nameWrapper);
-        final TextInputLayout accountWrapper = (TextInputLayout) findViewById(R.id.accountWrapper);
-        final TextInputLayout passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
-        final TextInputLayout noteWrapper = (TextInputLayout) findViewById(R.id.noteWrapper);
-        final TextInputLayout tagWrapper = (TextInputLayout) findViewById(R.id.tagWrapper);
+        nameWrapper = (TextInputLayout) findViewById(R.id.nameWrapper);
+        accountWrapper = (TextInputLayout) findViewById(R.id.accountWrapper);
+        passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
+        noteWrapper = (TextInputLayout) findViewById(R.id.noteWrapper);
+        tagWrapper = (TextInputLayout) findViewById(R.id.tagWrapper);
         nameWrapper.setHint("输入您所记录帐号的名称，比如酷安、酷安小号、酷安女号等");
         accountWrapper.setHint("请输入帐号信息");
         passwordWrapper.setHint("请输入密码信息");
         noteWrapper.setHint("请输入备注信息");
-        tagWrapper.setHint("标记信息最多可选三个，手动输入请用空格隔开");
+        tagWrapper.setHint("标记信息最多可选5个，手动输入请用空格隔开");
 
 
         et_name = (EditText) findViewById(R.id.et_name);
@@ -128,6 +160,7 @@ public class AddActivity extends AppCompatActivity {
         et_password = (EditText) findViewById(R.id.et_password);
         et_tag = (EditText) findViewById(R.id.et_tag);
         bt_go = (Button) findViewById(R.id.bt_go);
+
     }
 
     private void initData() {
@@ -153,8 +186,8 @@ public class AddActivity extends AppCompatActivity {
                             space++;
                         }
                     }
-                    if (space > 1) {
-                        MyApplication.showToast("最多支持添加3个tag哟~");
+                    if (space > 3) {
+                        MyApplication.showToast("最多支持添加5个tag哟~");
                         return;
                     }
                     et_tag.setText(string + " " + str);
@@ -167,4 +200,5 @@ public class AddActivity extends AppCompatActivity {
         }
 
     }
+
 }

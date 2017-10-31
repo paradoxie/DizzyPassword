@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:validation="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="cf.paradoxie.dizzypassword.activity.MainActivity">
 
@@ -20,13 +21,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp">
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp">
 
             <EditText
                 android:id="@+id/et_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:lineSpacingExtra="4dp"
                 android:hint="名称"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -51,12 +53,14 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            validation:passwordToggleEnabled="true"
             android:layout_marginTop="5dp">
 
             <EditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textVisiblePassword"
                 android:hint="密码"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -93,15 +97,13 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingTop="10dp">
+            android:layout_weight="1">
 
             <cf.paradoxie.dizzypassword.view.FlowLayout
                 android:id="@+id/flowlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:paddingBottom="15dp">
+                android:paddingBottom="5dp">
             </cf.paradoxie.dizzypassword.view.FlowLayout>
         </ScrollView>
 
@@ -112,7 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="添加帐号"/>
+            android:text="提交"/>
 
     </LinearLayout>
 </LinearLayout>

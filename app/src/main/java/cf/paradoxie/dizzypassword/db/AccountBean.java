@@ -10,6 +10,7 @@ import cn.bmob.v3.BmobUser;
  */
 
 public class AccountBean extends BmobObject {
+    private String id;
     private String name;//名字
     private String note;//备注
     private String account;//帐号
@@ -21,6 +22,14 @@ public class AccountBean extends BmobObject {
 
     public String getNote() {
         return note;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setNote(String note) {

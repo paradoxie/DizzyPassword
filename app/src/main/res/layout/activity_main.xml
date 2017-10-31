@@ -10,6 +10,14 @@
     <include layout="@layout/toolbar_layout"/>
 
     <include layout="@layout/content_main"/>
+    <TextView
+        android:id="@+id/tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:visibility="gone"
+        android:text="您还没有登录哟，点击右下角注册登录吧"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -17,6 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_input_add"/>
+        app:srcCompat="@drawable/add"/>
 
 </android.support.design.widget.CoordinatorLayout>
