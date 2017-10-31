@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class AddActivity extends AppCompatActivity {
+public class AddActivity extends BaseActivity {
     TextInputLayout nameWrapper, accountWrapper, passwordWrapper, tagWrapper, noteWrapper;
     private EditText et_name, et_note, et_account, et_password, et_tag;
     private Button bt_go;

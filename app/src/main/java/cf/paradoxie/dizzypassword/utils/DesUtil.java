@@ -226,14 +226,11 @@ public class DesUtil {
      * @param email
      * @return
      */
-    public static boolean isEmail(String email) {
-        String regex = "[a-zA-Z_]{1,}[0-9]{0,}@(([a-zA-z0-9]-*){1,}\\.){1,3}[a-zA-z\\-]{1,}" ;
-        return match(regex ,email);
-    }
-    private static boolean match( String regex ,String str ){
-        Pattern pattern = Pattern.compile(regex);
-        Matcher  matcher = pattern.matcher( str );
-        return matcher.matches();
+    public static boolean isEmail(String str) {
+        if(str == null || "".equals(str)){
+            return false;
+        }
+        return str.matches("^[\\w-]+@[\\w-]+(\\.[\\w-]+)+$");
     }
 
     /**
@@ -248,4 +245,10 @@ public class DesUtil {
         share.putExtra(Intent.EXTRA_TEXT, Title);
         context.startActivity(Intent.createChooser(share, "分享到"));
     }
+
+//    // 测试用例，不需要传递任何参数，直接执行即可。
+//        public static void main(String[] args) {
+//
+//            System.out.println(isEmail("351107836@gmail.com"));
+//        }
 }

@@ -121,6 +121,14 @@
         android:layout_marginTop="5dp"
         android:text="@string/action_note_4"
         android:textColor="@color/gray_btn_bg_pressed_color"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/action_note_6"
+        android:textColor="@color/gray_btn_bg_pressed_color"/>
 
     <TextView
         android:layout_width="wrap_content"

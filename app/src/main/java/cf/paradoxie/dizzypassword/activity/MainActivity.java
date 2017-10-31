@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,7 +39,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements CardStackView.ItemExpendListener {
+public class MainActivity extends BaseActivity implements CardStackView.ItemExpendListener {
     private boolean optionMenuOn = true;  //显示optionmenu
     private Menu aMenu;         //获取optionmenu
     public static Integer[] TEST_DATAS = new Integer[]{
@@ -54,16 +53,15 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
     };
 
     private CardStackView mStackView;
-    //    private LinearLayout mActionButtonContainer;
     private TestStackAdapter mTestStackAdapter;
 
     private List<AccountBean> mAccountBeans;
     private Button bt_search;
     private EditText et_search;
     private TextView tip;
-    SweetAlertDialog pDialog = null;
+    private SweetAlertDialog pDialog = null;
     private static Boolean isExit = false;
-    BmobUser user = new BmobUser();
+    private BmobUser user = new BmobUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                     }
                 }
                 if (id == R.id.action_share) {
-                    DesUtil.share(MyApplication.getContext(),getString(R.string.share_note));
+                    DesUtil.share(MyApplication.getContext(), getString(R.string.share_note));
                 }
 
                 if (id == R.id.action_change) {
@@ -100,29 +98,7 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                     startActivity(intent);
                 }
                 if (id == R.id.action_delete) {
-                    //            MyApplication.showToast(R.string.action_delete + "");
-                    //                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
-                    //                            .setTitleText("隐藏key配置入口")
-                    //                            .setContentText("点击确定后将使用此刻配置中的key，右上角的三个点将消失")
-                    //                            .setCancelText("我再看看")
-                    //                            .setConfirmText("确定")
-                    //                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    //                                @Override
-                    //                                public void onClick(SweetAlertDialog sDialog) {
-                    //                                    optionMenuOn = false;
-                    //                                    SPUtils.put("optionMenuOn", optionMenuOn);
-                    //                                    checkOptionMenu();
-                    //                                    sDialog.dismissWithAnimation();
-                    //                                }
-                    //                            })
-                    //                            .showCancelButton(true)
-                    //                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    //                                @Override
-                    //                                public void onClick(SweetAlertDialog sDialog) {
-                    //                                    sDialog.cancel();
-                    //                                }
-                    //                            })
-                    //                            .show();
+
                     //跳转到关于页面
                     MyApplication.showToast("跳转关于页面");
 
@@ -150,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
         });
 
 
-
         mStackView = (CardStackView) findViewById(R.id.stackview_main);
         mStackView.setItemExpendListener(this);
 
@@ -162,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
         }
         if (!MyApplication.isSign()) {
             tip.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             findDate();
         }
         et_search = (EditText) findViewById(R.id.et_search);
@@ -219,10 +194,11 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                             }
                             , 100
                     );
-                    pDialog.dismiss();
+
                 } else {
                     MyApplication.showToast("不知道哪里出问题了" + e);
                 }
+                pDialog.dismiss();
             }
 
         });
@@ -232,10 +208,9 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
     @Override
     protected void onResume() {
         super.onResume();
-//        if (SPUtils.get("key", "") + "" != null) {
-//            Bmob.initialize(this, SPUtils.get("key", "") + "");
-//            findDate();
-//        }
+        if (SPUtils.get("key", "") + "" != "") {
+            Bmob.initialize(this, SPUtils.get("key", "") + "");
+        }
 
     }
 
@@ -255,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                 public void done(List<AccountBean> objects, BmobException e) {
                     if (objects != null) {
                         mAccountBeans = objects;
+                        tip.setVisibility(View.GONE);
                         //                        MyApplication.showToast("成功");
                         mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
                         mStackView.setAdapter(mTestStackAdapter);
@@ -269,11 +245,13 @@ public class MainActivity extends AppCompatActivity implements CardStackView.Ite
                                 }
                                 , 100
                         );
-                        pDialog.dismiss();
+                    } else {
+                        tip.setText("好像还没有什么信息记录，点击右下角添加吧(*^__^*)");
+                        tip.setVisibility(View.VISIBLE);
                     }
+                    pDialog.dismiss();
                 }
             });
-
         }
 
     }
