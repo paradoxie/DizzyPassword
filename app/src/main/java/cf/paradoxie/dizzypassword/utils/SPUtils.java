@@ -77,6 +77,7 @@ public class SPUtils {
 
     /**
      * 移除某个key值已经对应的值
+     *
      * @param
      * @param key
      */
@@ -90,6 +91,7 @@ public class SPUtils {
 
     /**
      * 清除所有数据
+     *
      * @param
      */
     public static void clear() {
@@ -101,7 +103,6 @@ public class SPUtils {
     }
 
 
-
     /**
      * 创建一个解决SharedPreferencesCompat.apply方法的一个兼容类
      */
@@ -110,6 +111,7 @@ public class SPUtils {
 
         /**
          * 反射查找apply的方法
+         *
          * @return
          */
         @SuppressWarnings({"unchecked", "rawtypes"})
@@ -125,6 +127,7 @@ public class SPUtils {
 
         /**
          * 如果找到则使用apply执行，否则使用commit
+         *
          * @param editor
          */
         public static void apply(SharedPreferences.Editor editor) {
@@ -142,7 +145,7 @@ public class SPUtils {
     }
 
     //获取密钥
-    public  static String getKey(){
+    public static String getKey() {
         String str = SPUtils.get("password", "") + "";
         StringBuffer sb = null;
         int strLen = str.length();
@@ -158,7 +161,8 @@ public class SPUtils {
         }
         return str;
     }
-    public  static String getKey(String s){
+
+    public static String getKey(String s) {
 
         StringBuffer sb = null;
         int strLen = s.length();

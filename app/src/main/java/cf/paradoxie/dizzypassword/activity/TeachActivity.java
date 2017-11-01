@@ -17,6 +17,7 @@ import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cn.bmob.v3.BmobUser;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
@@ -73,6 +74,7 @@ public class TeachActivity extends BaseActivity {
                                 @Override
                                 public void onClick(SweetAlertDialog sDialog) {
                                     SPUtils.put("key", key);
+                                    BmobUser.logOut();   //清除缓存用户对象
                                     sDialog.setTitleText("配置完成!")
                                             .setContentText("点击重启，app自动关闭后将重新启动\n请莫方😁")
                                             .setConfirmText("重启")

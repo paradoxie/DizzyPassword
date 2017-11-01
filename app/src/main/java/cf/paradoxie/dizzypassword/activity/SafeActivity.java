@@ -8,9 +8,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
@@ -40,6 +40,7 @@ public class SafeActivity extends BaseActivity {
     private RxFingerPrinter rxfingerPrinter;
     private RelativeLayout rl_support_finger, rl_unsupport_finger;
     private TextView tv_message;
+    private Button btn_open;
     private int code = 999;
 
     @Override
@@ -48,7 +49,7 @@ public class SafeActivity extends BaseActivity {
         setContentView(R.layout.activity_safe);
         rl_support_finger = (RelativeLayout) findViewById(R.id.rl_support_finger);
         rl_unsupport_finger = (RelativeLayout) findViewById(R.id.rl_unsupport_finger);
-
+        btn_open = (Button) findViewById(R.id.btn_open);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("安全验证");
         setSupportActionBar(toolbar);
@@ -87,13 +88,16 @@ public class SafeActivity extends BaseActivity {
             public void onChange(int state) {
                 if (state == FingerPrinterView.STATE_CORRECT_PWD) {
                     fingerErrorNum = 0;
-                    Toast.makeText(MyApplication.getContext(), "指纹验证成功", Toast.LENGTH_SHORT).show();
+                    btn_open.setText("指纹验证成功，正在进入app...");
                     startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
                     finish();
                 }
                 if (state == FingerPrinterView.STATE_WRONG_PWD) {
-                    Toast.makeText(MyApplication.getContext(), "指纹验证失败，还剩" + (5 - fingerErrorNum) + "次机会",
-                            Toast.LENGTH_SHORT).show();
+                    btn_open.setText("指纹验证失败，还剩" + (5 - fingerErrorNum) + "次机会");
+                    if (fingerErrorNum == 5) {
+                        btn_open.setText("指纹验证失败，请退出重试");
+                        btn_open.setBackgroundResource(R.drawable.red_button_background);
+                    }
                     fingerPrinterView.setState(FingerPrinterView.STATE_NO_SCANING);
                 }
             }
@@ -122,6 +126,7 @@ public class SafeActivity extends BaseActivity {
 
     /**
      * 校验安全码
+     *
      * @param str 手机中保存的安全码
      * @param pwd 本次输入的安全码
      */
@@ -151,11 +156,13 @@ public class SafeActivity extends BaseActivity {
                     .show();
         } else {//设置了安全码，开始比对
             if (pwd.equals(str)) {
-                MyApplication.showToast("验证成功");
+                tv_message.setText("验证成功,正在进入app...");
                 startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
                 finish();
             } else {
-                MyApplication.showToast("安全码验证错误，请重新尝试");
+                view.clearResult();
+                tv_message.setText("安全码验证错误，请重新尝试");
+                tv_message.setTextColor(getResources().getColor(R.color.red_btn_bg_pressed_color));
             }
         }
     }

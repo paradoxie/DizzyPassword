@@ -148,11 +148,11 @@ public class AddActivity extends BaseActivity {
         passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
         noteWrapper = (TextInputLayout) findViewById(R.id.noteWrapper);
         tagWrapper = (TextInputLayout) findViewById(R.id.tagWrapper);
-        nameWrapper.setHint("输入您所记录帐号的名称，比如酷安、酷安小号、酷安女号等");
-        accountWrapper.setHint("请输入帐号信息");
-        passwordWrapper.setHint("请输入密码信息");
-        noteWrapper.setHint("请输入备注信息");
-        tagWrapper.setHint("标记信息最多可选5个，手动输入请用空格隔开");
+        nameWrapper.setHint("帐号的名称，比如酷安、酷安小号、酷安女号等");
+        accountWrapper.setHint("帐户信息");
+        passwordWrapper.setHint("密码信息");
+        noteWrapper.setHint("备注信息");
+        tagWrapper.setHint("选择标记信息，输入请用空格隔开");
 
 
         et_name = (EditText) findViewById(R.id.et_name);

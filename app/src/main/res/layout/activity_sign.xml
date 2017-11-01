@@ -28,7 +28,7 @@
                 android:id="@+id/et_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="请输入您的常用邮箱地址"
+                android:hint="帐号:请输入您的常用邮箱地址"
                 android:inputType="textEmailAddress"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -44,7 +44,7 @@
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="请输入您的密码"
+                android:hint="密码:请输入您设置的密码"
                 android:inputType="textPassword"/>
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
@@ -72,73 +72,83 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:text="注册"/>
+            android:text="首次使用，注册"/>
 
     </LinearLayout>
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/action_note"
-        android:textColor="@color/gray_btn_bg_pressed_color"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/action_note_1"
-        android:textColor="@color/gray_btn_bg_pressed_color"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/action_note_2"
-        android:textColor="@color/gray_btn_bg_pressed_color"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/action_note"
+                android:textColor="@color/gray_btn_bg_pressed_color"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/action_note_3"
-        android:textColor="@color/gray_btn_bg_pressed_color"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/action_note_1"
+                android:textColor="@color/gray_btn_bg_pressed_color"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/action_note_4"
-        android:textColor="@color/gray_btn_bg_pressed_color"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/action_note_2"
+                android:textColor="@color/gray_btn_bg_pressed_color"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/action_note_6"
-        android:textColor="@color/gray_btn_bg_pressed_color"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/action_note_3"
+                android:textColor="@color/gray_btn_bg_pressed_color"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/action_note_5"
-        android:textColor="@color/gray_btn_bg_pressed_color"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/action_note_4"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/action_note_6"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/action_note_5"
+                android:textColor="@color/gray_btn_bg_pressed_color"/>
+        </LinearLayout>
+
+    </ScrollView>
 
 
 </LinearLayout>

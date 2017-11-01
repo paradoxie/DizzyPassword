@@ -88,11 +88,12 @@ public class MyApplication extends Application {
 
     /**
      * webview载入网页
-     * @param wb 控件
+     *
+     * @param wb  控件
      * @param str 地址
      * @param bar 进度条
      */
-    public static void loadUri(WebView wb, int str,final ProgressBar bar){
+    public static void loadUri(WebView wb, int str, final ProgressBar bar) {
         wb.getSettings().setJavaScriptEnabled(true);//支持js
         wb.setWebViewClient(new WebViewClient() {//屏蔽自动浏览器打开
             public boolean shouldOverrideUrlLoading(WebView view, String url) {

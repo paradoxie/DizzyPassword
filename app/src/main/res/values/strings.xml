@@ -4,15 +4,16 @@
     <string name="action_change">修改当前ID</string>
     <string name="action_delete">关于</string>
     <string name="action_note">【注：事前小tip】</string>
-    <string name="action_note_1">1.注册仅支持邮箱，请务必使用常用邮箱</string>
+    <string name="action_note_1">1.首次使用请先注册，注册仅支持邮箱，请务必使用常用邮箱</string>
     <string name="action_note_2">2.数据上传云端之前，除开tag信息，全部已加密，密钥由您的密码决定</string>
     <string name="action_note_3">3.忘记用户密码后不支持帐号找回，因为加密后后端看不见您的帐号信息</string>
     <string name="action_note_4">4.实在担心您所记录的信息的安全性，可以查看app中教程，将信息记录到自己的后台</string>
     <string name="action_note_5">6.祝您食用开心(*^__^*)</string>
-    <string name="action_note_6">5.如果您需要将信息记录到自己的后台，请先不要注册，按照教程修改完key之后再进行注册登录操作</string>
+    <string name="action_note_6">5.如果您需要将信息记录到自己的后台，请先不要注册，按照教程修改完Application ID之后再进行注册登录操作</string>
 
     <string name="copy">帐号密码信息复制成功！</string>
     <string name="nothing_copy">好像...啥也没复制到...ಥ_ಥ</string>
     <string name="share_note">一个极具个人隐私属性的云端密码记录APP。 这种东西，当然还是安全可靠最重要啦~ 赶紧来【醋安应用市场】搜索下载试试吧(*^__^*) \n   ---From:【去特么的密码】Android客户端</string>
     <string name="web_site">http://www.jianshu.com/p/ab621a5c88fb</string>
+    <string name="app_info">本app作为一个密码管理工具，与常规密码管理app最大的不同在于支持个人后台的云端密码储存。\n\n尽管如此，使用默认模式也有极高的安全性，帐号信息在提交云端之前，几乎所有数据都在本地做了加密处理。\n\n数据采用Des加密，对此有疑问的朋友可以查看app的源码。\n\n开源之下，不会瞎搞(*^__^*)</string>
 </resources>

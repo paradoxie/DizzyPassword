@@ -75,6 +75,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (SPUtils.get("name", "") != "") {
+            toolbar.setTitle("");
             toolbar.setSubtitle((String.valueOf(SPUtils.get("name", ""))));
         }
         setSupportActionBar(toolbar);
@@ -83,13 +84,13 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.action_edit) {
-                    findDate();
-                    if (mStackView.isSelected()) {
+                    if (mStackView.isExpending()) {
                         mStackView.clearSelectPosition();
                     }
+                    findDate();
                 }
                 if (id == R.id.action_share) {
-                    DesUtil.share(MyApplication.getContext(), getString(R.string.share_note));
+                    DesUtil.share(MainActivity.this, getString(R.string.share_note));
                 }
                 if (id == R.id.action_change) {
                     // 跳转到一个web页面，获取并修改Bmob的key的教程
@@ -255,42 +256,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_change) {
-            // 跳转到一个web页面，获取并修改Bmob的key的教程
-            Intent intent = new Intent(MainActivity.this, TeachActivity.class);
-            startActivity(intent);
-        }
-        if (id == R.id.action_delete) {
-            //            MyApplication.showToast(R.string.action_delete + "");
-//            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-//                    .setTitleText("隐藏key配置入口")
-//                    .setContentText("点击确定后将使用此刻配置中的key，右上角的三个点将消失")
-//                    .setCancelText("我再看看")
-//                    .setConfirmText("确定")
-//                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                        @Override
-//                        public void onClick(SweetAlertDialog sDialog) {
-//                            optionMenuOn = false;
-//                            SPUtils.put("optionMenuOn", optionMenuOn);
-//                            checkOptionMenu();
-//                            sDialog.dismissWithAnimation();
-//                        }
-//                    })
-//                    .showCancelButton(true)
-//                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                        @Override
-//                        public void onClick(SweetAlertDialog sDialog) {
-//                            sDialog.cancel();
-//                        }
-//                    })
-//                    .show();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     //是否显示menu
     private void checkOptionMenu() {

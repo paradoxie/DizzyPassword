@@ -14,7 +14,7 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -45,17 +45,37 @@
             android:gravity="center"
             android:textStyle="bold"
             android:layout_alignParentBottom="true"
-            android:layout_margin="40dp"
+            android:layout_margin="25dp"
             android:text="Copyright © 2017 Paradoxie"/>
 
         <TextView
+            android:id="@+id/address"
             android:layout_above="@+id/right"
             android:layout_width="match_parent"
             android:layout_marginBottom="10dp"
             android:gravity="center"
             android:textSize="18sp"
-            android:text="项目源码查看我的github主页:\n https://github.com/paradoxie"
+            android:text="我的github主页:\n https://github.com/paradoxie"
             android:layout_height="wrap_content"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/version_info"
+            android:layout_above="@+id/address"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingRight="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/app_info"/>
+
+
+        </ScrollView>
 
     </RelativeLayout>
 

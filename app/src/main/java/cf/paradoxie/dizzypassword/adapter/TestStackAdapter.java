@@ -15,6 +15,8 @@ import com.loopeer.cardstack.CardStackView;
 import com.loopeer.cardstack.StackAdapter;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
@@ -61,6 +63,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         Button mChange, mDelete;
         RxBean rxEvent;
         ImageView iv_copy;
+        private static Boolean isSure = false;
 
         public ColorItemViewHolder(View view) {
             super(view);
@@ -152,31 +155,48 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mAccount.setText("帐号：" + account);
             mPassword.setText("密码：" + password);
             mNote.setText("备注：" + note);
+
             mDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //删除当前数据
-                    AccountBean accountBean = new AccountBean();
-                    accountBean.setObjectId(id);
-                    accountBean.delete(new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                mTextTitle.setText("已删除");
-                                mAccount.setText("已删除");
-                                mPassword.setText("已删除");
-                                mTag1.setVisibility(View.GONE);
-                                mTag2.setVisibility(View.GONE);
-                                mTag3.setVisibility(View.GONE);
-                                mTag4.setVisibility(View.GONE);
-                                mTag5.setVisibility(View.GONE);
-                                mNote.setText("删除成功，请点击右上角刷新按钮");
-                                MyApplication.showToast("删除成功");
-                            } else {
-                                MyApplication.showToast("删除失败：" + e.getMessage() + "," + e.getErrorCode());
+                    //确定删除
+                    Timer tExit = null;
+                    if (!isSure) {
+                        isSure = true;
+                        // 准备删除
+                        mDelete.setText("2秒内再次点击删除");
+                        tExit = new Timer();
+                        tExit.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                isSure = false;
                             }
-                        }
-                    });
+                        }, 2000);
+                    } else {
+                        //删除当前数据
+                        AccountBean accountBean = new AccountBean();
+                        accountBean.setObjectId(id);
+                        accountBean.delete(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    mTextTitle.setText("已删除");
+                                    mAccount.setText("已删除");
+                                    mPassword.setText("已删除");
+                                    mTag1.setVisibility(View.GONE);
+                                    mTag2.setVisibility(View.GONE);
+                                    mTag3.setVisibility(View.GONE);
+                                    mTag4.setVisibility(View.GONE);
+                                    mTag5.setVisibility(View.GONE);
+                                    mNote.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
+                                    mDelete.setText("删除成功");
+                                } else {
+                                    MyApplication.showToast("删除失败：" + e.getMessage() + "," + e.getErrorCode());
+                                }
+                            }
+                        });
+
+                    }
 
                 }
             });
