@@ -54,6 +54,9 @@ public class TeachActivity extends BaseActivity {
         MyApplication.loadUri(wb, R.string.web_site, bar);
 
         et_key = (EditText) findViewById(R.id.et_key);
+        if (SPUtils.get("key", "") + "" != ""){
+            et_key.setText(SPUtils.get("key", "") + "");
+        }
         bt_go = (Button) findViewById(R.id.bt_go);
         bt_go.setOnClickListener(new View.OnClickListener() {
             @Override

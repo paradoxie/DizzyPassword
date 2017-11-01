@@ -92,11 +92,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 if (id == R.id.action_share) {
                     DesUtil.share(MainActivity.this, getString(R.string.share_note));
                 }
-                if (id == R.id.action_change) {
-                    // 跳转到一个web页面，获取并修改Bmob的key的教程
-                    Intent intent = new Intent(MainActivity.this, TeachActivity.class);
-                    startActivity(intent);
-                }
                 if (id == R.id.action_delete) {
                     //跳转到关于页面
                     Intent intent = new Intent(MainActivity.this, AboutActivity.class);
