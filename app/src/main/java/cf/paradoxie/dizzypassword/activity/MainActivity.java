@@ -86,6 +86,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 if (id == R.id.action_edit) {
                     if (mStackView.isExpending()) {
                         mStackView.clearSelectPosition();
+                        mStackView.removeAllViews();
                     }
                     findDate();
                 }
@@ -156,6 +157,11 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
 
     private void searchDate(String s) {
+        //手动清除一次全部view，避免重用时的重合
+        if (mStackView.isExpending()) {
+            mStackView.clearSelectPosition();
+            mStackView.removeAllViews();
+        }
         pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("加载中");
@@ -220,6 +226,12 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 public void done(List<AccountBean> objects, BmobException e) {
                     if (objects != null) {
                         mAccountBeans = objects;
+                        if (mAccountBeans.size() < 1) {
+                            tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
+                            tip.setVisibility(View.VISIBLE);
+                            pDialog.dismiss();
+                            return;
+                        }
                         tip.setVisibility(View.GONE);
                         mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
                         mStackView.setAdapter(mTestStackAdapter);
@@ -235,7 +247,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                 , 100
                         );
                     } else {
-                        tip.setText("好像还没有什么信息记录，点击右下角添加吧(*^__^*)");
+                        tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
                         tip.setVisibility(View.VISIBLE);
                     }
                     pDialog.dismiss();
@@ -278,6 +290,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
     @Override
     public void onItemExpend(boolean expend) {
+
     }
 
     @Override

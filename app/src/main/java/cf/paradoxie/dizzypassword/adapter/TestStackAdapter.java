@@ -191,7 +191,11 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                                     mNote.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
                                     mDelete.setText("删除成功");
                                 } else {
-                                    MyApplication.showToast("删除失败：" + e.getMessage() + "," + e.getErrorCode());
+                                    if (e.getErrorCode() == 101) {
+                                        MyApplication.showToast("已经删掉了哦~");
+                                    } else {
+                                        MyApplication.showToast("删除失败：" + e.getMessage() + "," + e.getErrorCode());
+                                    }
                                 }
                             }
                         });

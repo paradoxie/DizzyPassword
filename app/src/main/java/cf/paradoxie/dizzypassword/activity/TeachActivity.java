@@ -54,7 +54,7 @@ public class TeachActivity extends BaseActivity {
         MyApplication.loadUri(wb, R.string.web_site, bar);
 
         et_key = (EditText) findViewById(R.id.et_key);
-        if (SPUtils.get("key", "") + "" != ""){
+        if (SPUtils.get("key", "") + "" != "") {
             et_key.setText(SPUtils.get("key", "") + "");
         }
         bt_go = (Button) findViewById(R.id.bt_go);
@@ -76,6 +76,7 @@ public class TeachActivity extends BaseActivity {
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sDialog) {
+                                    SPUtils.remove("name");
                                     SPUtils.put("key", key);
                                     BmobUser.logOut();   //清除缓存用户对象
                                     sDialog.setTitleText("配置完成!")

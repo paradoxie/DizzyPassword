@@ -62,30 +62,57 @@ public class SignActivity extends BaseActivity {
                     MyApplication.showToast("邮箱格式不正确哦~");
                     return;
                 }
-                if (password.isEmpty()) {
+                if (password.isEmpty() || password.length() < 8) {
+                    MyApplication.showToast("密码位数不够哟~");
                     return;
                 }
-                BmobUser user = new BmobUser();
-                String username1 = DesUtil.encrypt(username, password);
-                user.setUsername(username1);
-                user.setPassword(password);
-                pDialog.show();
-                user.signUp(new SaveListener<BmobUser>() {
-                    @Override
-                    public void done(BmobUser objectId, BmobException e) {
-                        if (e == null) {
-                            MyApplication.showToast("注册成功，可直接使用此帐号信息登录");
-                        } else {
-                            if (e.getErrorCode() == 202) {
-                                MyApplication.showToast("注册失败:该邮箱已注册...");
-                            } else {
-                                MyApplication.showToast("注册失败:" + e.getMessage());
-                            }
-                        }
-                        pDialog.dismiss();
-                    }
+                new SweetAlertDialog(SignActivity.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("注册信息确认")
+                        .setContentText("请牢记您的注册信息\n帐号:" + username + "\n密码:" + password)
+                        .setCancelText("哦填错了")
+                        .setConfirmText("确定")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(final SweetAlertDialog sDialog) {
 
-                });
+                                //注册
+                                BmobUser user = new BmobUser();
+                                String username1 = DesUtil.encrypt(username, password);
+                                user.setUsername(username1);
+                                user.setPassword(password);
+                                pDialog.show();
+                                user.signUp(new SaveListener<BmobUser>() {
+                                    @Override
+                                    public void done(BmobUser objectId, BmobException e) {
+                                        if (e == null) {
+                                            MyApplication.showToast("注册成功，已直接登录");
+                                            SPUtils.put("password", password);
+                                            SPUtils.put("name", username);
+                                            Intent intent = new Intent(SignActivity.this, MainActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            if (e.getErrorCode() == 202) {
+                                                MyApplication.showToast("注册失败:该邮箱已注册...");
+                                            } else {
+                                                MyApplication.showToast("注册失败:" + e.getMessage() + e.getErrorCode());
+                                            }
+                                        }
+                                        pDialog.dismiss();
+                                        sDialog.cancel();
+                                    }
+                                });
+                            }
+                        })
+                        .showCancelButton(true)
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.cancel();
+                            }
+                        })
+                        .show();
+
             }
         });
         bt_sign_up = (Button) findViewById(R.id.bt_sign_up);
@@ -99,7 +126,8 @@ public class SignActivity extends BaseActivity {
                     MyApplication.showToast("邮箱格式不正确哦~");
                     return;
                 }
-                if (password.isEmpty()) {
+                if (password.isEmpty() || password.length() < 8) {
+                    MyApplication.showToast("密码位数不够哟~");
                     return;
                 }
                 BmobUser bu2 = new BmobUser();
@@ -120,7 +148,7 @@ public class SignActivity extends BaseActivity {
                             finish();
                         } else {
                             if (e.getErrorCode() == 101) {
-                                MyApplication.showToast("登录失败：用户名或密码不正确");
+                                MyApplication.showToast("登录失败：用户名或密码不正确，或确认是否已注册");
                             } else {
                                 MyApplication.showToast("登录失败：" + e.getMessage() + e.getErrorCode());
                             }
@@ -143,9 +171,9 @@ public class SignActivity extends BaseActivity {
             nameWrapper.setErrorEnabled(true);
             nameWrapper.setError("请正确填写邮箱信息哦");
             return;
-        } else if (password.isEmpty()) {
+        } else if (password.isEmpty() || password.length() < 8) {
             passwordWrapper.setErrorEnabled(true);
-            passwordWrapper.setError("密码不能为空哦~");
+            passwordWrapper.setError("密码不能少于8位哟~");
             return;
         } else {
             nameWrapper.setError("");
