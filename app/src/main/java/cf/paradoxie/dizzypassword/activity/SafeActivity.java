@@ -53,6 +53,7 @@ public class SafeActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("安全验证");
         setSupportActionBar(toolbar);
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {//sdk23以下的版本直接数字码验证
             codeCheck();
             tv_message.setText("当前设备版本过低，请使用6位数字码进行安全验证");
@@ -93,9 +94,9 @@ public class SafeActivity extends BaseActivity {
                     finish();
                 }
                 if (state == FingerPrinterView.STATE_WRONG_PWD) {
-                    btn_open.setText("指纹验证失败，还剩" + (5 - fingerErrorNum) + "次机会");
+                    btn_open.setText("指纹认证失败，还剩" + (5 - fingerErrorNum) + "次机会");
                     if (fingerErrorNum == 5) {
-                        btn_open.setText("指纹验证失败，请退出重试");
+                        btn_open.setText("指纹验证失败，请退出稍后重试");
                         btn_open.setBackgroundResource(R.drawable.red_button_background);
                     }
                     fingerPrinterView.setState(FingerPrinterView.STATE_NO_SCANING);
@@ -194,7 +195,8 @@ public class SafeActivity extends BaseActivity {
             @Override
             public void onError(Throwable e) {
                 if (e instanceof FPerException) {
-                    code = ((FPerException) e).getCode();
+                    btn_open.setText(((FPerException) e).getDisplayMessage() + "，请退出稍候重试");
+                    btn_open.setBackgroundResource(R.drawable.red_button_background);
                 }
             }
 
@@ -212,11 +214,18 @@ public class SafeActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        System.exit(0);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (rxfingerPrinter != null) {
             rxfingerPrinter.unSubscribe(this);
         }
+        fingerErrorNum = 0;
     }
 
     /**

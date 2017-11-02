@@ -61,7 +61,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/search_label"
-                android:text="游戏"
                 android:textColor="#3f3e3e"
                 android:textSize="18sp"
                 android:visibility="gone"/>
@@ -73,7 +72,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/text_list_card_tag1"
                 android:background="@drawable/search_label"
-                android:text="社交"
                 android:textColor="#3f3e3e"
                 android:textSize="18sp"
                 android:visibility="gone"/>
@@ -86,7 +84,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/text_list_card_tag2"
                 android:background="@drawable/search_label"
-                android:text="网易"
                 android:textColor="#3f3e3e"
                 android:textSize="18sp"
                 android:visibility="gone"/>
@@ -99,7 +96,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/text_list_card_tag3"
                 android:background="@drawable/search_label"
-                android:text="网易"
                 android:textColor="#3f3e3e"
                 android:textSize="18sp"
                 android:visibility="gone"/>
@@ -112,7 +108,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/text_list_card_tag4"
                 android:background="@drawable/search_label"
-                android:text="网易"
                 android:textColor="#3f3e3e"
                 android:textSize="18sp"
                 android:visibility="gone"/>

@@ -244,7 +244,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 mTag1.setText(tag.get(0));
                 mTag2.setText(tag.get(1));
                 mTag3.setText(tag.get(2));
-                mTag3.setText(tag.get(3));
+                mTag4.setText(tag.get(3));
                 mTag1.setVisibility(View.VISIBLE);
                 mTag2.setVisibility(View.VISIBLE);
                 mTag3.setVisibility(View.VISIBLE);
@@ -254,8 +254,8 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 mTag1.setText(tag.get(0));
                 mTag2.setText(tag.get(1));
                 mTag3.setText(tag.get(2));
-                mTag3.setText(tag.get(3));
-                mTag3.setText(tag.get(4));
+                mTag4.setText(tag.get(3));
+                mTag5.setText(tag.get(4));
                 mTag1.setVisibility(View.VISIBLE);
                 mTag2.setVisibility(View.VISIBLE);
                 mTag3.setVisibility(View.VISIBLE);
