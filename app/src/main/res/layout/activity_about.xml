@@ -38,14 +38,23 @@
             android:textSize="18sp"
             android:layout_centerHorizontal="true"
             android:text="@string/app_name"/>
+
+        <TextView
+            android:id="@+id/note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="免责声明"
+            android:layout_marginBottom="15dp"
+            android:layout_alignParentBottom="true"/>
         <TextView
             android:id="@+id/right"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textStyle="bold"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="25dp"
+            android:layout_above="@id/note"
+            android:layout_marginTop="20dp"
             android:text="Copyright © 2017 Paradoxie"/>
 
         <TextView
@@ -57,6 +66,7 @@
             android:textSize="18sp"
             android:text="我的github主页:\n https://github.com/paradoxie"
             android:layout_height="wrap_content"/>
+
 
         <ScrollView
             android:layout_width="match_parent"

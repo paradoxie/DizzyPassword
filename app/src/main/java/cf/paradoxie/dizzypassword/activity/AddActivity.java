@@ -152,7 +152,7 @@ public class AddActivity extends BaseActivity {
         accountWrapper.setHint("帐户信息");
         passwordWrapper.setHint("密码信息");
         noteWrapper.setHint("备注信息");
-        tagWrapper.setHint("选择标记信息，输入请用空格隔开");
+        tagWrapper.setHint("选择标记信息，输入请用空格隔开,用于归类检索");
 
 
         et_name = (EditText) findViewById(R.id.et_name);

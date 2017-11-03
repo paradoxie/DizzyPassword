@@ -152,9 +152,9 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTextTitle.setText(name);
             mNum.setText(String.valueOf(position + 1) + "-" + mBeanList.size());
             mTime.setText(time);
-            mAccount.setText("帐号：" + account);
-            mPassword.setText("密码：" + password);
-            mNote.setText("备注：" + note);
+            mAccount.setText(account);
+            mPassword.setText(password);
+            mNote.setText(note);
 
             mDelete.setOnClickListener(new View.OnClickListener() {
                 @Override

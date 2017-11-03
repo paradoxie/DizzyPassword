@@ -195,9 +195,9 @@ public class SafeActivity extends BaseActivity {
             @Override
             public void onError(Throwable e) {
                 if (e instanceof FPerException) {
-                    btn_open.setText(((FPerException) e).getDisplayMessage() + "，请退出稍候重试");
-                    btn_open.setBackgroundResource(R.drawable.red_button_background);
+                    code=((FPerException) e).getCode();
                 }
+
             }
 
             @Override

@@ -11,13 +11,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by xiehehe on 2017/10/31.
  */
 
 public class AboutActivity extends BaseActivity {
-    private TextView version_info;
+    private TextView version_info, note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,16 @@ public class AboutActivity extends BaseActivity {
                 return false;
             }
         });
-
+        if (SPUtils.get("first_in","")+""==""){
+            showNote();
+        }
+        note = (TextView) findViewById(R.id.note);
+        note.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showNote();
+            }
+        });
         version_info = (TextView) findViewById(R.id.version_info);
 
         PackageInfo pi = null;
@@ -60,6 +71,27 @@ public class AboutActivity extends BaseActivity {
         }
 
     }
+
+    private void showNote() {
+        new SweetAlertDialog(AboutActivity.this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("免责声明")
+                .setContentText(
+                        "1.本app为非盈利开源项目，任何拷贝复制的相同项目与本app无关" +
+                                "\n2.后台数据储存由Bmob云服务提供，作者承诺不会对后台用户数据进行任何操作" +
+                                "\n3.任何加密技术都有被破解的可能性，由此造成的损失与本app及作者无关" +
+                                "\n4.作为作者，建议用户自己申请Bmob云服务进行私人信息储存，相关教程请点击右上角查看")
+                .setConfirmText("好的我知道啦")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        SPUtils.put("first_in","第一次进入app");
+                        sDialog.cancel();
+                    }
+                })
+                .show();
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_about, menu);
