@@ -64,7 +64,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="登录"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:background="@drawable/search_label_sure"/>
 
         <Button
             android:id="@+id/bt_sign_on"
@@ -72,7 +73,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:text="首次使用，注册"/>
+            android:text="首次使用，注册"
+            android:background="@drawable/search_label_sure"/>
 
     </LinearLayout>
 

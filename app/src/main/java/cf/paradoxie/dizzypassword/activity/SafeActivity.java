@@ -23,6 +23,7 @@ import rx.Subscription;
 import zwh.com.lib.FPerException;
 import zwh.com.lib.RxFingerPrinter;
 
+import static cf.paradoxie.dizzypassword.view.FingerPrinterView.STATE_NO_SCANING;
 import static zwh.com.lib.CodeException.FINGERPRINTERS_FAILED_ERROR;
 import static zwh.com.lib.CodeException.HARDWARE_MISSIING_ERROR;
 import static zwh.com.lib.CodeException.KEYGUARDSECURE_MISSIING_ERROR;
@@ -96,10 +97,10 @@ public class SafeActivity extends BaseActivity {
                 if (state == FingerPrinterView.STATE_WRONG_PWD) {
                     btn_open.setText("指纹认证失败，还剩" + (5 - fingerErrorNum) + "次机会");
                     if (fingerErrorNum == 5) {
-                        btn_open.setText("指纹验证失败，请退出稍后重试");
+                        btn_open.setText("指纹验证失败，请退出等待一段时间后重试");
                         btn_open.setBackgroundResource(R.drawable.red_button_background);
                     }
-                    fingerPrinterView.setState(FingerPrinterView.STATE_NO_SCANING);
+                    fingerPrinterView.setState(STATE_NO_SCANING);
                 }
             }
         });
@@ -180,7 +181,7 @@ public class SafeActivity extends BaseActivity {
                     return;
                 } else if (fingerPrinterView.getState() == FingerPrinterView.STATE_CORRECT_PWD
                         || fingerPrinterView.getState() == FingerPrinterView.STATE_WRONG_PWD) {
-                    fingerPrinterView.setState(FingerPrinterView.STATE_NO_SCANING);
+                    fingerPrinterView.setState(STATE_NO_SCANING);
                 } else {
                     fingerPrinterView.setState(FingerPrinterView.STATE_SCANING);
                 }
@@ -196,6 +197,10 @@ public class SafeActivity extends BaseActivity {
             public void onError(Throwable e) {
                 if (e instanceof FPerException) {
                     code=((FPerException) e).getCode();
+                    if(code ==6){
+                        btn_open.setText("指纹验证失败，请退出等待一段时间后重试");
+                        btn_open.setBackgroundResource(R.drawable.red_button_background);
+                    }
                 }
 
             }
@@ -211,12 +216,6 @@ public class SafeActivity extends BaseActivity {
             }
         });
         rxfingerPrinter.addSubscription(this, subscription);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        System.exit(0);
     }
 
     @Override
