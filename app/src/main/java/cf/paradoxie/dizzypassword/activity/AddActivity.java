@@ -18,27 +18,30 @@ import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.db.AccountBean;
+import cf.paradoxie.dizzypassword.db.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.view.FlowLayout;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class AddActivity extends BaseActivity {
     private TextInputLayout nameWrapper, accountWrapper, passwordWrapper, tagWrapper, noteWrapper;
     private EditText et_name, et_note, et_account, et_password, et_tag;
     private Button bt_go;
-    private String name, note, acount, password, tag;
+    private RxBean rxBean;
+    private String name, note, acount, password, tag, id;
     private FlowLayout mFlowLayout;
     private LayoutInflater mInflater;
     private SweetAlertDialog pDialog = null;
     private String[] mVals = new String[]{//常用tag
-            "酷安", "腾讯", "游戏", "社交", "新闻", "公司"
-            , "家庭", "WIFI", "购物", "京东", "亚马逊", "当当", "小米", "Google"
-            , "邮箱", "网易", "知乎", "视频", "豆瓣", "阅读", "技术", "学习", "微博"
-            , "公众号", "开车", "工作", "苹果", "阿里", "404", "福利", "音乐"
-            , "APP", "看图", "社区", "百度", "论坛", "玩机", "个人", "学术"};
+             "重要", "个人", "公司", "工作", "娱乐","家庭", "APP"
+            , "邮箱", "论坛", "游戏", "社交", "视频", "新闻", "阅读", "技术", "看图", "社区"
+            , "购物", "玩机", "学术", "福利", "音乐", "学习", "开车", "公众号", "WIFI"
+            , "酷安", "腾讯", "网易", "知乎", "豆瓣", "微博", "京东", "阿里", "百度", "小米"
+            , "苹果", "亚马逊","微软", "Google", "404"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,23 @@ public class AddActivity extends BaseActivity {
                 finish();
             }
         });
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            String name_1 = bundle.getString("name");
+            String account_1 = bundle.getString("account");
+            String password_1 = bundle.getString("password");
+            String note_1 = bundle.getString("finalNote");
+            String tag_1 = bundle.getString("tag");
+            id = bundle.getString("id");
+            et_name.setText(name_1);
+            et_account.setText(account_1);
+            et_password.setText(password_1);
+            et_note.setText(note_1);
+            et_tag.setText(tag_1);
+        }
+
 
         initFlowView();
         pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
@@ -109,6 +129,7 @@ public class AddActivity extends BaseActivity {
                 String[] arr = tag.split("\\s+");
                 List<String> tag1 = Arrays.asList(arr);
 
+                pDialog.show();
                 AccountBean accountBean = new AccountBean();
                 accountBean.setName(name1);
                 accountBean.setNote(note1);
@@ -116,22 +137,48 @@ public class AddActivity extends BaseActivity {
                 accountBean.setPassword(password1);
                 accountBean.setTag(tag1);
                 accountBean.setUser(MyApplication.getUser());
-                pDialog.show();
-                accountBean.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String objectId, BmobException e) {
-                        if (e == null) {
-                            MyApplication.showToast("保存成功");
-                            AppManager.getAppManager().finishActivity(MainActivity.class);
-                            Intent intent = new Intent(AddActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            MyApplication.showToast("保存失败" + e.getMessage());
-                        }
-                        pDialog.dismiss();
-                    }
-                });
+                if (id == null) {
+                    saveDate(accountBean);
+                } else {
+                    upDate(accountBean, id);
+                }
+
+            }
+        });
+    }
+
+    private void upDate(AccountBean accountBean, String id) {
+        accountBean.update(id, new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    MyApplication.showToast("更新成功");
+                    AppManager.getAppManager().finishActivity(MainActivity.class);
+                    Intent intent = new Intent(AddActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    MyApplication.showToast("更新失败：" + e.getMessage() + "," + e.getErrorCode());
+                }
+                pDialog.dismiss();
+            }
+        });
+    }
+
+    private void saveDate(AccountBean accountBean) {
+        accountBean.save(new SaveListener<String>() {
+            @Override
+            public void done(String objectId, BmobException e) {
+                if (e == null) {
+                    MyApplication.showToast("保存成功");
+                    AppManager.getAppManager().finishActivity(MainActivity.class);
+                    Intent intent = new Intent(AddActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    MyApplication.showToast("保存失败" + e.getMessage());
+                }
+                pDialog.dismiss();
             }
         });
     }
@@ -151,16 +198,17 @@ public class AddActivity extends BaseActivity {
         nameWrapper.setHint("帐号的名称，比如酷安、酷安小号、酷安女号等");
         accountWrapper.setHint("帐户信息");
         passwordWrapper.setHint("密码信息");
-        noteWrapper.setHint("备注信息");
-        tagWrapper.setHint("选择标记信息，输入请用空格隔开,用于归类检索");
+        noteWrapper.setHint("备注信息，回车即可换行");
+        tagWrapper.setHint("选择标记信息,输入请用空格隔开,注:可用于归类检索");
 
 
         et_name = (EditText) findViewById(R.id.et_name);
-        et_note = (EditText) findViewById(R.id.et_web);
         et_account = (EditText) findViewById(R.id.et_account);
         et_password = (EditText) findViewById(R.id.et_password);
+        et_note = (EditText) findViewById(R.id.et_web);
         et_tag = (EditText) findViewById(R.id.et_tag);
         bt_go = (Button) findViewById(R.id.bt_go);
+
 
     }
 

@@ -6,6 +6,18 @@ package cf.paradoxie.dizzypassword.db;
 
 public class RxBean {
 
+
+    private String message;
+    private String action;
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
     public String getMessage() {
         return message;
     }
@@ -13,26 +25,4 @@ public class RxBean {
     public void setMessage(String message) {
         this.message = message;
     }
-
-
-    private String message;
-    private String id;
-    private String name;
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
 }

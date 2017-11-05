@@ -40,12 +40,23 @@
             tools:text="12"/>
 
         <TextView
-            android:id="@+id/text_list_card_time"
+            android:id="@+id/text_list_card_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/text_list_card_num"
             android:layout_below="@id/text_list_card_num"
-            android:text="添加时间"
+            android:layout_marginTop="5dp"
+            android:text="更新"
+            android:textColor="@color/bg_color"
+            android:textSize="10sp"/>
+
+        <TextView
+            android:id="@+id/text_list_card_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/text_list_card_num"
+            android:layout_below="@id/text_list_card_up"
+            android:text="创建"
             android:textSize="10sp"/>
 
         <LinearLayout
@@ -53,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="80dp"
             android:orientation="horizontal">
 
             <TextView
@@ -228,20 +239,23 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
-                <Button
-                    android:id="@+id/bt_change"
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1"/>
+
+                <Button
+                    android:id="@+id/bt_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/search_label"
-                    android:text="修改"
-                    android:visibility="invisible"/>
+                    android:text="修改"/>
 
                 <Button
                     android:id="@+id/bt_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="30dp"
                     android:background="@drawable/search_label_delete"
                     android:text="删除此条帐号信息"
                     android:textColor="@color/bg_color"/>

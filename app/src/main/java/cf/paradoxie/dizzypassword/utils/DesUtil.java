@@ -194,12 +194,12 @@ public class DesUtil {
                 if (n == m) // 取到足量随机数后退出循环
                     break;
                 n++;
-//                System.out.println("得到的第" + n + "个随机数为：" + a[temp]);
+                //                System.out.println("得到的第" + n + "个随机数为：" + a[temp]);
                 result[n - 1] = a[temp];
                 r[temp] = true;
             }
         }
-//        Log.i("array", String.valueOf(result.length));
+        //        Log.i("array", String.valueOf(result.length));
         return result;
 
     }
@@ -223,11 +223,12 @@ public class DesUtil {
 
     /**
      * 验证邮箱的合法性
+     *
      * @param email
      * @return
      */
     public static boolean isEmail(String str) {
-        if(str == null || "".equals(str)){
+        if (str == null || "".equals(str)) {
             return false;
         }
         return str.matches("^[\\w-]+@[\\w-]+(\\.[\\w-]+)+$");
@@ -235,6 +236,7 @@ public class DesUtil {
 
     /**
      * 分享功能
+     *
      * @param context
      * @param Title
      */
@@ -246,9 +248,32 @@ public class DesUtil {
         context.startActivity(Intent.createChooser(share, "分享到"));
     }
 
-//    // 测试用例，不需要传递任何参数，直接执行即可。
-//        public static void main(String[] args) {
-//
-//            System.out.println(isEmail("351107836@gmail.com"));
-//        }
+    /**
+     * List转string
+     *
+     * @param list
+     * @param separator
+     * @return
+     */
+    public static String listToString(List list, String separator) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i));
+            if (i < list.size() - 1) {
+                sb.append(separator);
+            }
+        }
+        return sb.toString();
+    }
+
+    // 测试用例，不需要传递任何参数，直接执行即可。
+    //    public static void main(String[] args) {
+    //        List<String> list = new ArrayList<>();
+    //        list.add("购物");
+    //        list.add("当当");
+    //        list.add("微博");
+    //        list.add("豆瓣");
+    //        list.add("小米");
+    //        System.out.println(listToString(list," "));
+    //    }
 }

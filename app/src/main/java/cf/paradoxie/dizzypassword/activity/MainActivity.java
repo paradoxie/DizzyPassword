@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.loopeer.cardstack.CardStackView;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,6 +29,7 @@ import cf.paradoxie.dizzypassword.db.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cf.paradoxie.dizzypassword.utils.SortByTime;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -124,8 +126,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView.setItemExpendListener(this);
 
         if (SPUtils.get("key", "") + "" == "") {
-            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
-//                        Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
+            //            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
+            Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
         } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
@@ -142,15 +144,24 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 searchDate(et_search.getText().toString().trim());
             }
         });
-
+        final SortByTime sortByTime = new SortByTime();
         RxBus.getInstance().toObserverable(RxBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<RxBean>() {
                     @Override
                     public void call(RxBean rxBean) {
-                        if (rxBean.getMessage() != "") {
+                        if (rxBean.getMessage() != null) {
                             searchDate(rxBean.getMessage());
+                            return;
+                        }
+                        if (rxBean.getAction() != null) {
+                            if (mStackView.isExpending()) {
+                                mStackView.clearSelectPosition();
+                                mStackView.removeAllViews();
+                            }
+                            findDateByTime(sortByTime);
+                            return;
                         }
                     }
                 });
@@ -255,6 +266,58 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 }
             });
         }
+
+    }
+
+    private void findDateByTime(final SortByTime sortByTime) {
+        pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("加载中");
+        if (!MainActivity.this.isFinishing()) {
+            pDialog.show();
+        }
+        BmobQuery<AccountBean> query = new BmobQuery<>();
+        if (MyApplication.getUser() != null) {
+            String id = MyApplication.getUser().getObjectId();
+            user.setObjectId(id);
+            query.addWhereEqualTo("user", new BmobPointer(user));
+            query.findObjects(new FindListener<AccountBean>() {
+
+                @Override
+                public void done(List<AccountBean> objects, BmobException e) {
+                    if (objects != null) {
+                        Collections.sort(objects, Collections.reverseOrder(sortByTime));
+                        mAccountBeans = objects;
+                        MyApplication.showToast("已按最近更新时间排序");
+                        if (mAccountBeans.size() < 1) {
+                            tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
+                            tip.setVisibility(View.VISIBLE);
+                            pDialog.dismiss();
+                            return;
+                        }
+                        tip.setVisibility(View.GONE);
+                        mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
+                        mStackView.setAdapter(mTestStackAdapter);
+                        mTestStackAdapter.notifyDataSetChanged();
+                        new Handler().postDelayed(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
+                                        mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
+                                    }
+                                }
+                                , 100
+                        );
+                    } else {
+                        tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
+                        tip.setVisibility(View.VISIBLE);
+                    }
+                    pDialog.dismiss();
+                }
+            });
+        }
+
 
     }
 

@@ -1,7 +1,9 @@
 package cf.paradoxie.dizzypassword.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.ClipboardManager;
@@ -20,6 +22,7 @@ import java.util.TimerTask;
 
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.activity.AddActivity;
 import cf.paradoxie.dizzypassword.db.AccountBean;
 import cf.paradoxie.dizzypassword.db.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
@@ -59,9 +62,9 @@ public class TestStackAdapter extends StackAdapter<Integer> {
     static class ColorItemViewHolder extends CardStackView.ViewHolder {
         View mLayout;
         View mContainerContent;
-        TextView mTextTitle, mNum, mTime, mTag1, mTag2, mTag3, mTag4, mTag5, mAccount, mPassword, mNote;
+        TextView mTextTitle, mNum, mTime, mTime_up, mTag1, mTag2, mTag3, mTag4, mTag5, mAccount, mPassword, mNote;
         Button mChange, mDelete;
-        RxBean rxEvent;
+        RxBean rxEvent, rxEvent_1;
         ImageView iv_copy;
         private static Boolean isSure = false;
 
@@ -72,6 +75,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTextTitle = (TextView) view.findViewById(R.id.text_list_card_title);
             mNum = (TextView) view.findViewById(R.id.text_list_card_num);
             mTime = (TextView) view.findViewById(R.id.text_list_card_time);
+            mTime_up = (TextView) view.findViewById(R.id.text_list_card_up);
             mAccount = (TextView) view.findViewById(R.id.tv_account);
             mPassword = (TextView) view.findViewById(R.id.tv_password);
             mNote = (TextView) view.findViewById(R.id.tv_note);
@@ -86,9 +90,20 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTag4 = (TextView) view.findViewById(R.id.text_list_card_tag4);
             mTag5 = (TextView) view.findViewById(R.id.text_list_card_tag5);
             rxEvent = new RxBean();
-            mTextTitle.setOnClickListener(new View.OnClickListener() {
+            rxEvent_1 = new RxBean();
+
+            mTime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    rxEvent_1.setAction("done");
+                    RxBus.getInstance().post(rxEvent_1);
+                }
+            });
+            mTime_up.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    rxEvent_1.setAction("done");
+                    RxBus.getInstance().post(rxEvent_1);
                 }
             });
 
@@ -138,6 +153,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         public void onBind(Integer data, final int position) {
             final String id = mBeanList.get(position).getObjectId();
             final String time = mBeanList.get(position).getCreatedAt();
+            final String time_up = mBeanList.get(position).getUpdatedAt();
             final String name = DesUtil.decrypt(mBeanList.get(position).getName().toString(), SPUtils.getKey());
             final String account = DesUtil.decrypt(mBeanList.get(position).getAccount().toString(), SPUtils.getKey());
             final String password = DesUtil.decrypt(mBeanList.get(position).getPassword().toString(), SPUtils.getKey());
@@ -151,10 +167,31 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mLayout.getBackground().setColorFilter(ContextCompat.getColor(getContext(), data), PorterDuff.Mode.SRC_IN);
             mTextTitle.setText(name);
             mNum.setText(String.valueOf(position + 1) + "-" + mBeanList.size());
-            mTime.setText(time);
+            mTime.setText(time + "  创建");
+            mTime_up.setText(time_up + "  更新");
             mAccount.setText(account);
             mPassword.setText(password);
             mNote.setText(note);
+
+            final String finalNote = note;
+            mChange.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name", name);
+                    bundle.putString("account", account);
+                    bundle.putString("password", password);
+                    bundle.putString("finalNote", finalNote);
+                    bundle.putString("tag", DesUtil.listToString(tag, " "));
+                    bundle.putString("id", id);
+
+                    intent.putExtras(bundle);
+                    MyApplication.getContext().startActivity(intent.setClass(MyApplication.getContext(), AddActivity.class));
+                }
+            });
 
             mDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -190,6 +227,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                                     mTag5.setVisibility(View.GONE);
                                     mNote.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
                                     mDelete.setText("删除成功");
+                                    mDelete.setClickable(false);
                                 } else {
                                     if (e.getErrorCode() == 101) {
                                         MyApplication.showToast("已经删掉了哦~");
