@@ -9,11 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.ArrayList;
-
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.db.AccountBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cn.bmob.v3.BmobUser;
@@ -84,29 +81,29 @@ public class SignActivity extends BaseActivity {
                                 user.setUsername(username1);
                                 user.setPassword(password);
                                 pDialog.show();
-                                final AccountBean accountBean = new AccountBean();
+//                                final AccountBean accountBean = new AccountBean();
                                 user.signUp(new SaveListener<BmobUser>() {
                                     @Override
                                     public void done(BmobUser objectId, BmobException e) {
                                         if (e == null) {
                                             SPUtils.put("password", password);
                                             SPUtils.put("name", username);
-                                            accountBean.setName(DesUtil.encrypt("去特么的密码",password));
-                                            accountBean.setAccount(username1);
-                                            accountBean.setPassword(DesUtil.encrypt(password,password));
-                                            accountBean.setTag(new ArrayList<String>(){{add("个人"); add("当前");add("APP");add("备忘");add("记录");}});
-                                            accountBean.setNote(DesUtil.encrypt("1.该条信息注册登录后默认创建\n" +
-                                                    "2.帐号不支持找回，请牢记此条帐号信息\n" +
-                                                    "3.点击tag信息可对具有相同tag的条目进行搜索\n" +
-                                                    "4.条目默认排序为创建时间排序，点击时间可根据最近修改排序\n" +
-                                                    "5.此条可删除",password));
-                                            accountBean.setUser(MyApplication.getUser());
-                                            accountBean.save(new SaveListener<String>() {
-                                                @Override
-                                                public void done(String s, BmobException e) {
+//                                            accountBean.setName(DesUtil.encrypt("去特么的密码",password));
+//                                            accountBean.setAccount(username1);
+//                                            accountBean.setPassword(DesUtil.encrypt(password,password));
+//                                            accountBean.setTag(new ArrayList<String>(){{add("个人"); add("当前");add("APP");add("备忘");add("记录");}});
+//                                            accountBean.setNote(DesUtil.encrypt("1.该条信息注册登录后默认创建\n" +
+//                                                    "2.帐号不支持找回，请牢记此条帐号信息\n" +
+//                                                    "3.点击tag信息可对具有相同tag的条目进行搜索\n" +
+//                                                    "4.条目默认排序为创建时间排序，点击时间可根据最近修改排序\n" +
+//                                                    "5.此条可删除",password));
+//                                            accountBean.setUser(MyApplication.getUser());
+//                                            accountBean.save(new SaveListener<String>() {
+//                                                @Override
+//                                                public void done(String s, BmobException e) {
                                                     MyApplication.showToast("注册成功，已直接登录");
-                                                }
-                                            });
+//                                                }
+//                                            });
                                             Intent intent = new Intent(SignActivity.this, MainActivity.class);
                                             startActivity(intent);
                                             finish();

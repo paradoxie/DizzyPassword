@@ -76,11 +76,29 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             checkOptionMenu();
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (SPUtils.get("name", "") != "") {
-            toolbar.setTitle("");
-            toolbar.setSubtitle((String.valueOf(SPUtils.get("name", ""))));
-        }
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        if (SPUtils.get("name", "") != "") {
+            toolbar.setNavigationIcon(R.drawable.yep);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("当前帐号信息")
+                            .setContentText(
+                                    "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + (String.valueOf(SPUtils.get("password", "")))+
+                            "\n\n经常来瞅瞅,憋忘了😂")
+                            .setConfirmText("get!")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    sDialog.cancel();
+                                }
+                            })
+                            .show();
+                }
+            });
+        }
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
