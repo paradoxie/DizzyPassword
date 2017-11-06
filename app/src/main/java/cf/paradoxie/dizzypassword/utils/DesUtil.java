@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -224,14 +222,14 @@ public class DesUtil {
     /**
      * 验证邮箱的合法性
      *
-     * @param email
+     * @param str
      * @return
      */
     public static boolean isEmail(String str) {
         if (str == null || "".equals(str)) {
             return false;
         }
-        return str.matches("^[\\w-]+@[\\w-]+(\\.[\\w-]+)+$");
+        return str.matches("^\\s*\\w+(?:\\.{0,1}[\\w-]+)*@[a-zA-Z0-9]+(?:[-.][a-zA-Z0-9]+)*\\.[a-zA-Z]+\\s*$");
     }
 
     /**
@@ -266,14 +264,12 @@ public class DesUtil {
         return sb.toString();
     }
 
-    // 测试用例，不需要传递任何参数，直接执行即可。
-    //    public static void main(String[] args) {
-    //        List<String> list = new ArrayList<>();
-    //        list.add("购物");
-    //        list.add("当当");
-    //        list.add("微博");
-    //        list.add("豆瓣");
-    //        list.add("小米");
-    //        System.out.println(listToString(list," "));
-    //    }
+//     测试用例，不需要传递任何参数，直接执行即可。
+//        public static void main(String[] args) {
+//            System.out.println(isEmail("sonin.mskmi@gmail.com"));
+//            System.out.println(isEmail("mskmi@gmail.com"));
+//            System.out.println(isEmail("351107836@qq.com"));
+//            System.out.println(isEmail("paradoxie@163.com"));
+//            System.out.println(isEmail("paradoxie@163.com.cn"));
+//        }
 }
