@@ -32,6 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)  //使用该属性,必须指定状态栏颜色
                 .statusBarColor(R.color.color_13)
+                .navigationBarColor(R.color.gray_btn_bg_color)
                 .init();
     }
 

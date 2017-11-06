@@ -1,14 +1,12 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/color_13</item>
         <item name="colorAccent">@color/color_13_1</item>
         <item name="android:navigationBarColor">@color/gray_btn_bg_color</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
     </style>
 

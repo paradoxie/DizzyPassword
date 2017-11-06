@@ -2,6 +2,7 @@ package cf.paradoxie.dizzypassword;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -52,6 +53,13 @@ public class MyApplication extends Application {
                 mToast.setText(message);
             }
         mToast.show();
+    }
+
+    public static void showSnack(View view, int s) {
+        Snackbar snackbar = Snackbar.make(view, s, Snackbar.LENGTH_SHORT);
+        View mView = snackbar.getView();
+        mView.setBackgroundColor(getContext().getResources().getColor(R.color.color_13_1));
+        snackbar.show();
     }
 
     /**

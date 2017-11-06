@@ -1,10 +1,10 @@
 package cf.paradoxie.dizzypassword.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.ClipboardManager;
 import android.view.View;
@@ -67,6 +67,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         RxBean rxEvent, rxEvent_1;
         ImageView iv_copy;
         private static Boolean isSure = false;
+
 
         public ColorItemViewHolder(View view) {
             super(view);
@@ -170,14 +171,41 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTime.setText(time + "  创建");
             mTime_up.setText(time_up + "  更新");
             mAccount.setText(account);
+            mAccount.setOnLongClickListener(new View.OnLongClickListener() {
+                @SuppressLint("ResourceAsColor")
+                @Override
+                public boolean onLongClick(View view) {
+                    ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm.setText(mAccount.getText());
+                    MyApplication.showSnack(view, R.string.copy_account);
+                    return false;
+                }
+            });
             mPassword.setText(password);
+            mPassword.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm.setText(mPassword.getText());
+                    MyApplication.showSnack(view, R.string.copy_password);
+                    return false;
+                }
+            });
             mNote.setText(note);
+            mNote.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm.setText(mNote.getText());
+                    MyApplication.showSnack(view, R.string.copy_note);
+                    return false;
+                }
+            });
 
             final String finalNote = note;
             mChange.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
 
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
@@ -189,7 +217,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     bundle.putString("id", id);
 
                     intent.putExtras(bundle);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
                     MyApplication.getContext().startActivity(intent.setClass(MyApplication.getContext(), AddActivity.class));
                 }
             });
@@ -249,11 +277,9 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     if (mAccount.getText().length() > 0 || mPassword.getText().length() > 0) {
                         ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                         cm.setText(mAccount.getText() + "\n" + mPassword.getText());
-                        Snackbar.make(view, R.string.copy, Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                        MyApplication.showSnack(view, R.string.copy);
                     } else {
-                        Snackbar.make(view, R.string.nothing_copy, Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                        MyApplication.showSnack(view, R.string.nothing_copy);
                     }
                 }
             });
