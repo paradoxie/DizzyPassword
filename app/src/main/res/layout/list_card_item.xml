@@ -36,6 +36,7 @@
             android:layout_marginRight="12dp"
             android:layout_marginTop="15dp"
             android:maxLines="1"
+            android:textColor="@android:color/black"
             android:textSize="16sp"
             tools:text="12"/>
 
@@ -57,6 +58,7 @@
             android:layout_alignRight="@id/text_list_card_num"
             android:layout_below="@id/text_list_card_up"
             android:text="创建"
+            android:textColor="@android:color/black"
             android:textSize="10sp"/>
 
         <LinearLayout
@@ -166,6 +168,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="帐号:"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
                         android:textSize="16sp"/>
 
                     <TextView
@@ -173,6 +177,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:textColor="@android:color/black"
                         android:textSize="16sp"/>
 
                 </LinearLayout>
@@ -189,6 +194,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="密码:"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
                         android:textSize="16sp"/>
 
                     <TextView
@@ -196,6 +203,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:textColor="@android:color/black"
                         android:textSize="16sp"/>
                 </LinearLayout>
 
@@ -211,6 +219,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="备注:"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
                         android:textSize="16sp"/>
 
                     <TextView
@@ -218,6 +228,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:textColor="@android:color/black"
                         android:textSize="16sp"/>
 
                 </LinearLayout>
@@ -249,6 +260,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/search_label"
+                    android:textColor="@android:color/black"
                     android:text="修改"/>
 
                 <Button

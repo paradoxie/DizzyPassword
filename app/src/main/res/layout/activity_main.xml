@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="20dp"
+        android:textColor="@android:color/black"
         android:text="您还没有登录哟~\n点击右下角注册登录吧\n或者点击右上角修改当前ID后再注册登录\n【注意:注册登录后进行修改ID操作，需要重新进行注册】"
         android:visibility="gone"/>
 

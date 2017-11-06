@@ -130,6 +130,7 @@
                 android:layout_marginLeft="60dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
+                android:textColor="@android:color/black"
                 android:text="@string/action_note_4"/>
 
             <TextView
@@ -138,6 +139,7 @@
                 android:layout_marginLeft="60dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
+                android:textColor="@android:color/black"
                 android:text="@string/action_note_6"/>
 
             <TextView

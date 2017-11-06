@@ -189,6 +189,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     bundle.putString("id", id);
 
                     intent.putExtras(bundle);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     MyApplication.getContext().startActivity(intent.setClass(MyApplication.getContext(), AddActivity.class));
                 }
             });
