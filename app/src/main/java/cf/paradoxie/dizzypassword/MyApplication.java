@@ -19,8 +19,10 @@ import static cn.bmob.v3.BmobRealTimeData.TAG;
 public class MyApplication extends Application {
     public static MyApplication mInstance;
     public static Context mContext;
+    public static int first_check=0;
     public static boolean isShow = true;
     private static Toast mToast;
+
 
     @Override
     public void onCreate() {
@@ -44,6 +46,10 @@ public class MyApplication extends Application {
     }
 
 
+    /**
+     * 显示Toast
+     * @param message
+     */
     public static void showToast(CharSequence message) {
 
         if (isShow && message != null && !MyApplication.isStrNull(message + ""))
@@ -55,6 +61,11 @@ public class MyApplication extends Application {
         mToast.show();
     }
 
+    /**
+     * 显示Snack
+     * @param view
+     * @param s
+     */
     public static void showSnack(View view, int s) {
         Snackbar snackbar = Snackbar.make(view, s, Snackbar.LENGTH_SHORT);
         View mView = snackbar.getView();

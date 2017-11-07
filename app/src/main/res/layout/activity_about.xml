@@ -14,7 +14,7 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -26,18 +26,25 @@
             android:layout_below="@+id/logo"
             android:layout_centerHorizontal="true"
             android:textColor="@android:color/black"
-            android:textSize="22sp"
-            android:layout_marginTop="5dp"
+            android:textSize="20sp"
             android:text="@string/app_name"/>
         <TextView
             android:id="@+id/version_info"
-            android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/name"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="@android:color/black"
             android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/version_info"
+            android:text="图标由小伙伴@W王小丑L(酷安id)  友情提供😉"
+            android:textColor="@android:color/black"/>
 
         <TextView
             android:id="@+id/note"
@@ -54,7 +61,7 @@
             android:gravity="center"
             android:textStyle="bold"
             android:layout_above="@id/note"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:textColor="@android:color/black"
             android:text="Copyright © 2017 Paradoxie"/>
 
@@ -64,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_marginBottom="10dp"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="@android:color/black"
             android:text="我的github主页:\n https://github.com/paradoxie"
             android:layout_height="wrap_content"/>
@@ -73,7 +80,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/version_info"
+            android:layout_below="@+id/icon"
             android:layout_above="@+id/address"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -85,6 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@android:color/black"
+                android:textSize="12sp"
                 android:text="@string/app_info"/>
 
 

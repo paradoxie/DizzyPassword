@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.adapter.TestStackAdapter;
@@ -30,6 +31,7 @@ import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.SortByTime;
+import cf.paradoxie.dizzypassword.view.DialogView;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -69,7 +71,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //检测menu操作，第二次进入app时是否显示menu
         if (!(Boolean) SPUtils.get("optionMenuOn", true)) {
             optionMenuOn = false;
@@ -83,19 +84,56 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("当前帐号信息")
-                            .setContentText(
-                                    "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + (String.valueOf(SPUtils.get("password", "")))+
-                            "\n\n经常来瞅瞅,憋忘了😂")
-                            .setConfirmText("get!")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    sDialog.cancel();
+                    if (MyApplication.first_check == 0) {
+                        DialogView dialogView = new DialogView(AppManager.getAppManager().currentActivity());
+                        dialogView.setAccount(SPUtils.get("name", "") + "");
+                        if (!AppManager.getAppManager().currentActivity().isFinishing()) {
+                            dialogView.show();
+                        }
+                        dialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+                            @Override
+                            public void posClickListener(String value) {
+                                //校验密码
+                                if (value.equals(SPUtils.get("password", "") + "")) {
+                                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
+                                            .setTitleText("当前帐号信息")
+                                            .setContentText(
+                                                    "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + (String.valueOf(SPUtils.get("password", ""))) +
+                                                            "\n\n经常来瞅瞅,憋忘了😂")
+                                            .setConfirmText("get!")
+                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sDialog) {
+                                                    sDialog.cancel();
+                                                }
+                                            })
+                                            .show();
+                                    MyApplication.first_check++;
+                                } else {
+                                    MyApplication.showToast("密码错了哦~");
                                 }
-                            })
-                            .show();
+                            }
+
+                            @Override
+                            public void negCliclListener(String value) {
+                                //取消查看
+                            }
+                        });
+                    } else {
+                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("当前帐号信息")
+                                .setContentText(
+                                        "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + (String.valueOf(SPUtils.get("password", ""))) +
+                                                "\n\n经常来瞅瞅,憋忘了😂")
+                                .setConfirmText("get!")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.cancel();
+                                    }
+                                })
+                                .show();
+                    }
                 }
             });
         }
@@ -117,6 +155,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     //跳转到关于页面
                     Intent intent = new Intent(MainActivity.this, AboutActivity.class);
                     startActivity(intent);
+                    finish();
                 }
                 return false;
             }
@@ -130,8 +169,36 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             public void onClick(View view) {
 
                 if (MyApplication.isSign()) {
-                    Intent intent = new Intent(MainActivity.this, AddActivity.class);
-                    startActivity(intent);
+                    if (MyApplication.first_check == 0) {
+                        DialogView dialogView = new DialogView(AppManager.getAppManager().currentActivity());
+                        dialogView.setAccount(SPUtils.get("name", "") + "");
+                        if (!AppManager.getAppManager().currentActivity().isFinishing()) {
+                            dialogView.show();
+                        }
+                        dialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+                            @Override
+                            public void posClickListener(String value) {
+                                //校验密码
+                                if (value.equals(SPUtils.get("password", "") + "")) {
+                                    Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                    MyApplication.first_check++;
+                                } else {
+                                    MyApplication.showToast("密码错了哦~");
+                                }
+                            }
+
+                            @Override
+                            public void negCliclListener(String value) {
+                                //取消查看
+                            }
+                        });
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 } else {
                     //缓存用户对象为空时， 可打开用户注册界面…
                     Intent intent = new Intent(MainActivity.this, SignActivity.class);
@@ -145,7 +212,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView.setItemExpendListener(this);
 
         if (SPUtils.get("key", "") + "" == "") {
-//                        Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
+            //                        Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
             Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
         } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");

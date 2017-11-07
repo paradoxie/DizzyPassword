@@ -3,12 +3,15 @@ package cf.paradoxie.dizzypassword.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.ClipboardManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,9 +20,8 @@ import com.loopeer.cardstack.CardStackView;
 import com.loopeer.cardstack.StackAdapter;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
+import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.AddActivity;
@@ -28,8 +30,10 @@ import cf.paradoxie.dizzypassword.db.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cf.paradoxie.dizzypassword.view.DialogView;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class TestStackAdapter extends StackAdapter<Integer> {
     private static List<AccountBean> mBeanList;
@@ -62,12 +66,13 @@ public class TestStackAdapter extends StackAdapter<Integer> {
     static class ColorItemViewHolder extends CardStackView.ViewHolder {
         View mLayout;
         View mContainerContent;
-        TextView mTextTitle, mNum, mTime, mTime_up, mTag1, mTag2, mTag3, mTag4, mTag5, mAccount, mPassword, mNote;
+        TextView mTextTitle, mNum, mTime, mTime_up, mTag1, mTag2, mTag3, mTag4, mTag5, mAccount, mPassword, mPwdvisible, mNote;
         Button mChange, mDelete;
         RxBean rxEvent, rxEvent_1;
         ImageView iv_copy;
-        private static Boolean isSure = false;
-
+        private SweetAlertDialog pDialog = null;
+        private static Boolean isSure = false;//删除确认
+        private static Boolean isShow = false;//密码默认false不显示
 
         public ColorItemViewHolder(View view) {
             super(view);
@@ -79,6 +84,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTime_up = (TextView) view.findViewById(R.id.text_list_card_up);
             mAccount = (TextView) view.findViewById(R.id.tv_account);
             mPassword = (TextView) view.findViewById(R.id.tv_password);
+            mPwdvisible = (TextView) view.findViewById(R.id.tv_password_visible);
             mNote = (TextView) view.findViewById(R.id.tv_note);
             mChange = (Button) view.findViewById(R.id.bt_change);
             mDelete = (Button) view.findViewById(R.id.bt_delete);
@@ -164,13 +170,60 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             }
             final List<String> tag = mBeanList.get(position).getTag();
 
-
             mLayout.getBackground().setColorFilter(ContextCompat.getColor(getContext(), data), PorterDuff.Mode.SRC_IN);
             mTextTitle.setText(name);
             mNum.setText(String.valueOf(position + 1) + "-" + mBeanList.size());
             mTime.setText(time + "  创建");
             mTime_up.setText(time_up + "  更新");
             mAccount.setText(account);
+            //            mPassword.setText(password);
+            mPassword.setText("**********");
+            mNote.setText(note);
+            mPwdvisible.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (isShow == false) {
+                        if (MyApplication.first_check == 0) {
+                            DialogView dialogView = new DialogView(AppManager.getAppManager().currentActivity());//这操作可以
+                            dialogView.setAccount(SPUtils.get("name", "") + "");
+                            if (!AppManager.getAppManager().currentActivity().isFinishing()) {
+                                dialogView.show();
+                            }
+                            dialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+                                @Override
+                                public void posClickListener(String value) {
+                                    hideInputWindow();
+                                    //校验密码
+                                    if (value.equals(SPUtils.get("password", "") + "")) {
+                                        mPassword.setText(password);
+                                        setDrawableLeft(R.drawable.password_open);
+                                        isShow = true;
+                                        MyApplication.first_check++;
+                                    } else {
+                                        MyApplication.showToast("密码错了哦~");
+                                    }
+                                }
+
+                                @Override
+                                public void negCliclListener(String value) {
+                                    //取消查看
+                                    hideInputWindow();
+                                }
+                            });
+
+                        } else {
+                            mPassword.setText(password);
+                            setDrawableLeft(R.drawable.password_open);
+                            isShow = true;
+                        }
+                    } else {
+                        setDrawableLeft(R.drawable.password);
+                        mPassword.setText("**********");
+                        isShow = false;
+                    }
+                }
+            });
+
             mAccount.setOnLongClickListener(new View.OnLongClickListener() {
                 @SuppressLint("ResourceAsColor")
                 @Override
@@ -181,7 +234,6 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     return false;
                 }
             });
-            mPassword.setText(password);
             mPassword.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -191,7 +243,6 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     return false;
                 }
             });
-            mNote.setText(note);
             mNote.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -207,70 +258,67 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 @Override
                 public void onClick(View view) {
 
-                    Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("name", name);
-                    bundle.putString("account", account);
-                    bundle.putString("password", password);
-                    bundle.putString("finalNote", finalNote);
-                    bundle.putString("tag", DesUtil.listToString(tag, " "));
-                    bundle.putString("id", id);
+                    if (MyApplication.first_check == 0) {
+                        DialogView dialogView = new DialogView(AppManager.getAppManager().currentActivity());
+                        dialogView.setAccount(SPUtils.get("name", "") + "");
+                        if (!AppManager.getAppManager().currentActivity().isFinishing()) {
+                            dialogView.show();
+                        }
+                        dialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+                            @Override
+                            public void posClickListener(String value) {
+                                //校验密码
+                                if (value.equals(SPUtils.get("password", "") + "")) {
+                                   changeDate(name,account,password,finalNote,tag,id);
+                                    MyApplication.first_check++;
+                                } else {
+                                    MyApplication.showToast("密码错了哦~");
+                                }
+                            }
 
-                    intent.putExtras(bundle);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
-                    MyApplication.getContext().startActivity(intent.setClass(MyApplication.getContext(), AddActivity.class));
+                            @Override
+                            public void negCliclListener(String value) {
+                                //取消查看
+                            }
+                        });
+                    } else {
+                        changeDate(name,account,password,finalNote,tag,id);
+                    }
                 }
             });
 
             mDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //确定删除
-                    Timer tExit = null;
-                    if (!isSure) {
-                        isSure = true;
-                        // 准备删除
-                        mDelete.setText("2秒内再次点击删除");
-                        tExit = new Timer();
-                        tExit.schedule(new TimerTask() {
+                    if (MyApplication.first_check == 0) {
+                        DialogView dialogView = new DialogView(AppManager.getAppManager().currentActivity());
+                        dialogView.setAccount(SPUtils.get("name", "") + "");
+                        if (!AppManager.getAppManager().currentActivity().isFinishing()) {
+                            dialogView.show();
+                        }
+                        dialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
                             @Override
-                            public void run() {
-                                isSure = false;
-                            }
-                        }, 2000);
-                    } else {
-                        //删除当前数据
-                        AccountBean accountBean = new AccountBean();
-                        accountBean.setObjectId(id);
-                        accountBean.delete(new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if (e == null) {
-                                    mTextTitle.setText("已删除");
-                                    mAccount.setText("已删除");
-                                    mPassword.setText("已删除");
-                                    mTag1.setVisibility(View.GONE);
-                                    mTag2.setVisibility(View.GONE);
-                                    mTag3.setVisibility(View.GONE);
-                                    mTag4.setVisibility(View.GONE);
-                                    mTag5.setVisibility(View.GONE);
-                                    mNote.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
-                                    mDelete.setText("删除成功");
-                                    mDelete.setClickable(false);
+                            public void posClickListener(String value) {
+                                //校验密码
+                                if (value.equals(SPUtils.get("password", "") + "")) {
+                                    showDelete(id,account,password);
+                                    MyApplication.first_check++;
                                 } else {
-                                    if (e.getErrorCode() == 101) {
-                                        MyApplication.showToast("已经删掉了哦~");
-                                    } else {
-                                        MyApplication.showToast("删除失败：" + e.getMessage() + "," + e.getErrorCode());
-                                    }
+                                    MyApplication.showToast("密码错了哦~");
                                 }
                             }
+
+                            @Override
+                            public void negCliclListener(String value) {
+                                //取消查看
+                            }
                         });
-
+                    } else {
+                        showDelete(id,account,password);
                     }
-
                 }
             });
+
             iv_copy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -301,19 +349,19 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 mTag1.setText(tag.get(0));
                 mTag2.setText(tag.get(1));
                 mTag3.setText(tag.get(2));
-                mTag1.setVisibility(View.VISIBLE);
-                mTag2.setVisibility(View.VISIBLE);
-                mTag3.setVisibility(View.VISIBLE);
+
+                showTag(true);
+                mTag4.setVisibility(View.GONE);
+                mTag5.setVisibility(View.GONE);
             }
             if (tag.size() == 4) {
                 mTag1.setText(tag.get(0));
                 mTag2.setText(tag.get(1));
                 mTag3.setText(tag.get(2));
                 mTag4.setText(tag.get(3));
-                mTag1.setVisibility(View.VISIBLE);
-                mTag2.setVisibility(View.VISIBLE);
-                mTag3.setVisibility(View.VISIBLE);
-                mTag4.setVisibility(View.VISIBLE);
+
+                showTag(true);
+                mTag5.setVisibility(View.GONE);
             }
             if (tag.size() == 5) {
                 mTag1.setText(tag.get(0));
@@ -321,11 +369,119 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 mTag3.setText(tag.get(2));
                 mTag4.setText(tag.get(3));
                 mTag5.setText(tag.get(4));
+                showTag(true);
+            }
+
+        }
+
+        private void changeDate(String name, String account, String password, String finalNote, List<String> tag,String  id){
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putString("name", name);
+            bundle.putString("account", account);
+            bundle.putString("password", password);
+            bundle.putString("finalNote", finalNote);
+            bundle.putString("tag", DesUtil.listToString(tag, " "));
+            bundle.putString("id", id);
+
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
+            MyApplication.getContext().startActivity(intent.setClass(MyApplication.getContext(), AddActivity.class));
+            AppManager.getAppManager().currentActivity().finish();
+        }
+
+        private void showDelete(final String id, String account, String password) {
+
+            pDialog = new SweetAlertDialog(AppManager.getAppManager().currentActivity(), SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.setTitleText("Loading");
+            pDialog.setCancelable(false);
+            new SweetAlertDialog(AppManager.getAppManager().currentActivity(), SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("删除此条帐号信息")
+                    .setContentText(
+                            "帐号:" + account + "\n密码:" + password +
+                                    "\n\n您确定要删除么😟")
+                    .setConfirmText("确定")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            deleteDate(id);
+                            sDialog.cancel();
+                        }
+                    })
+                    .setCancelText("不删了")
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.cancel();
+                        }
+                    })
+                    .show();
+
+        }
+
+        private void deleteDate(String id) {
+            pDialog.show();
+            //删除当前数据
+            AccountBean accountBean = new AccountBean();
+            accountBean.setObjectId(id);
+            accountBean.delete(new UpdateListener() {
+                @Override
+                public void done(BmobException e) {
+                    if (e == null) {
+                        mTextTitle.setText("已删除");
+                        mAccount.setText("已删除");
+                        mPassword.setText("已删除");
+                        showTag(false);
+                        mTime_up.setVisibility(View.GONE);
+                        mTime.setVisibility(View.GONE);
+                        mNote.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
+                        mDelete.setText("删除成功");
+                        mDelete.setClickable(false);
+                    } else {
+                        if (e.getErrorCode() == 101) {
+                            MyApplication.showToast("已经删掉了哦~");
+                        } else {
+                            MyApplication.showToast("删除失败：" + e.getMessage() + "," + e.getErrorCode());
+                        }
+                    }
+                    pDialog.dismiss();
+                }
+            });
+        }
+
+        /**
+         * 隐藏软键盘
+         */
+        private void hideInputWindow() {
+            InputMethodManager imm = (InputMethodManager) MyApplication.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(AppManager.getAppManager().currentActivity().getWindow().getDecorView().getWindowToken(), 0);
+        }
+
+        /**
+         * 设置密码左边的图片显示
+         *
+         * @param id
+         */
+        private void setDrawableLeft(int id) {
+            Drawable drawableLeft = MyApplication.getContext().getResources().getDrawable(id);
+            drawableLeft.setBounds(0, 0, drawableLeft.getMinimumWidth(), drawableLeft.getMinimumHeight());
+            mPwdvisible.setCompoundDrawables(drawableLeft, null, null, null);
+        }
+
+        private void showTag(Boolean b) {
+            if (b) {
                 mTag1.setVisibility(View.VISIBLE);
                 mTag2.setVisibility(View.VISIBLE);
                 mTag3.setVisibility(View.VISIBLE);
                 mTag4.setVisibility(View.VISIBLE);
                 mTag5.setVisibility(View.VISIBLE);
+            } else {
+                mTag1.setVisibility(View.GONE);
+                mTag2.setVisibility(View.GONE);
+                mTag3.setVisibility(View.GONE);
+                mTag4.setVisibility(View.GONE);
+                mTag5.setVisibility(View.GONE);
             }
         }
     }

@@ -33,6 +33,8 @@ public class AboutActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(AboutActivity.this, MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -96,5 +98,12 @@ public class AboutActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_about, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed(); Intent intent = new Intent(AboutActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

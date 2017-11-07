@@ -226,7 +226,6 @@ public class SafeActivity extends BaseActivity {
         }
         fingerErrorNum = 0;
     }
-
     /**
      * 隐藏软键盘
      */

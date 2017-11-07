@@ -214,6 +214,8 @@ public class DesUtil {
             newList.addAll(newList);
             newList.addAll(newList);
             newList.addAll(newList);
+            newList.addAll(newList);
+            newList.addAll(newList);
         }
         Integer[] a = (Integer[]) newList.toArray(new Integer[newList.size()]);
         return a;
