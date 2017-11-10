@@ -56,7 +56,7 @@
         android:layout_marginRight="20dip"
         android:singleLine="true"
         android:gravity="center"
-        android:inputType="numberPassword"
+        android:inputType="textPassword"
         android:textSize="18dip"/>
 
     <LinearLayout
