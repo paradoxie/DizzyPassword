@@ -12,7 +12,7 @@
           android:title="分享"
           android:orderInCategory="90"
           android:icon="@drawable/share"
-          app:showAsAction="ifRoom" />
+          app:showAsAction="never" />
     <!--<item-->
         <!--android:id="@+id/action_change"-->
         <!--android:orderInCategory="100"-->

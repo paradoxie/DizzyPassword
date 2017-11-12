@@ -23,11 +23,7 @@ import java.util.ArrayList;
 
 import cf.paradoxie.dizzypassword.R;
 
-/**
- * 封装成lib，方便直接调用
- * 仿照支付宝的密码输入控件
- * Created by hua on 2016/7/24.
- */
+
 public class PswInputView extends View {
     private InputMethodManager input;//输入法管理
     private ArrayList<Integer> result;//输入结果保存
@@ -73,8 +69,8 @@ public class PswInputView extends View {
         result=new ArrayList<>();
         if (attrs!=null){
             TypedArray ta=getContext().obtainStyledAttributes(attrs, R.styleable.PswInputView);
-            mBorderColor=ta.getColor(R.styleable.PswInputView_border_color,Color.LTGRAY);
-            mDotColor=ta.getColor(R.styleable.PswInputView_dot_color,Color.GRAY);
+            mBorderColor=ta.getColor(R.styleable.PswInputView_border_color,getResources().getColor(R.color.color_13));
+            mDotColor=ta.getColor(R.styleable.PswInputView_dot_color,getResources().getColor(R.color.color_bg));
             count=ta.getInt(R.styleable.PswInputView_count,6);
             ta.recycle();
         }else {

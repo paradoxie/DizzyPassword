@@ -26,7 +26,7 @@
         android:orientation="horizontal"
         android:padding="8dp">
 
-        <EditText
+        <cf.paradoxie.dizzypassword.view.ClearableEditText
             android:id="@+id/et_key"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

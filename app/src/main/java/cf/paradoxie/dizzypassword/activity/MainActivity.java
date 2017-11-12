@@ -71,6 +71,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         //检测menu操作，第二次进入app时是否显示menu
         if (!(Boolean) SPUtils.get("optionMenuOn", true)) {
             optionMenuOn = false;
@@ -212,8 +214,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView.setItemExpendListener(this);
 
         if (SPUtils.get("key", "") + "" == "") {
-                                    Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
-//            Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
+//                                    Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
+            Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
         } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }

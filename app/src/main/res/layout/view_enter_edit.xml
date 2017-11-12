@@ -48,7 +48,7 @@
         android:textColor="@android:color/black"
         android:textSize="18dip" />
 
-    <EditText
+    <cf.paradoxie.dizzypassword.view.ClearableEditText
         android:id="@+id/et_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,7 +80,8 @@
         <View
             android:layout_width="0.7dip"
             android:layout_height="50dip"
-            android:background="#1bbc9b" />
+            android:background="#1bbc9b"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/btn_pos"

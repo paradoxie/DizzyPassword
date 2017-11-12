@@ -198,6 +198,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                                         mPassword.setText(password);
                                         setDrawableLeft(R.drawable.password_open);
                                         isShow = true;
+                                        iv_copy.setVisibility(View.VISIBLE);
                                         MyApplication.first_check++;
                                     } else {
                                         MyApplication.showToast("密码错了哦~");
@@ -215,11 +216,13 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                             mPassword.setText(password);
                             setDrawableLeft(R.drawable.password_open);
                             isShow = true;
+                            iv_copy.setVisibility(View.VISIBLE);
                         }
                     } else {
                         setDrawableLeft(R.drawable.password);
                         mPassword.setText("**********");
                         isShow = false;
+                        iv_copy.setVisibility(View.GONE);
                     }
                 }
             });
@@ -438,6 +441,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                         mNote.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
                         mDelete.setText("删除成功");
                         mDelete.setClickable(false);
+                        iv_copy.setVisibility(View.GONE);
                     } else {
                         if (e.getErrorCode() == 101) {
                             MyApplication.showToast("已经删掉了哦~");

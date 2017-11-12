@@ -38,7 +38,7 @@
             android:layout_marginRight="12dp"
             android:layout_marginTop="12dp"
             android:maxLines="1"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/darker_gray"
             android:textSize="16sp"
             tools:text="5-12"/>
 
@@ -64,11 +64,13 @@
             android:textSize="10sp"/>
 
         <LinearLayout
+            android:id="@+id/tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_marginTop="80dp"
+            android:layout_marginLeft="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -126,7 +128,26 @@
                 android:textColor="#3f3e3e"
                 android:textSize="16sp"
                 android:visibility="gone"/>
+
         </LinearLayout>
+
+        <View
+            android:id="@+id/tag_line"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_dotted_line"
+            android:layerType="software">
+        </View>
+        <!--<View-->
+            <!--android:layout_above="@+id/tag_line"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="2dp"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--android:background="@drawable/bg_dotted_line"-->
+            <!--android:layerType="software">-->
+        <!--</View>-->
 
     </RelativeLayout>
 
@@ -152,13 +173,14 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="12dp">
+                android:padding="12dp"
+                android:layout_marginLeft="10dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:orientation="horizontal">
@@ -169,7 +191,6 @@
                         android:layout_marginLeft="5dp"
                         android:drawableLeft="@drawable/account"
                         android:drawablePadding="5dp"
-                        android:text="帐号:"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"/>
 
@@ -178,11 +199,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:maxLines="1"
+                        android:layout_marginRight="32dp"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"/>
 
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -197,7 +219,6 @@
                         android:layout_marginLeft="5dp"
                         android:drawableLeft="@drawable/password"
                         android:drawablePadding="5dp"
-                        android:text="密码:"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"/>
 
@@ -206,6 +227,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:maxLines="1"
+                        android:layout_marginRight="32dp"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"/>
                 </LinearLayout>
@@ -222,15 +245,15 @@
                         android:layout_marginLeft="5dp"
                         android:drawableLeft="@drawable/note"
                         android:drawablePadding="5dp"
-                        android:text="备注:"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/tv_note"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:layout_marginRight="32dp"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"/>
 
@@ -263,8 +286,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/search_label"
-                    android:text="修改"
-                    android:textColor="@android:color/black"/>
+                    android:text="编辑"
+                    android:textColor="@color/color_bg"/>
 
                 <Button
                     android:id="@+id/bt_delete"
@@ -286,7 +309,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="12dp"
             android:layout_marginTop="24dp"
-            android:background="@drawable/copy"/>
+            android:background="@drawable/copy"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

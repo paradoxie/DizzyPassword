@@ -24,7 +24,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
 
-            <EditText
+            <cf.paradoxie.dizzypassword.view.ClearableEditText
                 android:id="@+id/et_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp">
 
-            <EditText
+            <cf.paradoxie.dizzypassword.view.ClearableEditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
