@@ -42,9 +42,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dip"
-        android:text="请输入当前账户的密码"
+        android:text="解锁账户数据操作权限"
         android:gravity="center"
-        android:textStyle="bold"
         android:textColor="@android:color/black"
         android:textSize="18dip" />
 
@@ -56,6 +55,7 @@
         android:layout_marginRight="20dip"
         android:singleLine="true"
         android:gravity="center"
+        android:hint="请输入账户密码"
         android:inputType="textPassword"
         android:textSize="18dip"/>
 

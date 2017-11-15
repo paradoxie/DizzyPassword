@@ -25,6 +25,7 @@ import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.AddActivity;
+import cf.paradoxie.dizzypassword.activity.MainActivity;
 import cf.paradoxie.dizzypassword.db.AccountBean;
 import cf.paradoxie.dizzypassword.db.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
@@ -200,6 +201,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                                         isShow = true;
                                         iv_copy.setVisibility(View.VISIBLE);
                                         MyApplication.first_check++;
+                                        MainActivity.toolbar.setNavigationIcon(R.drawable.yep);
                                     } else {
                                         MyApplication.showToast("密码错了哦~");
                                     }
@@ -274,6 +276,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                                 if (value.equals(SPUtils.get("password", "") + "")) {
                                    changeDate(name,account,password,finalNote,tag,id);
                                     MyApplication.first_check++;
+                                    MainActivity.toolbar.setNavigationIcon(R.drawable.yep);
                                 } else {
                                     MyApplication.showToast("密码错了哦~");
                                 }
@@ -306,6 +309,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                                 if (value.equals(SPUtils.get("password", "") + "")) {
                                     showDelete(id,account,password);
                                     MyApplication.first_check++;
+                                    MainActivity.toolbar.setNavigationIcon(R.drawable.yep);
                                 } else {
                                     MyApplication.showToast("密码错了哦~");
                                 }

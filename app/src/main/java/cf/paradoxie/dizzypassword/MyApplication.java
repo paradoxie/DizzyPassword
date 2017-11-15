@@ -11,12 +11,13 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import cf.paradoxie.dizzypassword.utils.CrashLogActivity;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cn.bmob.v3.BmobUser;
 
 import static cn.bmob.v3.BmobRealTimeData.TAG;
 
-public class MyApplication extends Application {
+public class MyApplication extends Application implements Thread.UncaughtExceptionHandler{
     public static MyApplication mInstance;
     public static Context mContext;
     public static int first_check=0;
@@ -30,6 +31,12 @@ public class MyApplication extends Application {
         super.onCreate();
         mInstance = this;
         mContext = getApplicationContext();
+        Thread.setDefaultUncaughtExceptionHandler(this);//开启抓取错误信息
+    }
+    @Override
+    public void uncaughtException(Thread thread, Throwable e) {
+        CrashLogActivity.start(this, e);
+        System.exit(1);
     }
 
     //返回

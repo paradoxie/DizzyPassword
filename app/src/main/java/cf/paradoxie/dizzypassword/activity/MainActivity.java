@@ -66,23 +66,27 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private SweetAlertDialog pDialog = null;
     private static Boolean isExit = false;
     private BmobUser user = new BmobUser();
+    public static Toolbar toolbar = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         //检测menu操作，第二次进入app时是否显示menu
         if (!(Boolean) SPUtils.get("optionMenuOn", true)) {
             optionMenuOn = false;
             checkOptionMenu();
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         if (SPUtils.get("name", "") != "") {
-            toolbar.setNavigationIcon(R.drawable.yep);
+            if (MyApplication.first_check == 0) {
+                toolbar.setNavigationIcon(R.drawable.yep_0);
+            } else {
+                toolbar.setNavigationIcon(R.drawable.yep);
+            }
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -97,20 +101,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                             public void posClickListener(String value) {
                                 //校验密码
                                 if (value.equals(SPUtils.get("password", "") + "")) {
-                                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
-                                            .setTitleText("当前帐号信息")
-                                            .setContentText(
-                                                    "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + (String.valueOf(SPUtils.get("password", ""))) +
-                                                            "\n\n经常来瞅瞅,憋忘了😂")
-                                            .setConfirmText("get!")
-                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                                @Override
-                                                public void onClick(SweetAlertDialog sDialog) {
-                                                    sDialog.cancel();
-                                                }
-                                            })
-                                            .show();
                                     MyApplication.first_check++;
+                                    //换图标，解锁
+                                    toolbar.setNavigationIcon(R.drawable.yep);
                                 } else {
                                     MyApplication.showToast("密码错了哦~");
                                 }
@@ -123,14 +116,18 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         });
                     } else {
                         new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("当前帐号信息")
+                                .setTitleText("锁定数据操作")
                                 .setContentText(
                                         "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + (String.valueOf(SPUtils.get("password", ""))) +
-                                                "\n\n经常来瞅瞅,憋忘了😂")
-                                .setConfirmText("get!")
+                                                "\n\n确定要锁定当前操作权限么？")
+                                .setConfirmText("锁定")
+                                .setCancelText("算啦")
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
                                     public void onClick(SweetAlertDialog sDialog) {
+                                        MyApplication.first_check = 0;
+                                        //换图标：加锁
+                                        toolbar.setNavigationIcon(R.drawable.yep_0);
                                         sDialog.cancel();
                                     }
                                 })
@@ -186,6 +183,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                     startActivity(intent);
                                     finish();
                                     MyApplication.first_check++;
+                                    toolbar.setNavigationIcon(R.drawable.yep);
                                 } else {
                                     MyApplication.showToast("密码错了哦~");
                                 }
@@ -214,8 +212,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView.setItemExpendListener(this);
 
         if (SPUtils.get("key", "") + "" == "") {
-            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
-            //            Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
+            //            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
+            Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
         } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
@@ -286,10 +284,11 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                 @Override
                                 public void run() {
                                     //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
+
                                     mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
                                 }
                             }
-                            , 100
+                            , 1000
                     );
 
                 } else {
@@ -358,10 +357,10 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     }
 
     private void findDateByTime(final SortByTime sortByTime) {
-        pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("加载中");
-        if (!MainActivity.this.isFinishing()) {
+        if (!isFinishing()) {
+            pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.setTitleText("加载中");
             pDialog.show();
         }
         BmobQuery<AccountBean> query = new BmobQuery<>();

@@ -42,6 +42,9 @@
         <activity android:name=".activity.AboutActivity"/>
 
         <activity
+            android:name=".utils.CrashLogActivity"/>
+
+        <activity
             android:name=".activity.TeachActivity"
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activity.SafeActivity">
