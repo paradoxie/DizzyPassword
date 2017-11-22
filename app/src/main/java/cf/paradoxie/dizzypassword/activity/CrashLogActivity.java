@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.utils;
+package cf.paradoxie.dizzypassword.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +19,6 @@ import java.util.Locale;
 
 import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.activity.BaseActivity;
 
 public class CrashLogActivity extends BaseActivity {
     private static final String EXTRA_E = "e";
@@ -43,7 +42,7 @@ public class CrashLogActivity extends BaseActivity {
         setContentView(R.layout.activity_crash_log);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("崩溃日志");
-        toolbar.setSubtitle("请截图私信开发者，蟹蟹😜");
+        toolbar.setSubtitle("请截图私信开发者，蟹蟹( •̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩́ ˑ̫ •̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̀)");
         setSupportActionBar(toolbar);
         tvInfo = (TextView) findViewById(R.id.tv_info);
 

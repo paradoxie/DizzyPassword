@@ -12,8 +12,8 @@ import android.text.ClipboardManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loopeer.cardstack.CardStackView;
@@ -68,12 +68,18 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         View mLayout;
         View mContainerContent;
         TextView mTextTitle, mNum, mTime, mTime_up, mTag1, mTag2, mTag3, mTag4, mTag5, mAccount, mPassword, mPwdvisible, mNote;
-        Button mChange, mDelete;
+        ImageView mChange, mDelete;
         RxBean rxEvent, rxEvent_1;
         ImageView iv_copy;
         private SweetAlertDialog pDialog = null;
-        private static Boolean isSure = false;//删除确认
         private static Boolean isShow = false;//密码默认false不显示
+
+        private boolean isOpen = false;
+        private int mShortHeight;//限定行数高度
+        private int mLongHeight;//展开全文高度
+        private LinearLayout.LayoutParams mLayoutParams;
+        private int mMaxlines = 2;//设定显示的最大行数
+        private int maxLine;//真正的最大行数
 
         public ColorItemViewHolder(View view) {
             super(view);
@@ -87,8 +93,8 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mPassword = (TextView) view.findViewById(R.id.tv_password);
             mPwdvisible = (TextView) view.findViewById(R.id.tv_password_visible);
             mNote = (TextView) view.findViewById(R.id.tv_note);
-            mChange = (Button) view.findViewById(R.id.bt_change);
-            mDelete = (Button) view.findViewById(R.id.bt_delete);
+            mChange = (ImageView) view.findViewById(R.id.iv_change);
+            mDelete = (ImageView) view.findViewById(R.id.iv_delete);
             iv_copy = (ImageView) view.findViewById(R.id.iv_copy);
 
 
@@ -248,6 +254,8 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     return false;
                 }
             });
+
+
             mNote.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -274,7 +282,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                             public void posClickListener(String value) {
                                 //校验密码
                                 if (value.equals(SPUtils.get("password", "") + "")) {
-                                   changeDate(name,account,password,finalNote,tag,id);
+                                    changeDate(name, account, password, finalNote, tag, id);
                                     MyApplication.first_check++;
                                     MainActivity.toolbar.setNavigationIcon(R.drawable.yep);
                                 } else {
@@ -288,7 +296,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                             }
                         });
                     } else {
-                        changeDate(name,account,password,finalNote,tag,id);
+                        changeDate(name, account, password, finalNote, tag, id);
                     }
                 }
             });
@@ -307,7 +315,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                             public void posClickListener(String value) {
                                 //校验密码
                                 if (value.equals(SPUtils.get("password", "") + "")) {
-                                    showDelete(id,account,password);
+                                    showDelete(id, account, password);
                                     MyApplication.first_check++;
                                     MainActivity.toolbar.setNavigationIcon(R.drawable.yep);
                                 } else {
@@ -321,7 +329,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                             }
                         });
                     } else {
-                        showDelete(id,account,password);
+                        showDelete(id, account, password);
                     }
                 }
             });
@@ -381,7 +389,9 @@ public class TestStackAdapter extends StackAdapter<Integer> {
 
         }
 
-        private void changeDate(String name, String account, String password, String finalNote, List<String> tag,String  id){
+
+
+        private void changeDate(String name, String account, String password, String finalNote, List<String> tag, String id) {
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
             bundle.putString("name", name);
@@ -436,15 +446,17 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 @Override
                 public void done(BmobException e) {
                     if (e == null) {
-                        mTextTitle.setText("已删除");
+                        mTextTitle.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
                         mAccount.setText("已删除");
                         mPassword.setText("已删除");
                         showTag(false);
                         mTime_up.setVisibility(View.GONE);
                         mTime.setVisibility(View.GONE);
-                        mNote.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
-                        mDelete.setText("删除成功");
+                        mNote.setText("已删除");
                         mDelete.setClickable(false);
+                        mChange.setClickable(false);
+                        mPwdvisible.setClickable(false);
+                        setDrawableLeft(R.drawable.password);
                         iv_copy.setVisibility(View.GONE);
                     } else {
                         if (e.getErrorCode() == 101) {

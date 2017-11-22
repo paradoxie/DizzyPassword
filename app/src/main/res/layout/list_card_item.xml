@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linear_list_card_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:stackHeaderHeight="160dp">
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/frame_list_card_item"
@@ -15,7 +14,7 @@
         android:layout_height="160dp"
         android:background="@drawable/shape_rectangle_with_radius">
 
-        <TextView
+        <cf.paradoxie.dizzypassword.view.SingleLineTextView
             android:id="@+id/text_list_card_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,6 +22,7 @@
             android:layout_marginLeft="18dp"
             android:layout_marginRight="35dp"
             android:maxLines="1"
+            android:gravity="center"
             android:textColor="@android:color/white"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -36,10 +36,10 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="12dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:maxLines="1"
             android:textColor="@android:color/darker_gray"
-            android:textSize="16sp"
+            android:textSize="14sp"
             tools:text="5-12"/>
 
         <TextView
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/text_list_card_num"
             android:layout_below="@id/text_list_card_num"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="20dp"
             tools:text="更新"
             android:textColor="@color/bg_color"
             android:textSize="10sp"/>
@@ -69,11 +69,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/text_list_card_time"
             android:layout_marginLeft="10dp"
             android:orientation="horizontal">
 
-            <TextView
+            <cf.paradoxie.dizzypassword.view.SingleLineTextView
                 android:id="@+id/text_list_card_tag1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,7 +83,7 @@
                 android:textSize="16sp"
                 android:visibility="gone"/>
 
-            <TextView
+            <cf.paradoxie.dizzypassword.view.SingleLineTextView
                 android:id="@+id/text_list_card_tag2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -93,7 +94,7 @@
                 android:textSize="16sp"
                 android:visibility="gone"/>
 
-            <TextView
+            <cf.paradoxie.dizzypassword.view.SingleLineTextView
                 android:id="@+id/text_list_card_tag3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -105,7 +106,7 @@
                 android:textSize="16sp"
                 android:visibility="gone"/>
 
-            <TextView
+            <cf.paradoxie.dizzypassword.view.SingleLineTextView
                 android:id="@+id/text_list_card_tag4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -117,7 +118,7 @@
                 android:textSize="16sp"
                 android:visibility="gone"/>
 
-            <TextView
+            <cf.paradoxie.dizzypassword.view.SingleLineTextView
                 android:id="@+id/text_list_card_tag5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -140,14 +141,6 @@
             android:background="@drawable/bg_dotted_line"
             android:layerType="software">
         </View>
-        <!--<View-->
-            <!--android:layout_above="@+id/tag_line"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="2dp"-->
-            <!--android:layout_marginBottom="10dp"-->
-            <!--android:background="@drawable/bg_dotted_line"-->
-            <!--android:layerType="software">-->
-        <!--</View>-->
 
     </RelativeLayout>
 
@@ -157,38 +150,79 @@
         android:layout_height="1dp"
         android:background="@color/bg_color"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:animateLayoutChanges="true"
-        android:orientation="horizontal">
-
         <LinearLayout
             android:id="@+id/container_list_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:animateLayoutChanges="true"
             android:background="@drawable/shape_rectangle_with_radius"
             android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:animateLayoutChanges="true"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:id="@+id/iv_copy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="18dp"
+                    android:background="@drawable/copy_selector"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/iv_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/edit_selector"/>
+
+                <ImageView
+                    android:id="@+id/iv_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/delete_selector"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/bg_dotted_line"
+                android:layerType="software">
+            </View>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="12dp"
+                android:padding="8dp"
                 android:layout_marginLeft="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="4dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:drawableLeft="@drawable/account"
                         android:drawablePadding="5dp"
                         android:textColor="@android:color/black"
@@ -210,13 +244,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:animateLayoutChanges="true"
                     android:paddingTop="12dp">
 
                     <TextView
                         android:id="@+id/tv_password_visible"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:drawableLeft="@drawable/password"
                         android:drawablePadding="5dp"
                         android:textColor="@android:color/black"
@@ -242,76 +276,38 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:drawableLeft="@drawable/note"
                         android:drawablePadding="5dp"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"/>
 
-                    <TextView
-                        android:id="@+id/tv_note"
+                    <ScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="32dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"/>
+                        android:fadeScrollbars="false"
+                        android:scrollbarThumbVertical="@drawable/down">
 
+                        <TextView
+                            android:id="@+id/tv_note"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="20dp"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp"/>
+                    </ScrollView>
                 </LinearLayout>
 
-
             </LinearLayout>
-
             <View
+                android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/bg_dotted_line"
                 android:layerType="software">
             </View>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="12dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-
-                <Button
-                    android:id="@+id/bt_change"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/search_label"
-                    android:text="编辑"
-                    android:textColor="@color/color_bg"/>
-
-                <Button
-                    android:id="@+id/bt_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:background="@drawable/search_label_delete"
-                    android:text="删除此条帐号信息"
-                    android:textColor="@color/bg_color"/>
-
-            </LinearLayout>
-
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/iv_copy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/copy"
-            android:visibility="gone"/>
-
-    </RelativeLayout>
 
 </LinearLayout>

@@ -357,12 +357,17 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     }
 
     private void findDateByTime(final SortByTime sortByTime) {
-        if (!isFinishing()) {
-            pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-            pDialog.setTitleText("加载中");
-            pDialog.show();
+        try {//233，这个地方单独判断isFinish还是会崩，得再捕捉一次
+            if (!MainActivity.this.isFinishing()) {
+                pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                pDialog.setTitleText("加载中");
+                pDialog.show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         BmobQuery<AccountBean> query = new BmobQuery<>();
         if (MyApplication.getUser() != null) {
             String id = MyApplication.getUser().getObjectId();

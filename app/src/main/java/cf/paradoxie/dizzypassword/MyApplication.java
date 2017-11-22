@@ -11,7 +11,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import cf.paradoxie.dizzypassword.utils.CrashLogActivity;
+import cf.paradoxie.dizzypassword.activity.CrashLogActivity;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cn.bmob.v3.BmobUser;
 
