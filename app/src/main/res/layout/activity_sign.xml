@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color"
-    android:orientation="vertical"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="cf.paradoxie.dizzypassword.activity.SignActivity">
 
     <include layout="@layout/toolbar_layout"/>
@@ -64,9 +64,9 @@
             style="@style/dialog_blue_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/search_label_sure"
             android:text="登录"
-            android:textSize="14sp"
-            android:background="@drawable/search_label_sure"/>
+            android:textSize="14sp"/>
 
         <Button
             android:id="@+id/bt_sign_on"
@@ -74,8 +74,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:text="首次使用，注册"
-            android:background="@drawable/search_label_sure"/>
+            android:background="@drawable/search_label_sure"
+            android:text="首次使用，注册"/>
 
     </LinearLayout>
 
@@ -131,8 +131,8 @@
                 android:layout_marginLeft="60dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:textColor="@android:color/black"
-                android:text="@string/action_note_4"/>
+                android:text="@string/action_note_4"
+                android:textColor="@android:color/black"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -140,8 +140,8 @@
                 android:layout_marginLeft="60dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:textColor="@android:color/black"
-                android:text="@string/action_note_6"/>
+                android:text="@string/action_note_6"
+                android:textColor="@android:color/black"/>
 
             <TextView
                 android:layout_width="wrap_content"

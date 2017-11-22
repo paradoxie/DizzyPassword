@@ -37,11 +37,11 @@ public class AddActivity extends BaseActivity {
     private LayoutInflater mInflater;
     private SweetAlertDialog pDialog = null;
     private String[] mVals = new String[]{//常用tag
-             "重要", "个人", "公司", "工作", "娱乐","家庭", "APP"
+            "重要", "个人", "公司", "工作", "娱乐", "家庭", "APP"
             , "邮箱", "论坛", "游戏", "社交", "视频", "新闻", "阅读", "技术", "看图", "社区"
             , "购物", "玩机", "学术", "福利", "音乐", "学习", "开车", "公众号", "WIFI"
             , "酷安", "腾讯", "网易", "知乎", "豆瓣", "微博", "京东", "阿里", "百度", "小米"
-            , "苹果", "亚马逊","微软", "Google", "404"};
+            , "苹果", "亚马逊", "微软", "Google", "404"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

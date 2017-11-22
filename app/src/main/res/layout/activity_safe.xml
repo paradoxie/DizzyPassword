@@ -89,8 +89,8 @@
             android:layout_centerInParent="true"
             android:layout_margin="20dp"
             android:gravity="center"
-            android:textColor="@android:color/black"
-            android:text="验证提示信息"/>
+            android:text="验证提示信息"
+            android:textColor="@android:color/black"/>
 
     </RelativeLayout>
 

@@ -37,7 +37,7 @@ public class AboutActivity extends BaseActivity {
             }
         });
 
-        if (SPUtils.get("first_in","")+""==""){
+        if (SPUtils.get("first_in", "") + "" == "") {
             showNote();
         }
         note = (TextView) findViewById(R.id.note);
@@ -73,7 +73,7 @@ public class AboutActivity extends BaseActivity {
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
-                        SPUtils.put("first_in","第一次进入app");
+                        SPUtils.put("first_in", "第一次进入app");
                         sDialog.cancel();
                     }
                 })

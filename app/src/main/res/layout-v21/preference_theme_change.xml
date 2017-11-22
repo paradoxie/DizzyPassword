@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="48dp">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:gravity="center"
-        android:text="主题"
         android:layout_marginLeft="16dp"
-        android:textSize="16sp"
-        android:textColor="#000"/>
+        android:gravity="center"
+        android:text="更换主题"
+        android:textColor="#000"
+        android:textSize="16sp"/>
 
     <ImageView
         android:id="@+id/img_theme"
         android:layout_width="28dp"
         android:layout_height="28dp"
-        android:background="@drawable/img_current_theme"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="16dp"
         android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/img_current_theme"
         />
 
 </RelativeLayout>

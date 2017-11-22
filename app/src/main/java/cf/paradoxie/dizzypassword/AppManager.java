@@ -13,6 +13,7 @@ public class AppManager {
     private AppManager() {
 
     }
+
     /**
      * 单例模式
      */
@@ -22,6 +23,7 @@ public class AppManager {
         }
         return instance;
     }
+
     /**
      * 添加Activity到堆栈
      */

@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ThemeUtils.initStatusBarColor(MainActivity.this,ThemeUtils.getPrimaryDarkColor(MainActivity.this));
+        ThemeUtils.initStatusBarColor(MainActivity.this, ThemeUtils.getPrimaryDarkColor(MainActivity.this));
 
         //检测menu操作，第二次进入app时是否显示menu
         if (!(Boolean) SPUtils.get("optionMenuOn", true)) {
@@ -143,16 +143,20 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.action_edit) {
-                    if (mStackView.isExpending()) {
-                        mStackView.clearSelectPosition();
-                        mStackView.removeAllViews();
+                    if (MyApplication.isSign()) {
+                        if (mStackView.isExpending()) {
+                            mStackView.clearSelectPosition();
+                            mStackView.removeAllViews();
+                        }
+                        findDate();
+                    } else {
+                        MyApplication.showToast("您还木有登录哦~");
+
                     }
-                    findDate();
                 }
                 if (id == R.id.action_set) {
                     Intent intent = new Intent(MainActivity.this, SettingActivity.class);
                     startActivity(intent);
-                    finish();
                 }
                 return false;
             }

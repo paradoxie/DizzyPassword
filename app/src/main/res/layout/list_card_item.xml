@@ -18,11 +18,11 @@
             android:id="@+id/text_list_card_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="35dp"
-            android:maxLines="1"
+            android:layout_marginTop="18dp"
             android:gravity="center"
+            android:maxLines="1"
             android:textColor="@android:color/white"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -49,9 +49,9 @@
             android:layout_alignRight="@id/text_list_card_num"
             android:layout_below="@id/text_list_card_num"
             android:layout_marginTop="20dp"
-            tools:text="更新"
             android:textColor="@color/bg_color"
-            android:textSize="10sp"/>
+            android:textSize="10sp"
+            tools:text="更新"/>
 
         <TextView
             android:id="@+id/text_list_card_time"
@@ -59,19 +59,19 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/text_list_card_num"
             android:layout_below="@id/text_list_card_up"
-            tools:text="创建"
             android:textColor="@android:color/black"
-            android:textSize="10sp"/>
+            android:textSize="10sp"
+            tools:text="创建"/>
 
         <LinearLayout
             android:id="@+id/tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/text_list_card_time"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <cf.paradoxie.dizzypassword.view.SingleLineTextView
@@ -134,9 +134,9 @@
 
         <View
             android:id="@+id/tag_line"
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="2dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
             android:background="@drawable/bg_dotted_line"
             android:layerType="software">
@@ -150,164 +150,165 @@
         android:layout_height="1dp"
         android:background="@color/bg_color"/>
 
+    <LinearLayout
+        android:id="@+id/container_list_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:animateLayoutChanges="true"
+        android:background="@drawable/shape_rectangle_with_radius"
+        android:orientation="vertical">
+
+
         <LinearLayout
-            android:id="@+id/container_list_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
             android:animateLayoutChanges="true"
-            android:background="@drawable/shape_rectangle_with_radius"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="8dp">
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/iv_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="18dp"
+                android:background="@drawable/copy_selector"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/iv_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/edit_selector"/>
+
+            <ImageView
+                android:id="@+id/iv_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/delete_selector"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/bg_dotted_line"
+            android:layerType="software">
+        </View>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical"
+            android:padding="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:animateLayoutChanges="true"
-                android:padding="8dp">
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-
-                <ImageView
-                    android:id="@+id/iv_copy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="18dp"
-                    android:background="@drawable/copy_selector"
-                    android:visibility="gone"/>
+                    android:drawableLeft="@drawable/account"
+                    android:drawablePadding="5dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"/>
 
-                <ImageView
-                    android:id="@+id/iv_change"
+                <TextView
+                    android:id="@+id/tv_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
-                    android:background="@drawable/edit_selector"/>
-
-                <ImageView
-                    android:id="@+id/iv_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="16dp"
-                    android:background="@drawable/delete_selector"/>
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="32dp"
+                    android:maxLines="1"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
 
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@drawable/bg_dotted_line"
-                android:layerType="software">
-            </View>
-
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="8dp"
-                android:layout_marginLeft="10dp">
+                android:animateLayoutChanges="true"
+                android:orientation="horizontal"
+                android:paddingTop="12dp">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tv_password_visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:orientation="horizontal">
+                    android:drawableLeft="@drawable/password"
+                    android:drawablePadding="5dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/account"
-                        android:drawablePadding="5dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp"/>
-
-                    <TextView
-                        android:id="@+id/tv_account"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:maxLines="1"
-                        android:layout_marginRight="32dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"/>
-
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tv_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:animateLayoutChanges="true"
-                    android:paddingTop="12dp">
-
-                    <TextView
-                        android:id="@+id/tv_password_visible"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/password"
-                        android:drawablePadding="5dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp"/>
-
-                    <TextView
-                        android:id="@+id/tv_password"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:maxLines="1"
-                        android:layout_marginRight="32dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="12dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/note"
-                        android:drawablePadding="5dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp"/>
-
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fadeScrollbars="false"
-                        android:scrollbarThumbVertical="@drawable/down">
-
-                        <TextView
-                            android:id="@+id/tv_note"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="20dp"
-                            android:textColor="@android:color/black"
-                            android:textSize="16sp"/>
-                    </ScrollView>
-                </LinearLayout>
-
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="32dp"
+                    android:maxLines="1"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
             </LinearLayout>
-            <View
-                android:layout_alignParentBottom="true"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/bg_dotted_line"
-                android:layerType="software">
-            </View>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/note"
+                    android:drawablePadding="5dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"/>
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fadeScrollbars="false"
+                    android:scrollbarThumbVertical="@drawable/down">
+
+                    <TextView
+                        android:id="@+id/tv_note"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="20dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"/>
+                </ScrollView>
+            </LinearLayout>
+
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_dotted_line"
+            android:layerType="software">
+        </View>
+    </LinearLayout>
 
 </LinearLayout>

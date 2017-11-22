@@ -267,12 +267,12 @@ public class DesUtil {
         return sb.toString();
     }
 
-//     测试用例，不需要传递任何参数，直接执行即可。
-//        public static void main(String[] args) {
-//            System.out.println(isEmail("sonin.mskmi@gmail.com"));
-//            System.out.println(isEmail("mskmi@gmail.com"));
-//            System.out.println(isEmail("351107836@qq.com"));
-//            System.out.println(isEmail("paradoxie@163.com"));
-//            System.out.println(isEmail("paradoxie@163.com.cn"));
-//        }
+    //     测试用例，不需要传递任何参数，直接执行即可。
+    //        public static void main(String[] args) {
+    //            System.out.println(isEmail("sonin.mskmi@gmail.com"));
+    //            System.out.println(isEmail("mskmi@gmail.com"));
+    //            System.out.println(isEmail("351107836@qq.com"));
+    //            System.out.println(isEmail("paradoxie@163.com"));
+    //            System.out.println(isEmail("paradoxie@163.com.cn"));
+    //        }
 }

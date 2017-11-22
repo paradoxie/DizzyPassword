@@ -17,10 +17,10 @@ import cn.bmob.v3.BmobUser;
 
 import static cn.bmob.v3.BmobRealTimeData.TAG;
 
-public class MyApplication extends Application implements Thread.UncaughtExceptionHandler{
+public class MyApplication extends Application implements Thread.UncaughtExceptionHandler {
     public static MyApplication mInstance;
     public static Context mContext;
-    public static int first_check=0;
+    public static int first_check = 0;
     public static boolean isShow = true;
     private static Toast mToast;
 
@@ -31,8 +31,9 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         super.onCreate();
         mInstance = this;
         mContext = getApplicationContext();
-//        Thread.setDefaultUncaughtExceptionHandler(this);//开启抓取错误信息
+        //        Thread.setDefaultUncaughtExceptionHandler(this);//开启抓取错误信息
     }
+
     @Override
     public void uncaughtException(Thread thread, Throwable e) {
         CrashLogActivity.start(this, e);
@@ -55,6 +56,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
 
     /**
      * 显示Toast
+     *
      * @param message
      */
     public static void showToast(CharSequence message) {
@@ -70,6 +72,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
 
     /**
      * 显示Snack
+     *
      * @param view
      * @param s
      */

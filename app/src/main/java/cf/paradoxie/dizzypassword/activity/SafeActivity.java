@@ -55,7 +55,7 @@ public class SafeActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("安全验证");
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {//sdk23以下的版本直接数字码验证
             codeCheck();
             tv_message.setText("当前设备版本过低，请使用6位数字码进行安全验证");
@@ -80,7 +80,7 @@ public class SafeActivity extends BaseActivity {
             }
         }
 
-        ThemeUtils.initStatusBarColor(SafeActivity.this,ThemeUtils.getPrimaryDarkColor(SafeActivity.this));
+        ThemeUtils.initStatusBarColor(SafeActivity.this, ThemeUtils.getPrimaryDarkColor(SafeActivity.this));
 
     }
 
@@ -200,8 +200,8 @@ public class SafeActivity extends BaseActivity {
             @Override
             public void onError(Throwable e) {
                 if (e instanceof FPerException) {
-                    code=((FPerException) e).getCode();
-                    if(code ==6){
+                    code = ((FPerException) e).getCode();
+                    if (code == 6) {
                         btn_open.setText("指纹验证失败，请退出等待一段时间后重试");
                         btn_open.setBackgroundResource(R.drawable.red_button_background);
                     }
@@ -230,6 +230,7 @@ public class SafeActivity extends BaseActivity {
         }
         fingerErrorNum = 0;
     }
+
     /**
      * 隐藏软键盘
      */

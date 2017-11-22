@@ -1,225 +1,249 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <RadioGroup
         android:id="@+id/group1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="4dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="4dp">
+        android:orientation="horizontal">
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_1"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/red500"
-            android:button="@null"
             android:layout_gravity="center"
-            android:drawableTop="@drawable/rdo_btn_theme_transparent"
             android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/rdo_btn_theme_transparent"
+            app:backgroundColor="@color/red500"
             />
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_2"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/pink500"
-            android:button="@null"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
             android:drawableTop="@drawable/rdo_btn_theme_transparent"
-            android:layout_weight="1"/>
+            app:backgroundColor="@color/pink500"/>
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_3"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/purple500"
-            android:button="@null"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
             android:drawableTop="@drawable/rdo_btn_theme_transparent"
-            android:layout_weight="1"/>
+            app:backgroundColor="@color/purple500"/>
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_4"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/deeppurple500"
-            android:button="@null"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
             android:drawableTop="@drawable/rdo_btn_theme_transparent"
-            android:layout_weight="1"/>
+            app:backgroundColor="@color/deeppurple500"/>
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_5"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/indigo500"
-            android:button="@null"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
             android:drawableTop="@drawable/rdo_btn_theme_transparent"
-            android:layout_weight="1"/>
+            app:backgroundColor="@color/indigo500"/>
     </RadioGroup>
 
     <RadioGroup
         android:id="@+id/group2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp">
+        android:orientation="horizontal">
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
-        android:id="@+id/rdobtn_6"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:backgroundColor="@color/blue500"
-        android:button="@null"
-        android:layout_gravity="center"
-        android:drawableTop="@drawable/rdo_btn_theme_transparent"
-        android:layout_weight="1"
-        />
+            android:id="@+id/rdobtn_6"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/rdo_btn_theme_transparent"
+            app:backgroundColor="@color/blue500"
+            />
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
-        android:id="@+id/rdobtn_7"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:backgroundColor="@color/lightblue500"
-        android:button="@null"
-        android:layout_gravity="center"
-        android:drawableTop="@drawable/rdo_btn_theme_transparent"
-        android:layout_weight="1"/>
+            android:id="@+id/rdobtn_7"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/rdo_btn_theme_transparent"
+            app:backgroundColor="@color/lightblue500"/>
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
-        android:id="@+id/rdobtn_8"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:backgroundColor="@color/cyan500"
-        android:button="@null"
-        android:layout_gravity="center"
-        android:drawableTop="@drawable/rdo_btn_theme_transparent"
-        android:layout_weight="1"/>
+            android:id="@+id/rdobtn_8"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/rdo_btn_theme_transparent"
+            app:backgroundColor="@color/cyan500"/>
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
-        android:id="@+id/rdobtn_9"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:backgroundColor="@color/teal500"
-        android:button="@null"
-        android:layout_gravity="center"
-        android:drawableTop="@drawable/rdo_btn_theme_transparent"
-        android:layout_weight="1"/>
+            android:id="@+id/rdobtn_9"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/rdo_btn_theme_transparent"
+            app:backgroundColor="@color/teal500"/>
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
-        android:id="@+id/rdobtn_10"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:backgroundColor="@color/green500"
-        android:button="@null"
-        android:layout_gravity="center"
-        android:drawableTop="@drawable/rdo_btn_theme_transparent"
-        android:layout_weight="1"/>
-</RadioGroup>
+            android:id="@+id/rdobtn_10"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/rdo_btn_theme_transparent"
+            app:backgroundColor="@color/green500"/>
+    </RadioGroup>
+
     <RadioGroup
         android:id="@+id/group3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp">
+        android:orientation="horizontal">
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_11"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/lightgreen500"
-            android:button="@null"
             android:layout_gravity="center"
-            android:drawableTop="@drawable/rdo_btn_theme_transparent"
             android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/rdo_btn_theme_transparent"
+            app:backgroundColor="@color/lightgreen500"
             />
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_12"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/lime500"
-            android:button="@null"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
             android:drawableTop="@drawable/rdo_btn_theme_transparent"
-            android:layout_weight="1"/>
+            app:backgroundColor="@color/lime500"/>
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_13"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/yellow500"
-            android:button="@null"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
             android:drawableTop="@drawable/rdo_btn_theme_transparent"
-            android:layout_weight="1"/>
+            app:backgroundColor="@color/yellow500"/>
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_14"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/amber500"
-            android:button="@null"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
             android:drawableTop="@drawable/rdo_btn_theme_transparent"
-            android:layout_weight="1"/>
+            app:backgroundColor="@color/amber500"/>
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_15"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/orange500"
-            android:button="@null"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
             android:drawableTop="@drawable/rdo_btn_theme_transparent"
-            android:layout_weight="1"/>
+            app:backgroundColor="@color/orange500"/>
     </RadioGroup>
+
     <RadioGroup
         android:id="@+id/group4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="16dp">
+        android:orientation="horizontal">
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_16"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/deeporange500"
-            android:button="@null"
             android:layout_gravity="center"
-            android:drawableTop="@drawable/rdo_btn_theme_transparent"
             android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/rdo_btn_theme_transparent"
+            app:backgroundColor="@color/deeporange500"
             />
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_17"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/brown500"
-            android:button="@null"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
             android:drawableTop="@drawable/rdo_btn_theme_transparent"
-            android:layout_weight="1"/>
+            app:backgroundColor="@color/brown500"/>
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_18"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/grey500"
-            android:button="@null"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
             android:drawableTop="@drawable/rdo_btn_theme_transparent"
-            android:layout_weight="1"/>
+            app:backgroundColor="@color/grey500"/>
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_19"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/bluegrey500"
-            android:button="@null"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
             android:drawableTop="@drawable/rdo_btn_theme_transparent"
-            android:layout_weight="1"/>
+            app:backgroundColor="@color/bluegrey500"/>
+
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_20"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:backgroundColor="@color/green500"
-            android:button="@null"
             android:layout_gravity="center"
-            android:drawableTop="@drawable/rdo_btn_theme_transparent"
             android:layout_weight="1"
-            android:visibility="invisible"/>
+            android:button="@null"
+            android:drawableTop="@drawable/rdo_btn_theme_transparent"
+            android:visibility="invisible"
+            app:backgroundColor="@color/green500"/>
     </RadioGroup>
 </LinearLayout>

@@ -75,14 +75,14 @@ public class CrashLogActivity extends BaseActivity {
         sb.append(writer.toString());
 
         String str = sb.toString();
-        String s1,s2,s3 = "Caused by";
-        if (str.contains(s3)){//提取重点
+        String s1, s2, s3 = "Caused by";
+        if (str.contains(s3)) {//提取重点
             String[] ary = str.split("Caused by");
-            s1= ary[0];
+            s1 = ary[0];
             s2 = ary[1];
-            str = s1+ "<br/><font color=red>" + s3 + "</font>"+s2;
-            tvInfo.setText(Html.fromHtml(str.replace("\n","<br/>")));
-        }else {
+            str = s1 + "<br/><font color=red>" + s3 + "</font>" + s2;
+            tvInfo.setText(Html.fromHtml(str.replace("\n", "<br/>")));
+        } else {
             tvInfo.setText(str);
         }
         ThemeUtils.initStatusBarColor(CrashLogActivity.this, ThemeUtils.getPrimaryDarkColor(CrashLogActivity.this));

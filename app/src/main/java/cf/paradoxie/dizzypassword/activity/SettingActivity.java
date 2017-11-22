@@ -17,9 +17,6 @@ import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 
-/**
- * Created by miaoyongyong on 2016/12/25.
- */
 
 public class SettingActivity extends BaseActivity {
 
@@ -36,8 +33,6 @@ public class SettingActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SettingActivity.this, MainActivity.class);
-                startActivity(intent);
                 finish();
             }
         });

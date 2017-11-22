@@ -390,7 +390,6 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         }
 
 
-
         private void changeDate(String name, String account, String password, String finalNote, List<String> tag, String id) {
             Intent intent = new Intent();
             Bundle bundle = new Bundle();

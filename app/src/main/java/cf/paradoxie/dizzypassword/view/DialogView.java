@@ -23,7 +23,7 @@ public class DialogView extends Dialog implements View.OnClickListener {
     private Context mContext;
 
     private LinearLayout mLinearLayout;
-    private TextView mTitleTv,mTextView;
+    private TextView mTitleTv, mTextView;
     private EditText mEditText;
     private Button mButton;
     private Button mPosBtn;
@@ -72,9 +72,10 @@ public class DialogView extends Dialog implements View.OnClickListener {
         mPosBtn.setOnClickListener(this);
     }
 
-    public void setAccount(String s ){
+    public void setAccount(String s) {
         mTextView.setText(s);
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
