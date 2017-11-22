@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="pref_cate_base"
+        android:title="通用">
+        <cf.paradoxie.dizzypassword.view.ThemeChoice
+            android:key="theme_change"/>
+        <PreferenceScreen
+            android:key="id_change"
+            android:title="更换ID">
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pref_cate_base"
+        android:title="其他">
+        <PreferenceScreen
+            android:key="share"
+            android:title="分享">
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:key="about"
+            android:title="关于">
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -17,6 +17,7 @@ import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cn.bmob.v3.BmobUser;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -46,6 +47,8 @@ public class TeachActivity extends BaseActivity {
             }
         });
         init();
+        ThemeUtils.initStatusBarColor(TeachActivity.this, ThemeUtils.getPrimaryDarkColor(TeachActivity.this));
+
     }
 
     private void init() {

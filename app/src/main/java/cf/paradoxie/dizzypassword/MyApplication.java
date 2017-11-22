@@ -27,11 +27,11 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "[MyApplication] onCreate");
+        Log.d(TAG, "----------------------[MyApplication] onCreate-------------------");
         super.onCreate();
         mInstance = this;
         mContext = getApplicationContext();
-        Thread.setDefaultUncaughtExceptionHandler(this);//开启抓取错误信息
+//        Thread.setDefaultUncaughtExceptionHandler(this);//开启抓取错误信息
     }
     @Override
     public void uncaughtException(Thread thread, Throwable e) {

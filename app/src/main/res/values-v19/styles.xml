@@ -1,11 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
+        <!--这个属性是4.4系统引入的，表示透明化状态栏-->
+        <item name="android:windowTranslucentStatus">true</item>
+        <!--去除状态栏顶部阴影-->
+        <item name="android:windowContentOverlay">@null</item>
     </style>
+
     <style name="Theme1" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">@color/red500</item>
         <item name="colorPrimaryDark">@color/red700</item>

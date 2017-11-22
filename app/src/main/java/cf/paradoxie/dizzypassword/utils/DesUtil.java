@@ -245,6 +245,7 @@ public class DesUtil {
         share.setType("text/plain");
         share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         share.putExtra(Intent.EXTRA_TEXT, Title);
+        share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(Intent.createChooser(share, "分享到"));
     }
 

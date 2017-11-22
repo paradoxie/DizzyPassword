@@ -15,6 +15,7 @@ import android.widget.TextView;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.view.FingerPrinterView;
 import cf.paradoxie.dizzypassword.view.PswInputView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -54,7 +55,7 @@ public class SafeActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("安全验证");
         setSupportActionBar(toolbar);
-
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {//sdk23以下的版本直接数字码验证
             codeCheck();
             tv_message.setText("当前设备版本过低，请使用6位数字码进行安全验证");
@@ -78,6 +79,9 @@ public class SafeActivity extends BaseActivity {
                 rl_support_finger.setVisibility(View.VISIBLE);
             }
         }
+
+        ThemeUtils.initStatusBarColor(SafeActivity.this,ThemeUtils.getPrimaryDarkColor(SafeActivity.this));
+
     }
 
     /*

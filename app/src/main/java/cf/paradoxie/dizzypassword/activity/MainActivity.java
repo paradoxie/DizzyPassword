@@ -31,6 +31,7 @@ import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.SortByTime;
+import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.view.DialogView;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
@@ -72,6 +73,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ThemeUtils.initStatusBarColor(MainActivity.this,ThemeUtils.getPrimaryDarkColor(MainActivity.this));
 
         //检测menu操作，第二次进入app时是否显示menu
         if (!(Boolean) SPUtils.get("optionMenuOn", true)) {
@@ -147,12 +149,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     }
                     findDate();
                 }
-                if (id == R.id.action_share) {
-                    DesUtil.share(MainActivity.this, getString(R.string.share_note));
-                }
-                if (id == R.id.action_delete) {
-                    //跳转到关于页面
-                    Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+                if (id == R.id.action_set) {
+                    Intent intent = new Intent(MainActivity.this, SettingActivity.class);
                     startActivity(intent);
                     finish();
                 }

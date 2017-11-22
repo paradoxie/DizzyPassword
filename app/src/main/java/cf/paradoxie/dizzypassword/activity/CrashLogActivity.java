@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 
 public class CrashLogActivity extends BaseActivity {
     private static final String EXTRA_E = "e";
@@ -84,6 +85,7 @@ public class CrashLogActivity extends BaseActivity {
         }else {
             tvInfo.setText(str);
         }
+        ThemeUtils.initStatusBarColor(CrashLogActivity.this, ThemeUtils.getPrimaryDarkColor(CrashLogActivity.this));
 
     }
 

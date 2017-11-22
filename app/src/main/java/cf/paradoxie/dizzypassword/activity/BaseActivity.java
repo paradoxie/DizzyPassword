@@ -2,11 +2,11 @@ package cf.paradoxie.dizzypassword.activity;/**
  * Created by xiehehe on 15/11/8.
  */
 
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-
-import com.gyf.barlibrary.ImmersionBar;
 
 import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.R;
@@ -17,30 +17,41 @@ import cf.paradoxie.dizzypassword.R;
  * Time: 11:59
  */
 public abstract class BaseActivity extends AppCompatActivity {
-    private ImmersionBar mImmersionBar;
+    private int theme;
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        onPreCreate();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         init();
     }
 
     private void init() {
         AppManager.getAppManager().addActivity(this);
-        mImmersionBar = ImmersionBar.with(this);
-        ImmersionBar.with(this)
-                .fitsSystemWindows(true)  //使用该属性,必须指定状态栏颜色
-                .statusBarColor(R.color.color_13)
-                .navigationBarColor(R.color.gray_btn_bg_color)
-                .init();
+    }
+
+    private void onPreCreate() {
+        sp= PreferenceManager.getDefaultSharedPreferences(this);
+        theme=sp.getInt("theme_change", R.style.Theme7);
+        setTheme(theme);
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        int newTheme = sp.getInt("theme_change", theme);
+        if (newTheme != theme) {
+            recreate();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mImmersionBar != null)
-            mImmersionBar.destroy();  //必须调用该方法，防止内存泄漏，不调用该方法，如果界面bar发生改变，在不关闭app的情况下，退出此界面再进入将记忆最后一次bar改变的状态
     }
+
 
 }

@@ -1,17 +1,15 @@
 package cf.paradoxie.dizzypassword.activity;
 
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
@@ -30,27 +28,15 @@ public class AboutActivity extends BaseActivity {
         toolbar.setTitle("关于");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AboutActivity.this, MainActivity.class);
-                startActivity(intent);
+
                 finish();
             }
         });
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.action_change) {
-                    // 跳转到一个web页面，获取并修改Bmob的key的教程
-                    Intent intent = new Intent(AboutActivity.this, TeachActivity.class);
-                    startActivity(intent);
-                }
 
-                return false;
-            }
-        });
         if (SPUtils.get("first_in","")+""==""){
             showNote();
         }
@@ -72,6 +58,7 @@ public class AboutActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+        ThemeUtils.initStatusBarColor(AboutActivity.this, ThemeUtils.getPrimaryDarkColor(AboutActivity.this));
     }
 
     private void showNote() {
@@ -95,15 +82,8 @@ public class AboutActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_about, menu);
-        return true;
-    }
-
-    @Override
     public void onBackPressed() {
-        super.onBackPressed(); Intent intent = new Intent(AboutActivity.this, MainActivity.class);
-        startActivity(intent);
+
         finish();
     }
 }
