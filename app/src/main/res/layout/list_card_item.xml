@@ -251,7 +251,7 @@
                     android:id="@+id/tv_password_visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/password"
+                    android:drawableLeft="@drawable/show_selector"
                     android:drawablePadding="5dp"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"/>

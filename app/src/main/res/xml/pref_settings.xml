@@ -7,7 +7,7 @@
             android:key="theme_change"/>
         <PreferenceScreen
             android:key="id_change"
-            android:title="更换ID">
+            android:title="更换签名">
         </PreferenceScreen>
 
     </PreferenceCategory>

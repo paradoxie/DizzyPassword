@@ -45,7 +45,7 @@ public class SettingActivity extends BaseActivity {
     public void setColor() {
         ThemeUtils.setToolbarColor(SettingActivity.this, ThemeUtils.getPrimaryColor(SettingActivity.this));
         ThemeUtils.setWindowStatusBarColor(SettingActivity.this, ThemeUtils.getPrimaryDarkColor(SettingActivity.this));
-
+        getFragmentManager().beginTransaction().replace(R.id.frame_content, new SettingPreferenceFragment()).commit();
     }
 
     public static class SettingPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -83,26 +83,26 @@ public class SettingActivity extends BaseActivity {
                     SettingActivity settingActivity = (SettingActivity) getActivity();
                     settingActivity.setTheme(newTheme);
                     settingActivity.setColor();
-                    this.onCreate(null);
+                    //                    this.onCreate(null);
                 }
             }
         }
 
+
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-            Intent intent;
+
             switch (preference.getKey()) {
                 case "id_change":
-                    intent = new Intent(AppManager.getAppManager().currentActivity(), TeachActivity.class);
+                    Intent intent = new Intent(AppManager.getAppManager().currentActivity(), TeachActivity.class);
                     startActivity(intent);
                     break;
                 case "about":
-                    intent = new Intent(AppManager.getAppManager().currentActivity(), AboutActivity.class);
-                    startActivity(intent);
+                    Intent intent1 = new Intent(AppManager.getAppManager().currentActivity(), AboutActivity.class);
+                    startActivity(intent1);
                     break;
                 case "share":
                     DesUtil.share(AppManager.getAppManager().currentActivity(), getString(R.string.share_note));
-
                     break;
                 default:
                     break;

@@ -4,14 +4,14 @@
       tools:context="cf.paradoxie.dizzypassword.activity.MainActivity">
     <item
         android:id="@+id/action_edit"
-        android:icon="@drawable/refresh"
+        android:icon="@drawable/rotate"
         android:orderInCategory="80"
         android:title="刷新"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_set"
-        android:icon="@drawable/set"
+        android:icon="@drawable/set_selector"
         android:orderInCategory="90"
         android:title="设置"
         app:showAsAction="ifRoom"/>

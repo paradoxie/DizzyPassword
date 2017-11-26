@@ -76,10 +76,10 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
      * @param view
      * @param s
      */
-    public static void showSnack(View view, int s) {
+    public static void showSnack(View view, int s, int color) {
         Snackbar snackbar = Snackbar.make(view, s, Snackbar.LENGTH_SHORT);
         View mView = snackbar.getView();
-        mView.setBackgroundColor(getContext().getResources().getColor(R.color.color_13_1));
+        mView.setBackgroundColor(color);
         snackbar.show();
     }
 

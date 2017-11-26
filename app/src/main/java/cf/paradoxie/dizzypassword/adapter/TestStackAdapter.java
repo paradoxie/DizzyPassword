@@ -6,14 +6,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.text.ClipboardManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loopeer.cardstack.CardStackView;
@@ -25,13 +26,13 @@ import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.AddActivity;
-import cf.paradoxie.dizzypassword.activity.MainActivity;
 import cf.paradoxie.dizzypassword.db.AccountBean;
 import cf.paradoxie.dizzypassword.db.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
+import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
-import cf.paradoxie.dizzypassword.view.DialogView;
+import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -74,15 +75,10 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         private SweetAlertDialog pDialog = null;
         private static Boolean isShow = false;//密码默认false不显示
 
-        private boolean isOpen = false;
-        private int mShortHeight;//限定行数高度
-        private int mLongHeight;//展开全文高度
-        private LinearLayout.LayoutParams mLayoutParams;
-        private int mMaxlines = 2;//设定显示的最大行数
-        private int maxLine;//真正的最大行数
-
         public ColorItemViewHolder(View view) {
             super(view);
+
+
             mLayout = view.findViewById(R.id.frame_list_card_item);
             mContainerContent = view.findViewById(R.id.container_list_content);
             mTextTitle = (TextView) view.findViewById(R.id.text_list_card_title);
@@ -106,14 +102,19 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             rxEvent = new RxBean();
             rxEvent_1 = new RxBean();
 
-            mTime.setOnClickListener(new View.OnClickListener() {
+
+            mTime.setOnClickListener(new View.OnClickListener()
+
+            {
                 @Override
                 public void onClick(View view) {
                     rxEvent_1.setAction("done");
                     RxBus.getInstance().post(rxEvent_1);
                 }
             });
-            mTime_up.setOnClickListener(new View.OnClickListener() {
+            mTime_up.setOnClickListener(new View.OnClickListener()
+
+            {
                 @Override
                 public void onClick(View view) {
                     rxEvent_1.setAction("done");
@@ -165,6 +166,8 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         }
 
         public void onBind(Integer data, final int position) {
+
+
             final String id = mBeanList.get(position).getObjectId();
             final String time = mBeanList.get(position).getCreatedAt();
             final String time_up = mBeanList.get(position).getUpdatedAt();
@@ -189,48 +192,20 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mPwdvisible.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (isShow == false) {
-                        if (MyApplication.first_check == 0) {
-                            DialogView dialogView = new DialogView(AppManager.getAppManager().currentActivity());//这操作可以
-                            dialogView.setAccount(SPUtils.get("name", "") + "");
-                            if (!AppManager.getAppManager().currentActivity().isFinishing()) {
-                                dialogView.show();
-                            }
-                            dialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
-                                @Override
-                                public void posClickListener(String value) {
-                                    hideInputWindow();
-                                    //校验密码
-                                    if (value.equals(SPUtils.get("password", "") + "")) {
-                                        mPassword.setText(password);
-                                        setDrawableLeft(R.drawable.password_open);
-                                        isShow = true;
-                                        iv_copy.setVisibility(View.VISIBLE);
-                                        MyApplication.first_check++;
-                                        MainActivity.toolbar.setNavigationIcon(R.drawable.yep);
-                                    } else {
-                                        MyApplication.showToast("密码错了哦~");
-                                    }
-                                }
-
-                                @Override
-                                public void negCliclListener(String value) {
-                                    //取消查看
-                                    hideInputWindow();
-                                }
-                            });
-
-                        } else {
+                    if (MyApplication.first_check == 0) {
+                        MyToast.show(AppManager.getAppManager().currentActivity(), "请先点击左上角解锁操作权限",ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                    } else {
+                        if (isShow == false) {
                             mPassword.setText(password);
                             setDrawableLeft(R.drawable.password_open);
                             isShow = true;
                             iv_copy.setVisibility(View.VISIBLE);
+                        } else {
+                            setDrawableLeft(R.drawable.password);
+                            mPassword.setText("**********");
+                            isShow = false;
+                            iv_copy.setVisibility(View.GONE);
                         }
-                    } else {
-                        setDrawableLeft(R.drawable.password);
-                        mPassword.setText("**********");
-                        isShow = false;
-                        iv_copy.setVisibility(View.GONE);
                     }
                 }
             });
@@ -241,7 +216,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 public boolean onLongClick(View view) {
                     ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                     cm.setText(mAccount.getText());
-                    MyApplication.showSnack(view, R.string.copy_account);
+                    MyApplication.showSnack(view, R.string.copy_account, ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
                     return false;
                 }
             });
@@ -250,7 +225,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 public boolean onLongClick(View view) {
                     ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                     cm.setText(mPassword.getText());
-                    MyApplication.showSnack(view, R.string.copy_password);
+                    MyApplication.showSnack(view, R.string.copy_password, ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
                     return false;
                 }
             });
@@ -261,73 +236,35 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 public boolean onLongClick(View view) {
                     ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                     cm.setText(mNote.getText());
-                    MyApplication.showSnack(view, R.string.copy_note);
+                    MyApplication.showSnack(view, R.string.copy_note, ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
                     return false;
                 }
             });
 
             final String finalNote = note;
+
+
             mChange.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     if (MyApplication.first_check == 0) {
-                        DialogView dialogView = new DialogView(AppManager.getAppManager().currentActivity());
-                        dialogView.setAccount(SPUtils.get("name", "") + "");
-                        if (!AppManager.getAppManager().currentActivity().isFinishing()) {
-                            dialogView.show();
-                        }
-                        dialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
-                            @Override
-                            public void posClickListener(String value) {
-                                //校验密码
-                                if (value.equals(SPUtils.get("password", "") + "")) {
-                                    changeDate(name, account, password, finalNote, tag, id);
-                                    MyApplication.first_check++;
-                                    MainActivity.toolbar.setNavigationIcon(R.drawable.yep);
-                                } else {
-                                    MyApplication.showToast("密码错了哦~");
-                                }
-                            }
-
-                            @Override
-                            public void negCliclListener(String value) {
-                                //取消查看
-                            }
-                        });
+                        //                        MyApplication.showToast("请先点击左上角解锁操作权限");
+                        MyToast.show(AppManager.getAppManager().currentActivity(), "请先点击左上角解锁操作权限",ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
                     } else {
                         changeDate(name, account, password, finalNote, tag, id);
                     }
                 }
             });
 
+
             mDelete.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View view) {
                     if (MyApplication.first_check == 0) {
-                        DialogView dialogView = new DialogView(AppManager.getAppManager().currentActivity());
-                        dialogView.setAccount(SPUtils.get("name", "") + "");
-                        if (!AppManager.getAppManager().currentActivity().isFinishing()) {
-                            dialogView.show();
-                        }
-                        dialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
-                            @Override
-                            public void posClickListener(String value) {
-                                //校验密码
-                                if (value.equals(SPUtils.get("password", "") + "")) {
-                                    showDelete(id, account, password);
-                                    MyApplication.first_check++;
-                                    MainActivity.toolbar.setNavigationIcon(R.drawable.yep);
-                                } else {
-                                    MyApplication.showToast("密码错了哦~");
-                                }
-                            }
+                        MyToast.show(AppManager.getAppManager().currentActivity(), "请先点击左上角解锁操作权限"
+                                ,ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
 
-                            @Override
-                            public void negCliclListener(String value) {
-                                //取消查看
-                            }
-                        });
                     } else {
                         showDelete(id, account, password);
                     }
@@ -340,9 +277,9 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     if (mAccount.getText().length() > 0 || mPassword.getText().length() > 0) {
                         ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                         cm.setText(mAccount.getText() + "\n" + mPassword.getText());
-                        MyApplication.showSnack(view, R.string.copy);
+                        MyApplication.showSnack(view, R.string.copy, ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
                     } else {
-                        MyApplication.showSnack(view, R.string.nothing_copy);
+                        MyApplication.showSnack(view, R.string.nothing_copy, ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
                     }
                 }
             });

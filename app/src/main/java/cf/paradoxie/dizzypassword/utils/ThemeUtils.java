@@ -35,7 +35,7 @@ public class ThemeUtils {
                 //            状态栏
                 window.setStatusBarColor(color);
                 //            底部导航栏
-                window.setNavigationBarColor(color);
+//                window.setNavigationBarColor(color);
             }
         }
 
@@ -127,4 +127,6 @@ public class ThemeUtils {
         context.getTheme().resolveAttribute(R.attr.colorPrimaryDark, primaryDarkValue, true);
         return primaryDarkValue.data;
     }
+
+
 }

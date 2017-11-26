@@ -63,14 +63,21 @@ public class ThemeChoice extends DialogPreference {
         mThemes = new int[]{R.style.Theme1, R.style.Theme2, R.style.Theme3
                 , R.style.Theme4, R.style.Theme5, R.style.Theme6
                 , R.style.Theme7, R.style.Theme8, R.style.Theme9
-                , R.style.Theme10, R.style.Theme11, R.style.Theme12
-                , R.style.Theme13, R.style.Theme14, R.style.Theme15
-                , R.style.Theme16, R.style.Theme17, R.style.Theme18
+                , R.style.Theme10, R.style.Theme11,
+                //                R.style.Theme12
+                //                , R.style.Theme13,R.style.Theme14,
+                R.style.Theme15
+                , R.style.Theme16, R.style.Theme17
+                //                , R.style.Theme18
                 , R.style.Theme19};
         mRdoBtns = new int[]{R.id.rdobtn_1, R.id.rdobtn_2, R.id.rdobtn_3, R.id.rdobtn_4, R.id.rdobtn_5
                 , R.id.rdobtn_6, R.id.rdobtn_7, R.id.rdobtn_8, R.id.rdobtn_9, R.id.rdobtn_10
-                , R.id.rdobtn_11, R.id.rdobtn_12, R.id.rdobtn_13, R.id.rdobtn_14, R.id.rdobtn_15
-                , R.id.rdobtn_16, R.id.rdobtn_17, R.id.rdobtn_18, R.id.rdobtn_19};
+                , R.id.rdobtn_11,
+                //                R.id.rdobtn_12, R.id.rdobtn_13,R.id.rdobtn_14,
+                R.id.rdobtn_15
+                , R.id.rdobtn_16, R.id.rdobtn_17
+                //                , R.id.rdobtn_18
+                , R.id.rdobtn_19};
         for (int i = 0; i < mThemes.length; i++) {
             if (mTheme == mThemes[i]) {
                 RadioButton radioButton = (RadioButton) view.findViewById(mRdoBtns[i]);

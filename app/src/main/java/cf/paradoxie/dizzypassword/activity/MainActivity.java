@@ -28,6 +28,7 @@ import cf.paradoxie.dizzypassword.adapter.TestStackAdapter;
 import cf.paradoxie.dizzypassword.db.AccountBean;
 import cf.paradoxie.dizzypassword.db.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
+import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.SortByTime;
@@ -68,6 +69,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private static Boolean isExit = false;
     private BmobUser user = new BmobUser();
     public static Toolbar toolbar = null;
+    private DialogView mDialogView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +87,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         setSupportActionBar(toolbar);
         if (SPUtils.get("name", "") != "") {
             if (MyApplication.first_check == 0) {
-                toolbar.setNavigationIcon(R.drawable.yep_0);
+                toolbar.setNavigationIcon(R.drawable.yep_selector);
             } else {
                 toolbar.setNavigationIcon(R.drawable.yep);
             }
@@ -93,17 +95,14 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 @Override
                 public void onClick(View view) {
                     if (MyApplication.first_check == 0) {
-                        DialogView dialogView = new DialogView(AppManager.getAppManager().currentActivity());
-                        dialogView.setAccount(SPUtils.get("name", "") + "");
-                        if (!AppManager.getAppManager().currentActivity().isFinishing()) {
-                            dialogView.show();
-                        }
-                        dialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+                        checkActivity();
+                        mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
                             @Override
                             public void posClickListener(String value) {
                                 //校验密码
                                 if (value.equals(SPUtils.get("password", "") + "")) {
                                     MyApplication.first_check++;
+
                                     //换图标，解锁
                                     toolbar.setNavigationIcon(R.drawable.yep);
                                 } else {
@@ -128,8 +127,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                     @Override
                                     public void onClick(SweetAlertDialog sDialog) {
                                         MyApplication.first_check = 0;
+
                                         //换图标：加锁
-                                        toolbar.setNavigationIcon(R.drawable.yep_0);
+                                        toolbar.setNavigationIcon(R.drawable.yep_selector);
                                         sDialog.cancel();
                                     }
                                 })
@@ -138,6 +138,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 }
             });
         }
+
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -149,6 +150,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                             mStackView.removeAllViews();
                         }
                         findDate();
+
                     } else {
                         MyApplication.showToast("您还木有登录哦~");
 
@@ -165,18 +167,17 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         tip = (TextView) findViewById(R.id.tip);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
+
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if (MyApplication.isSign()) {
                     if (MyApplication.first_check == 0) {
-                        DialogView dialogView = new DialogView(AppManager.getAppManager().currentActivity());
-                        dialogView.setAccount(SPUtils.get("name", "") + "");
-                        if (!AppManager.getAppManager().currentActivity().isFinishing()) {
-                            dialogView.show();
-                        }
-                        dialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+                        checkActivity();
+                        mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
                             @Override
                             public void posClickListener(String value) {
                                 //校验密码
@@ -185,6 +186,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                     startActivity(intent);
                                     finish();
                                     MyApplication.first_check++;
+
                                     toolbar.setNavigationIcon(R.drawable.yep);
                                 } else {
                                     MyApplication.showToast("密码错了哦~");
@@ -255,6 +257,17 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 });
     }
 
+    private void checkActivity() {
+        mDialogView = new DialogView(MainActivity.this);
+        mDialogView.setAccount(SPUtils.get("name", "") + "");
+        try {
+            if (!MainActivity.this.isFinishing()) {
+                mDialogView.show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void searchDate(String s) {
         //手动清除一次全部view，避免重用时的重合
@@ -382,7 +395,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     if (objects != null) {
                         Collections.sort(objects, Collections.reverseOrder(sortByTime));
                         mAccountBeans = objects;
-                        MyApplication.showToast("已按最近更新时间排序");
+                        MyToast.show(MainActivity.this,"已按最近更新时间排序",ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+
                         if (mAccountBeans.size() < 1) {
                             tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
                             tip.setVisibility(View.VISIBLE);
@@ -407,7 +421,10 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
                         tip.setVisibility(View.VISIBLE);
                     }
-                    pDialog.dismiss();
+                    if(pDialog!=null&&pDialog.isShowing()){
+                        pDialog.dismiss();
+                    }
+
                 }
             });
         }
