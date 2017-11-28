@@ -43,7 +43,6 @@ public class CrashLogActivity extends BaseActivity {
         setContentView(R.layout.activity_crash_log);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("崩溃日志");
-        toolbar.setSubtitle("请截图私信开发者，蟹蟹( •̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩́ ˑ̫ •̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̀)");
         setSupportActionBar(toolbar);
         tvInfo = (TextView) findViewById(R.id.tv_info);
 
