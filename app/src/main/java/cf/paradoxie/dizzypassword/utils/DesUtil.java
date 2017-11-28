@@ -188,9 +188,9 @@ public class DesUtil {
         int n = 0;
         while (true) {
             int temp = random.nextInt(a.length);
+            if (n == m) // 取到足量随机数后退出循环
+                break;
             if (!r[temp]) {
-                if (n == m) // 取到足量随机数后退出循环
-                    break;
                 n++;
                 //                System.out.println("得到的第" + n + "个随机数为：" + a[temp]);
                 result[n - 1] = a[temp];
@@ -267,12 +267,9 @@ public class DesUtil {
         return sb.toString();
     }
 
-    //     测试用例，不需要传递任何参数，直接执行即可。
-    //        public static void main(String[] args) {
-    //            System.out.println(isEmail("sonin.mskmi@gmail.com"));
-    //            System.out.println(isEmail("mskmi@gmail.com"));
-    //            System.out.println(isEmail("351107836@qq.com"));
-    //            System.out.println(isEmail("paradoxie@163.com"));
-    //            System.out.println(isEmail("paradoxie@163.com.cn"));
-    //        }
+    //    //         测试用例，不需要传递任何参数，直接执行即可。
+    //    public static void main(String[] args) {
+    //        String username1 = DesUtil.encrypt("", "");
+    //        System.out.println(username1);
+    //    }
 }

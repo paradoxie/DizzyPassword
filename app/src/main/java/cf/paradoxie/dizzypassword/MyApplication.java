@@ -31,7 +31,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         super.onCreate();
         mInstance = this;
         mContext = getApplicationContext();
-        //        Thread.setDefaultUncaughtExceptionHandler(this);//开启抓取错误信息
+        Thread.setDefaultUncaughtExceptionHandler(this);//开启抓取错误信息
     }
 
     @Override

@@ -49,8 +49,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private boolean optionMenuOn = true;  //显示optionmenu
     private Menu aMenu;         //获取optionmenu
     public static Integer[] TEST_DATAS = new Integer[]{
-            R.color.color_1, R.color.color_2, R.color.color_3, R.color.color_4,
-            R.color.color_5, R.color.color_6, R.color.color_7, R.color.color_8,
+            R.color.color_1, R.color.color_2, R.color.color_3, R.color.color_4
+            , R.color.color_5, R.color.color_6
+            , R.color.color_7, R.color.color_8,
             R.color.color_9, R.color.color_10, R.color.color_11, R.color.color_12,
             R.color.color_13, R.color.color_14, R.color.color_15, R.color.color_16,
             R.color.color_17, R.color.color_18, R.color.color_19, R.color.color_20,
@@ -168,8 +169,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
 
-
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -216,8 +215,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView.setItemExpendListener(this);
 
         if (SPUtils.get("key", "") + "" == "") {
-            //            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
-            Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
+            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
+            //                        Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
         } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
@@ -395,7 +394,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     if (objects != null) {
                         Collections.sort(objects, Collections.reverseOrder(sortByTime));
                         mAccountBeans = objects;
-                        MyToast.show(MainActivity.this,"已按最近更新时间排序",ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                        MyToast.show(MainActivity.this, "已按最近更新时间排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
 
                         if (mAccountBeans.size() < 1) {
                             tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
@@ -421,7 +420,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
                         tip.setVisibility(View.VISIBLE);
                     }
-                    if(pDialog!=null&&pDialog.isShowing()){
+                    if (pDialog != null && pDialog.isShowing()) {
                         pDialog.dismiss();
                     }
 

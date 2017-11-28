@@ -9,13 +9,17 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
+import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
+import cn.bmob.v3.BmobUser;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 public class SettingActivity extends BaseActivity {
@@ -37,9 +41,47 @@ public class SettingActivity extends BaseActivity {
             }
         });
 
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.action_exit) {
+                    new SweetAlertDialog(SettingActivity.this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("退出登录")
+                            .setContentText(
+                                    "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + (String.valueOf(SPUtils.get("password", ""))) +
+                                            "\n\n确定要退出当前帐号么？")
+                            .setConfirmText("退出")
+                            .setCancelText("算啦")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    SPUtils.remove("name");//清除用户记录
+                                    BmobUser.logOut();   //清除缓存用户对象
+                                    AppManager.getAppManager().finishAllActivity();
+                                    startActivity(new Intent(SettingActivity.this,SignActivity.class));
+                                    finish();
+
+                                    sDialog.cancel();
+                                }
+                            })
+                            .show();
+                }
+                return false;
+            }
+        });
+
         getFragmentManager().beginTransaction().replace(R.id.frame_content, new SettingPreferenceFragment()).commit();
         ThemeUtils.initStatusBarColor(SettingActivity.this, ThemeUtils.getPrimaryDarkColor(SettingActivity.this));
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_set, menu);
+        return true;
+    }
+
 
     //    当前页面，主题切换后，需要手动进行颜色修改。下面只修改了状态栏和ToolBar的颜色。
     public void setColor() {
