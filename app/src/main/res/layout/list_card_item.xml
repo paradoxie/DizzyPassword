@@ -206,6 +206,25 @@
             android:layerType="software">
         </View>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <cf.paradoxie.dizzypassword.view.SingleLineTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:text="长按单条信息可以实现单独复制哦(*^__^*)"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="8sp"/>
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -217,7 +236,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -309,6 +327,7 @@
             android:background="@drawable/bg_dotted_line"
             android:layerType="software">
         </View>
+
     </LinearLayout>
 
 </LinearLayout>

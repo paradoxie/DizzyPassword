@@ -215,8 +215,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView.setItemExpendListener(this);
 
         if (SPUtils.get("key", "") + "" == "") {
-            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
-            //                        Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
+            //            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
+            Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
         } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
@@ -253,6 +253,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                             return;
                         }
                     }
+
                 });
     }
 
@@ -288,7 +289,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
             @Override
             public void done(List<AccountBean> object, BmobException e) {
-                if (e == null) {
+                if (object.size() != 0) {
                     mAccountBeans = object;
                     mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
                     mStackView.setAdapter(mTestStackAdapter);

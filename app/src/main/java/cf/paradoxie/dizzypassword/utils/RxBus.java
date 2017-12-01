@@ -9,7 +9,7 @@ import rx.subjects.Subject;
  * Created by xiehehe on 2017/10/29.
  */
 
-public class RxBus {
+public class RxBus{
     private static volatile RxBus mInstance;
     private final Subject bus;
 
@@ -45,7 +45,6 @@ public class RxBus {
      */
     public void post(Object object) {
         bus.onNext(object);
-
     }
 
     /**

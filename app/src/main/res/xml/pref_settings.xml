@@ -7,8 +7,17 @@
             android:key="theme_change"/>
         <PreferenceScreen
             android:key="id_change"
-            android:title="更换签名">
-        </PreferenceScreen>
+            android:title="更换签名"/>
+        <EditTextPreference
+            android:key="id_code"
+            android:title="更换安全码"
+            android:paddingLeft="5dp"
+            android:summary="更换进入App时的六位安全码，指纹用户请忽略(*^__^*)"
+            android:inputType="number"
+            android:gravity="center"
+            android:hint="请输入6位新的安全码"
+            android:maxLength="6">
+        </EditTextPreference>
 
     </PreferenceCategory>
 
