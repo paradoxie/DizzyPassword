@@ -56,8 +56,8 @@ public class AddActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AddActivity.this, MainActivity.class);
-                startActivity(intent);
+                //                Intent intent = new Intent(AddActivity.this, MainActivity.class);
+                //                startActivity(intent);
                 finish();
             }
         });
@@ -253,8 +253,8 @@ public class AddActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(AddActivity.this, MainActivity.class);
-        startActivity(intent);
+        //        Intent intent = new Intent(AddActivity.this, MainActivity.class);
+        //        startActivity(intent);
         finish();
     }
 }

@@ -1,7 +1,9 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -10,22 +12,27 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.ClipboardManager;
 import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import cf.paradoxie.dizzypassword.AppManager;
+import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
+import cf.paradoxie.dizzypassword.view.DialogView;
 import cn.bmob.v3.BmobUser;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 public class SettingActivity extends BaseActivity {
+    private String pwd;
+    private DialogView mDialogView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,33 +50,59 @@ public class SettingActivity extends BaseActivity {
                 finish();
             }
         });
-
+        pwd = String.valueOf(SPUtils.get("password", ""));
+        mDialogView = new DialogView(SettingActivity.this);
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.action_exit) {
-                    new SweetAlertDialog(SettingActivity.this, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("退出登录")
-                            .setContentText(
-                                    "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + (String.valueOf(SPUtils.get("password", ""))) +
-                                            "\n\n确定要退出当前帐号么？")
-                            .setConfirmText("退出")
-                            .setCancelText("算啦")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    SPUtils.remove("name");//清除用户记录
-                                    BmobUser.logOut();   //清除缓存用户对象
-                                    AppManager.getAppManager().finishAllActivity();
-                                    startActivity(new Intent(SettingActivity.this, SignActivity.class));
-                                    finish();
+                    //                    new SweetAlertDialog(SettingActivity.this, SweetAlertDialog.WARNING_TYPE)
+                    //                            .setTitleText("退出登录")
+                    //                            .setContentText(
+                    //                                    "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + getCodePwd(pwd) +
+                    //                                            "\n\n确定要退出当前帐号么？")
+                    //                            .setConfirmText("退出")
+                    //                            .setCancelText("算啦")
+                    //                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    //                                @Override
+                    //                                public void onClick(SweetAlertDialog sDialog) {
+                    //                                    SPUtils.remove("name");//清除用户记录
+                    //                                    BmobUser.logOut();   //清除缓存用户对象
+                    //                                    AppManager.getAppManager().finishAllActivity();
+                    //                                    startActivity(new Intent(SettingActivity.this, SignActivity.class));
+                    //                                    finish();
+                    //
+                    //                                    sDialog.cancel();
+                    //                                }
+                    //                            })
+                    //                            .show();
 
-                                    sDialog.cancel();
-                                }
-                            })
-                            .show();
+                    checkActivity();
+                    mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+                        @Override
+                        public void posClickListener(String value) {
+                            //校验密码
+                            if (value.equals(SPUtils.get("password", "") + "")) {
+                                SPUtils.remove("name");//清除用户记录
+                                BmobUser.logOut();   //清除缓存用户对象
+                                AppManager.getAppManager().finishAllActivity();
+                                startActivity(new Intent(SettingActivity.this, SignActivity.class));
+                                finish();
+                                hideInputWindow();
+                                mDialogView.dismiss();
+                            } else {
+                                MyApplication.showToast("密码错了哦~");
+                            }
+                        }
+
+                        @Override
+                        public void negCliclListener(String value) {
+                            //取消查看
+                        }
+                    });
+
                 }
                 return false;
             }
@@ -147,7 +180,6 @@ public class SettingActivity extends BaseActivity {
         }
 
 
-
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
 
@@ -166,6 +198,15 @@ public class SettingActivity extends BaseActivity {
                 case "share":
                     DesUtil.share(AppManager.getAppManager().currentActivity(), getString(R.string.share_note));
                     break;
+                case "red_package":
+                    ClipboardManager cm = (ClipboardManager) AppManager.getAppManager().currentActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm.setText(getString(R.string.red_package_string));
+                    try {
+                        MyApplication.openAppByPackageName(AppManager.getAppManager().currentActivity(),"com.eg.android.AlipayGphone");
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -181,5 +222,38 @@ public class SettingActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    private void checkActivity() {
+        mDialogView = new DialogView(SettingActivity.this);
+        mDialogView.setMeaasge("确定退出当前帐号？", "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + getCodePwd(pwd));
+        try {
+            if (!SettingActivity.this.isFinishing()) {
+                mDialogView.show();
+                hideInputWindow();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    private void hideInputWindow() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    private String getCodePwd(String string) {
+        if (string.isEmpty() || string == null) {
+            return null;
+        } else {
+            return replaceAction(string, "(?<=\\w{2})\\w(?=\\w{2})");
+        }
+    }
+
+    private static String replaceAction(String username, String regular) {
+        return username.replaceAll(regular, "*");
     }
 }

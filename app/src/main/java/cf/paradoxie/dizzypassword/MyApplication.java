@@ -1,7 +1,12 @@
 package cf.paradoxie.dizzypassword;
 
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +15,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import java.util.List;
 
 import cf.paradoxie.dizzypassword.activity.CrashLogActivity;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
@@ -150,4 +157,30 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         });
         wb.loadUrl(getContext().getString(str));
     }
+
+
+    public static void openAppByPackageName(Context context, String packageName) throws PackageManager.NameNotFoundException {
+        PackageInfo pi;
+        try {
+            pi = MyApplication.getContext().getPackageManager().getPackageInfo(packageName, 0);
+            Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
+            resolveIntent.setPackage(pi.packageName);
+            PackageManager pManager = MyApplication.getContext().getPackageManager();
+            List<ResolveInfo> apps = pManager.queryIntentActivities(resolveIntent, 0);
+            ResolveInfo ri = apps.iterator().next();
+            if (ri != null) {
+                packageName = ri.activityInfo.packageName;
+                String className = ri.activityInfo.name;
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);//重点是加这个
+                ComponentName cn = new ComponentName(packageName, className);
+                intent.setComponent(cn);
+                context.startActivity(intent);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

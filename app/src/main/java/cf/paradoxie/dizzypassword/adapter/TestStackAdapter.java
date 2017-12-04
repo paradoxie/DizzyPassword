@@ -13,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.text.ClipboardManager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,9 +38,11 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class TestStackAdapter extends StackAdapter<Integer> {
     private static List<AccountBean> mBeanList;
+    private static Context mContext;
 
     public TestStackAdapter(Context context, List list) {
         super(context);
+        mContext = context;
         this.mBeanList = list;
     }
 
@@ -193,7 +194,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 @Override
                 public void onClick(View view) {
                     if (MyApplication.first_check == 0) {
-                        MyToast.show(AppManager.getAppManager().currentActivity(), "请先点击左上角解锁操作权限",ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                        MyToast.show(mContext, "请先点击左上角解锁操作权限", ThemeUtils.getPrimaryColor(mContext));
                     } else {
                         if (isShow == false) {
                             mPassword.setText(password);
@@ -214,18 +215,18 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 @SuppressLint("ResourceAsColor")
                 @Override
                 public boolean onLongClick(View view) {
-                    ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                     cm.setText(mAccount.getText());
-                    MyApplication.showSnack(view, R.string.copy_account, ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                    MyApplication.showSnack(view, R.string.copy_account, ThemeUtils.getPrimaryColor(mContext));
                     return false;
                 }
             });
             mPassword.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                     cm.setText(mPassword.getText());
-                    MyApplication.showSnack(view, R.string.copy_password, ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                    MyApplication.showSnack(view, R.string.copy_password, ThemeUtils.getPrimaryColor(mContext));
                     return false;
                 }
             });
@@ -234,9 +235,9 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mNote.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                     cm.setText(mNote.getText());
-                    MyApplication.showSnack(view, R.string.copy_note, ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                    MyApplication.showSnack(view, R.string.copy_note, ThemeUtils.getPrimaryColor(mContext));
                     return false;
                 }
             });
@@ -249,7 +250,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 public void onClick(View view) {
                     if (MyApplication.first_check == 0) {
                         //                        MyApplication.showToast("请先点击左上角解锁操作权限");
-                        MyToast.show(AppManager.getAppManager().currentActivity(), "请先点击左上角解锁操作权限",ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                        MyToast.show(mContext, "请先点击左上角解锁操作权限", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
                     } else {
                         changeDate(name, account, password, finalNote, tag, id);
                     }
@@ -262,8 +263,8 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 @Override
                 public void onClick(View view) {
                     if (MyApplication.first_check == 0) {
-                        MyToast.show(AppManager.getAppManager().currentActivity(), "请先点击左上角解锁操作权限"
-                                ,ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                        MyToast.show(mContext, "请先点击左上角解锁操作权限"
+                                , ThemeUtils.getPrimaryColor(mContext));
 
                     } else {
                         showDelete(id, account, password);
@@ -275,11 +276,11 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 @Override
                 public void onClick(View view) {
                     if (mAccount.getText().length() > 0 || mPassword.getText().length() > 0) {
-                        ClipboardManager cm = (ClipboardManager) MyApplication.mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                         cm.setText(mAccount.getText() + "\n" + mPassword.getText());
-                        MyApplication.showSnack(view, R.string.copy, ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                        MyApplication.showSnack(view, R.string.copy, ThemeUtils.getPrimaryColor(mContext));
                     } else {
-                        MyApplication.showSnack(view, R.string.nothing_copy, ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                        MyApplication.showSnack(view, R.string.nothing_copy, ThemeUtils.getPrimaryColor(mContext));
                     }
                 }
             });
@@ -340,16 +341,15 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
             MyApplication.getContext().startActivity(intent.setClass(MyApplication.getContext(), AddActivity.class));
-            AppManager.getAppManager().currentActivity().finish();
+            //            AppManager.getAppManager().currentActivity().finish();
         }
 
         private void showDelete(final String id, String account, String password) {
-
-            pDialog = new SweetAlertDialog(AppManager.getAppManager().currentActivity(), SweetAlertDialog.PROGRESS_TYPE);
+            pDialog = new SweetAlertDialog(mContext, SweetAlertDialog.PROGRESS_TYPE);
             pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
             pDialog.setTitleText("Loading");
             pDialog.setCancelable(false);
-            new SweetAlertDialog(AppManager.getAppManager().currentActivity(), SweetAlertDialog.WARNING_TYPE)
+            new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("删除此条帐号信息")
                     .setContentText(
                             "帐号:" + account + "\n密码:" + password +
@@ -406,13 +406,6 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             });
         }
 
-        /**
-         * 隐藏软键盘
-         */
-        private void hideInputWindow() {
-            InputMethodManager imm = (InputMethodManager) MyApplication.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(AppManager.getAppManager().currentActivity().getWindow().getDecorView().getWindowToken(), 0);
-        }
 
         /**
          * 设置密码左边的图片显示

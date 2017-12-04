@@ -65,10 +65,10 @@ public class AboutActivity extends BaseActivity {
         new SweetAlertDialog(AboutActivity.this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("免责声明")
                 .setContentText(
-                        "1.本app为非盈利开源项目，任何拷贝复制的相同项目与本app无关" +
+                                "1.本app为非盈利开源项目，任何拷贝复制的相同项目与本app无关" +
                                 "\n2.后台数据储存由Bmob云服务提供，作者承诺不会对后台用户数据进行任何操作" +
                                 "\n3.任何加密技术都有被破解的可能性，由此造成的损失与本app及作者无关" +
-                                "\n4.作为作者，建议用户自己申请Bmob云服务进行私人信息储存，相关教程请点击右上角查看")
+                                "\n4.作为作者，建议用户自己申请Bmob云服务进行私人信息储存，相关教程请点击设置页面【修改签名】")
                 .setConfirmText("好的我知道啦")
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override

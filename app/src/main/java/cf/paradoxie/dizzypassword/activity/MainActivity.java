@@ -1,14 +1,18 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.text.ClipboardManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -103,9 +107,10 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                 //校验密码
                                 if (value.equals(SPUtils.get("password", "") + "")) {
                                     MyApplication.first_check++;
-
+                                    hideInputWindow();
                                     //换图标，解锁
                                     toolbar.setNavigationIcon(R.drawable.yep);
+                                    mDialogView.dismiss();
                                 } else {
                                     MyApplication.showToast("密码错了哦~");
                                 }
@@ -161,6 +166,26 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     Intent intent = new Intent(MainActivity.this, SettingActivity.class);
                     startActivity(intent);
                 }
+                if (id == R.id.action_red_package) {
+                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText("口令复制成功")
+                            .setContentText("支付宝红包，金额随机，最高￥99喔😃\n话说最近的红包好像变大了呢...\n")
+                            .setConfirmText("前往支付宝领取")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    ClipboardManager cm = (ClipboardManager) MainActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
+                                    cm.setText(getString(R.string.red_package_string));
+                                    try {
+                                        MyApplication.openAppByPackageName(MainActivity.this, "com.eg.android.AlipayGphone");
+                                    } catch (PackageManager.NameNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
+                                    sDialog.cancel();
+                                }
+                            })
+                            .show();
+                }
                 return false;
             }
         });
@@ -183,9 +208,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                 if (value.equals(SPUtils.get("password", "") + "")) {
                                     Intent intent = new Intent(MainActivity.this, AddActivity.class);
                                     startActivity(intent);
-                                    finish();
                                     MyApplication.first_check++;
-
+                                    hideInputWindow();
+                                    mDialogView.dismiss();
                                     toolbar.setNavigationIcon(R.drawable.yep);
                                 } else {
                                     MyApplication.showToast("密码错了哦~");
@@ -200,7 +225,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     } else {
                         Intent intent = new Intent(MainActivity.this, AddActivity.class);
                         startActivity(intent);
-                        finish();
+                        //                        finish();
                     }
                 } else {
                     //缓存用户对象为空时， 可打开用户注册界面…
@@ -215,8 +240,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView.setItemExpendListener(this);
 
         if (SPUtils.get("key", "") + "" == "") {
-            //            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
-            Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
+            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
+            //            Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
         } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
@@ -263,6 +288,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         try {
             if (!MainActivity.this.isFinishing()) {
                 mDialogView.show();
+                hideInputWindow();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -291,7 +317,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             public void done(List<AccountBean> object, BmobException e) {
                 if (object.size() != 0) {
                     mAccountBeans = object;
-                    mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
+                    mTestStackAdapter = new TestStackAdapter(MainActivity.this, mAccountBeans);
                     mStackView.setAdapter(mTestStackAdapter);
                     mTestStackAdapter.notifyDataSetChanged();
                     new Handler().postDelayed(
@@ -347,7 +373,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                             return;
                         }
                         tip.setVisibility(View.GONE);
-                        mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
+                        mTestStackAdapter = new TestStackAdapter(MainActivity.this, mAccountBeans);
                         mStackView.setAdapter(mTestStackAdapter);
                         mTestStackAdapter.notifyDataSetChanged();
                         new Handler().postDelayed(
@@ -404,7 +430,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                             return;
                         }
                         tip.setVisibility(View.GONE);
-                        mTestStackAdapter = new TestStackAdapter(MyApplication.getContext(), mAccountBeans);
+                        mTestStackAdapter = new TestStackAdapter(MainActivity.this, mAccountBeans);
                         mStackView.setAdapter(mTestStackAdapter);
                         mTestStackAdapter.notifyDataSetChanged();
                         new Handler().postDelayed(
@@ -492,4 +518,11 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
     }
 
+    /**
+     * 隐藏软键盘
+     */
+    private void hideInputWindow() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
 }

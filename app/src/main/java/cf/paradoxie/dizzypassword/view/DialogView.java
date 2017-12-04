@@ -76,6 +76,15 @@ public class DialogView extends Dialog implements View.OnClickListener {
         mTextView.setText(s);
     }
 
+    public void setMeaasge(String title, String account) {
+        mTextView.setText(title);
+        mTextView.setTextSize(22);
+        mTitleTv.setText(account);
+        mTitleTv.setTextSize(16);
+
+
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -94,9 +103,9 @@ public class DialogView extends Dialog implements View.OnClickListener {
                     String mEtValue = mEditText.getText().toString().trim();
                     if (!mEtValue.isEmpty()) {
                         onPosNegClickListener.posClickListener(mEtValue);
+                        //                        this.dismiss();
                     }
                 }
-                this.dismiss();
                 break;
         }
     }
