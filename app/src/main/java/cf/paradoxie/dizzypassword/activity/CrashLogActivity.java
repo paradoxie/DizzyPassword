@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import cf.paradoxie.dizzypassword.AppManager;
+import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 
@@ -55,6 +56,8 @@ public class CrashLogActivity extends BaseActivity {
         sb.append(Build.MODEL).append("\n");
         sb.append("系统版本：");
         sb.append(Build.VERSION.RELEASE).append("\n");
+        sb.append("网络环境：");
+        sb.append(MyApplication.GetNetworkType()).append("\n");
         sb.append("异常时间：");
         sb.append(dateFormat.format(new Date())).append("\n");
         sb.append("异常类型：");
