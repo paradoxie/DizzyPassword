@@ -1,12 +1,11 @@
 package cf.paradoxie.dizzypassword.activity;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
@@ -49,15 +48,7 @@ public class AboutActivity extends BaseActivity {
         });
         version_info = (TextView) findViewById(R.id.version_info);
 
-        PackageInfo pi = null;
-        try {
-            pi = getPackageManager().getPackageInfo(getPackageName(), 0);
-            String versionName = pi.versionName;
-            version_info.setText("V" + versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        version_info.setText("V" + MyApplication.GetVersion());
         ThemeUtils.initStatusBarColor(AboutActivity.this, ThemeUtils.getPrimaryDarkColor(AboutActivity.this));
     }
 

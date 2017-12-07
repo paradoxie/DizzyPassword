@@ -35,7 +35,7 @@
         <PreferenceScreen
             android:key="red_package"
             android:title="领红包"
-            android:summary="点击前往支付宝，最近的红包好像都变大了">
+            android:summary="点击前往支付宝领取，最近的红包好像都变大了">
         </PreferenceScreen>
 
     </PreferenceCategory>

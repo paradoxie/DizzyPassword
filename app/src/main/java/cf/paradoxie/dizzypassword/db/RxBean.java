@@ -10,6 +10,16 @@ public class RxBean {
     private String message;
     private String action;
 
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    private String pwd;
+
     public String getAction() {
         return action;
     }

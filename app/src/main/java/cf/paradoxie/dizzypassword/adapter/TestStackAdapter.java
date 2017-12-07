@@ -32,6 +32,7 @@ import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
+import cf.paradoxie.dizzypassword.view.SingleLineTextView;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -69,12 +70,12 @@ public class TestStackAdapter extends StackAdapter<Integer> {
     static class ColorItemViewHolder extends CardStackView.ViewHolder {
         View mLayout;
         View mContainerContent;
-        TextView mTextTitle, mNum, mTime, mTime_up, mTag1, mTag2, mTag3, mTag4, mTag5, mAccount, mPassword, mPwdvisible, mNote;
+        SingleLineTextView mAccount, mPassword;
+        TextView mTextTitle, mNum, mTime, mTime_up, mTag1, mTag2, mTag3, mTag4, mTag5, mPwdvisible, mNote;
         ImageView mChange, mDelete;
         RxBean rxEvent, rxEvent_1;
         ImageView iv_copy;
         private SweetAlertDialog pDialog = null;
-        private static Boolean isShow = false;//密码默认false不显示
 
         public ColorItemViewHolder(View view) {
             super(view);
@@ -86,8 +87,8 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mNum = (TextView) view.findViewById(R.id.text_list_card_num);
             mTime = (TextView) view.findViewById(R.id.text_list_card_time);
             mTime_up = (TextView) view.findViewById(R.id.text_list_card_up);
-            mAccount = (TextView) view.findViewById(R.id.tv_account);
-            mPassword = (TextView) view.findViewById(R.id.tv_password);
+            mAccount = (SingleLineTextView) view.findViewById(R.id.tv_account);
+            mPassword = (SingleLineTextView) view.findViewById(R.id.tv_password);
             mPwdvisible = (TextView) view.findViewById(R.id.tv_password_visible);
             mNote = (TextView) view.findViewById(R.id.tv_note);
             mChange = (ImageView) view.findViewById(R.id.iv_change);
@@ -196,15 +197,13 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     if (MyApplication.first_check == 0) {
                         MyToast.show(mContext, "请先点击左上角解锁操作权限", ThemeUtils.getPrimaryColor(mContext));
                     } else {
-                        if (isShow == false) {
+                        if (mPassword.getText().equals("**********")) {
                             mPassword.setText(password);
                             setDrawableLeft(R.drawable.password_open);
-                            isShow = true;
                             iv_copy.setVisibility(View.VISIBLE);
                         } else {
                             setDrawableLeft(R.drawable.password);
                             mPassword.setText("**********");
-                            isShow = false;
                             iv_copy.setVisibility(View.GONE);
                         }
                     }

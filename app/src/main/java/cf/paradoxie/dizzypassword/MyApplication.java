@@ -248,4 +248,16 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         return strNetworkType;
     }
 
+    public static String GetVersion() {
+        PackageInfo pi = null;
+        try {
+            pi = MyApplication.getContext().getPackageManager().getPackageInfo(MyApplication.getContext().getPackageName(), 0);
+            String versionName = pi.versionName;
+            return versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 }

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="20dp"
+    android:background="@drawable/search_label"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="请选择条件后点击生成"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold"/>
+
+    <cf.paradoxie.dizzypassword.view.SingleLineTextView
+        android:id="@+id/et_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/note"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:textColor="@color/red600"
+        android:textSize="22sp"/>
+
+    <View
+        android:id="@+id/bg_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/et_pwd"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/colorBlack">
+    </View>
+
+    <com.xw.repo.BubbleSeekBar
+        android:id="@+id/sb_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bg_line"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="35dp"
+        app:bsb_auto_adjust_section_mark="true"
+        app:bsb_bubble_color="@color/green100"
+        app:bsb_bubble_text_color="@color/colorPrimaryDark"
+        app:bsb_max="50"
+        app:bsb_min="6"
+        app:bsb_second_track_color="@color/green500"
+        app:bsb_section_count="44"
+        app:bsb_section_text_position="bottom_sides"
+        app:bsb_show_progress_in_float="false"
+        app:bsb_show_section_mark="false"
+        app:bsb_show_section_text="true"
+        app:bsb_show_thumb_text="true"
+        app:bsb_touch_to_seek="true"
+        app:bsb_track_color="@color/green50"/>
+
+    <LinearLayout
+        android:id="@+id/ll_rb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sb_num"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.mixiaoxiao.smoothcompoundbutton.SmoothSwitch
+                android:id="@+id/ss1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:tint="@color/green500"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="数字"
+                android:textColor="@color/colorBlack"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.mixiaoxiao.smoothcompoundbutton.SmoothSwitch
+                android:id="@+id/ss2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="@color/green500"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="小写字母"
+                android:textColor="@color/colorBlack"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.mixiaoxiao.smoothcompoundbutton.SmoothSwitch
+                android:id="@+id/ss3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="@color/green500"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="大写字母"
+                android:textColor="@color/colorBlack"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.mixiaoxiao.smoothcompoundbutton.SmoothSwitch
+                android:id="@+id/ss4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="@color/green500"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="字符"
+                android:textColor="@color/colorBlack"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/ll_rb"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorBlackAlpha26">
+    </View>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/line"
+        android:layout_margin="30dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_get"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/search_label"
+            android:padding="10dp"
+            android:text="生成"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"/>
+
+        <Button
+            android:id="@+id/btn_sure"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/search_label_sure"
+            android:padding="10dp"
+            android:text="确定"
+            android:textColor="@color/bg_color"
+            android:textSize="16sp"/>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

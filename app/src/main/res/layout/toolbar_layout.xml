@@ -10,11 +10,42 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/AppTheme.PopupOverlay">
 
+        <LinearLayout
+            android:id="@+id/main_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginRight="20dp"
+            android:visibility="gone">
 
+            <ImageView
+                android:id="@+id/refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:scaleType="center"
+                android:src="@drawable/refresh"/>
+
+            <ImageView
+                android:id="@+id/red_package"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="30dp"
+                android:src="@drawable/red_package_selector"/>
+
+            <ImageView
+                android:id="@+id/setting"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="30dp"
+                android:src="@drawable/set_selector"/>
+        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
 </android.support.design.widget.AppBarLayout>

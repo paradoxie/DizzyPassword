@@ -1,5 +1,7 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,11 +12,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.text.ClipboardManager;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loopeer.cardstack.CardStackView;
@@ -49,7 +51,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends BaseActivity implements CardStackView.ItemExpendListener {
+public class MainActivity extends BaseActivity implements CardStackView.ItemExpendListener, View.OnClickListener {
     private boolean optionMenuOn = true;  //显示optionmenu
     private Menu aMenu;         //获取optionmenu
     public static Integer[] TEST_DATAS = new Integer[]{
@@ -67,14 +69,16 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private TestStackAdapter mTestStackAdapter;
 
     private List<AccountBean> mAccountBeans;
-    private Button bt_search;
-    private EditText et_search;
     private TextView tip;
     private SweetAlertDialog pDialog = null;
     private static Boolean isExit = false;
     private BmobUser user = new BmobUser();
     public static Toolbar toolbar = null;
     private DialogView mDialogView;
+    private LinearLayout main_btn;
+    private long mCurrentPlayTime;
+    private ObjectAnimator animator;
+    private ImageView refresh, red_package, setting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,14 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         setContentView(R.layout.activity_main);
         ThemeUtils.initStatusBarColor(MainActivity.this, ThemeUtils.getPrimaryDarkColor(MainActivity.this));
 
+        refresh = (ImageView) findViewById(R.id.refresh);
+        red_package = (ImageView) findViewById(R.id.red_package);
+        setting = (ImageView) findViewById(R.id.setting);
+        refresh.setOnClickListener(this);
+        red_package.setOnClickListener(this);
+        setting.setOnClickListener(this);
+        main_btn = (LinearLayout) findViewById(R.id.main_btn);
+        main_btn.setVisibility(View.VISIBLE);
         //检测menu操作，第二次进入app时是否显示menu
         if (!(Boolean) SPUtils.get("optionMenuOn", true)) {
             optionMenuOn = false;
@@ -145,51 +157,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             });
         }
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.action_edit) {
-                    if (MyApplication.isSign()) {
-                        if (mStackView.isExpending()) {
-                            mStackView.clearSelectPosition();
-                            mStackView.removeAllViews();
-                        }
-                        findDate();
-
-                    } else {
-                        MyApplication.showToast("您还木有登录哦~");
-
-                    }
-                }
-                if (id == R.id.action_set) {
-                    Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-                    startActivity(intent);
-                }
-                if (id == R.id.action_red_package) {
-                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText("口令复制成功")
-                            .setContentText("支付宝红包，金额随机，最高￥99喔😃\n话说最近的红包好像变大了呢...\n")
-                            .setConfirmText("前往支付宝领取")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    ClipboardManager cm = (ClipboardManager) MainActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
-                                    cm.setText(getString(R.string.red_package_string));
-                                    try {
-                                        MyApplication.openAppByPackageName(MainActivity.this, "com.eg.android.AlipayGphone");
-                                    } catch (PackageManager.NameNotFoundException e) {
-                                        e.printStackTrace();
-                                    }
-                                    sDialog.cancel();
-                                }
-                            })
-                            .show();
-                }
-                return false;
-            }
-        });
-
         tip = (TextView) findViewById(R.id.tip);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -240,24 +207,23 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView.setItemExpendListener(this);
 
         if (SPUtils.get("key", "") + "" == "") {
-            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
-            //                        Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
+            //            Bmob.initialize(this, "46b1709520ec4d0afa17e505680202da");//正式版
+            Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
         } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
         if (!MyApplication.isSign()) {
             tip.setVisibility(View.VISIBLE);
         } else {
-            findDate();
-        }
-        et_search = (EditText) findViewById(R.id.et_search);
-        bt_search = (Button) findViewById(R.id.bt_search);
-        bt_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchDate(et_search.getText().toString().trim());
+            //取缓存数据
+            if (SPUtils.getDataList("beans", AccountBean.class).size() < 1) {
+                findOnLineDate();
+            } else {
+                findOffLineDate();
             }
-        });
+
+        }
+
         final SortByTime sortByTime = new SortByTime();
         RxBus.getInstance().toObserverable(RxBean.class)
                 .subscribeOn(Schedulers.io())
@@ -282,6 +248,31 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 });
     }
 
+
+    private void findOffLineDate() {
+
+        pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("离线数据加载中...");
+        pDialog.show();
+        mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
+
+        mTestStackAdapter = new TestStackAdapter(MainActivity.this, mAccountBeans);
+        mStackView.setAdapter(mTestStackAdapter);
+        mTestStackAdapter.notifyDataSetChanged();
+        new Handler().postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
+                        mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
+                        pDialog.dismiss();
+                    }
+                }
+                , 1500
+        );
+    }
+
     private void checkActivity() {
         mDialogView = new DialogView(MainActivity.this);
         mDialogView.setAccount(SPUtils.get("name", "") + "");
@@ -303,7 +294,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
         pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("加载中");
+        pDialog.setTitleText("查找中...");
         if (!MainActivity.this.isFinishing()) {
             pDialog.show();
         }
@@ -329,7 +320,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                     mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
                                 }
                             }
-                            , 1000
+                            , 100
                     );
 
                 } else {
@@ -350,11 +341,12 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
     }
 
-    private void findDate() {
+    private void findOnLineDate() {
         pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("加载中");
+        pDialog.setTitleText("联网加载中...");
         pDialog.show();
+        startAnim();
         BmobQuery<AccountBean> query = new BmobQuery<>();
         if (MyApplication.getUser() != null) {
             String id = MyApplication.getUser().getObjectId();
@@ -367,12 +359,17 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     if (objects != null) {
                         mAccountBeans = objects;
                         if (mAccountBeans.size() < 1) {
-                            tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
-                            tip.setVisibility(View.VISIBLE);
-                            pDialog.dismiss();
-                            return;
+                            if (SPUtils.getDataList("beans", AccountBean.class).size() < 1) {
+                                tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
+                                tip.setVisibility(View.VISIBLE);
+                                pDialog.dismiss();
+                                stopAnim(animator);
+                                return;
+                            }
                         }
                         tip.setVisibility(View.GONE);
+                        //缓存
+                        SPUtils.setDataList("beans", mAccountBeans);
                         mTestStackAdapter = new TestStackAdapter(MainActivity.this, mAccountBeans);
                         mStackView.setAdapter(mTestStackAdapter);
                         mTestStackAdapter.notifyDataSetChanged();
@@ -382,15 +379,25 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                     public void run() {
                                         //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
                                         mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
+                                        // hideAnimate();
+                                        stopAnim(animator);
                                     }
                                 }
                                 , 100
                         );
                     } else {
-                        tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
-                        tip.setVisibility(View.VISIBLE);
+                        if (e.getErrorCode() == 9016 && SPUtils.getDataList("beans", AccountBean.class).size() > 1) {
+                            MyApplication.showToast("网络好像不可以哦~");
+                            stopAnim(animator);
+                            pDialog.dismiss();
+                            return;
+                        } else {
+                            tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
+                            tip.setVisibility(View.VISIBLE);
+                        }
                     }
                     pDialog.dismiss();
+
                 }
             });
         }
@@ -458,12 +465,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
 
     //是否显示menu
     private void checkOptionMenu() {
@@ -524,5 +525,70 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private void hideInputWindow() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.refresh:
+                if (MyApplication.isSign()) {
+                    if (mStackView.isExpending()) {
+                        mStackView.clearSelectPosition();
+                        mStackView.removeAllViews();
+                    }
+                    findOnLineDate();
+
+                } else {
+                    MyApplication.showToast("您还木有登录哦~");
+
+                }
+                break;
+            case R.id.red_package:
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText("口令复制成功")
+                        .setContentText("支付宝红包，金额随机，最高￥99喔😃\n" +
+                                "\n每天都可以来领取一次哈\n话说最近的红包好像都变大了呢...\n")
+                        .setConfirmText("前往支付宝领取")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                ClipboardManager cm = (ClipboardManager) MainActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
+                                cm.setText(getString(R.string.red_package_string_little));
+                                try {
+                                    MyApplication.openAppByPackageName(MainActivity.this, "com.eg.android.AlipayGphone");
+                                } catch (PackageManager.NameNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                                sDialog.cancel();
+                            }
+                        })
+                        .show();
+                break;
+            case R.id.setting:
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void startAnim() {
+        animator = ObjectAnimator.ofFloat(refresh, "rotation", 0f, 360.0f);
+        animator.setDuration(500);
+        animator.setInterpolator(new LinearInterpolator());//不停顿
+        animator.setRepeatCount(-1);//设置动画重复次数
+        animator.setRepeatMode(ValueAnimator.RESTART);//动画重复模式
+        startAnimation(animator);
+    }
+
+    private void stopAnim(ObjectAnimator mRotateAntiClockwiseAnimator) {
+        mCurrentPlayTime = mRotateAntiClockwiseAnimator.getCurrentPlayTime();
+        mRotateAntiClockwiseAnimator.cancel();
+    }
+
+    private void startAnimation(ObjectAnimator mRotateAntiClockwiseAnimator) {
+        mRotateAntiClockwiseAnimator.start();
+        mRotateAntiClockwiseAnimator.setCurrentPlayTime(mCurrentPlayTime);
     }
 }

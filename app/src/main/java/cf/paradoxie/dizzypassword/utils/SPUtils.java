@@ -3,18 +3,29 @@ package cf.paradoxie.dizzypassword.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import cf.paradoxie.dizzypassword.MyApplication;
 
 public class SPUtils {
+
+
     /**
      * 保存在手机里面的文件名
      */
     public static final String FILE_NAME = "share_data";
+    public static final String FILE_NAME_LIST = "beans_data";
 
     public SPUtils() {
+
         /* cannot be instantiated */
         throw new UnsupportedOperationException("cannot be instantiated");
     }
@@ -73,6 +84,63 @@ public class SPUtils {
         }
 
         return null;
+    }
+
+    /**
+     * 保存List
+     *
+     * @param tag
+     * @param datalist
+     */
+    public static <T> void setDataList(String tag, List<T> datalist) {
+
+        SharedPreferences sp = MyApplication.getContext()
+                .getSharedPreferences(FILE_NAME_LIST, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        if (null == datalist || datalist.size() <= 0)
+            return;
+
+        Gson gson = new Gson();
+        //转换成json数据，再保存
+        String strJson = gson.toJson(datalist);
+        editor.clear();
+        editor.putString(tag, strJson);
+        editor.commit();
+
+    }
+
+    /**
+     * 获取List
+     *
+     * @param tag
+     * @return
+     */
+    public static <T> List<T> getDataList(String tag, Class<T> clazz) {
+        List<T> datalist = new ArrayList<>();
+        SharedPreferences sp = MyApplication.getContext()
+                .getSharedPreferences(FILE_NAME_LIST, Context.MODE_PRIVATE);
+        String strJson = sp.getString(tag, null);
+        if (null == strJson) {
+            return datalist;
+        }
+        //        Gson gson = new Gson();
+        //        datalist = gson.fromJson(strJson, new TypeToken<List<T>>() {
+        //        }.getType());
+        //解决强转类型错误：方案来自知乎
+        JsonArray array = new JsonParser().parse(strJson).getAsJsonArray();
+        for (final JsonElement elem : array) {
+            datalist.add(new Gson().fromJson(elem, clazz));
+        }
+        return datalist;
+
+    }
+
+    public static void removeDataList(String key) {
+        SharedPreferences sp = MyApplication.getContext()
+                .getSharedPreferences(FILE_NAME_LIST, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.remove(key);
+        SharedPreferencesCompat.apply(editor);
     }
 
     /**
@@ -160,23 +228,6 @@ public class SPUtils {
             str = str.substring(0, 8);
         }
         return str;
-    }
-
-    public static String getKey(String s) {
-
-        StringBuffer sb = null;
-        int strLen = s.length();
-        if (strLen < 8) {
-            while (strLen < 8) {
-                sb = new StringBuffer();
-                sb.append(s).append("0");//右(后)补0
-                s = sb.toString();
-                strLen = s.length();
-            }
-        } else {
-            s = s.substring(0, 8);
-        }
-        return s;
     }
 
 }

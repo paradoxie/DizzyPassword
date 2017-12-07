@@ -5,21 +5,21 @@
 
     <item
         android:id="@+id/action_edit"
-        android:icon="@drawable/rotate"
-        android:orderInCategory="80"
+        android:icon="@drawable/refresh"
+        android:orderInCategory="100"
         android:title="刷新"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
     <item
         android:id="@+id/action_red_package"
         android:icon="@drawable/red_package_selector"
-        android:orderInCategory="80"
+        android:orderInCategory="200"
         android:title="红包"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_set"
         android:icon="@drawable/set_selector"
-        android:orderInCategory="90"
+        android:orderInCategory="300"
         android:title="设置"
         app:showAsAction="ifRoom"/>
 

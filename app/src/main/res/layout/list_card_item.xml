@@ -246,7 +246,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="18sp"/>
 
-                <TextView
+                <cf.paradoxie.dizzypassword.view.SingleLineTextView
                     android:id="@+id/tv_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -274,7 +274,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="18sp"/>
 
-                <TextView
+                <cf.paradoxie.dizzypassword.view.SingleLineTextView
                     android:id="@+id/tv_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

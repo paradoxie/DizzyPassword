@@ -58,6 +58,8 @@ public class CrashLogActivity extends BaseActivity {
         sb.append(Build.VERSION.RELEASE).append("\n");
         sb.append("网络环境：");
         sb.append(MyApplication.GetNetworkType()).append("\n");
+        sb.append("软件版本：");
+        sb.append(MyApplication.GetVersion()).append("\n");
         sb.append("异常时间：");
         sb.append(dateFormat.format(new Date())).append("\n");
         sb.append("异常类型：");
