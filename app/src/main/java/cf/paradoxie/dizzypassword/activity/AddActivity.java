@@ -207,11 +207,11 @@ public class AddActivity extends BaseActivity {
         passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
         noteWrapper = (TextInputLayout) findViewById(R.id.noteWrapper);
         tagWrapper = (TextInputLayout) findViewById(R.id.tagWrapper);
-        nameWrapper.setHint("名称，比如酷安、酷安小号、酷安女号等");
-        accountWrapper.setHint("帐户，邮箱、电话、用户名");
-        passwordWrapper.setHint("密码，点击左侧图标可自动生成哦");
-        noteWrapper.setHint("备注，回车即可换行");
-        tagWrapper.setHint("选择标记信息,输入请用空格隔开,注:可用于归类检索");
+        nameWrapper.setHint("名称,比如酷安、酷安小号、酷安女号等");
+        accountWrapper.setHint("帐户,邮箱、电话、用户名");
+        passwordWrapper.setHint("密码,点击左侧图标可自动生成哦");
+        noteWrapper.setHint("备注,回车即可换行");
+        tagWrapper.setHint("标记,点击选择,输入请用空格隔开,注:可用于归类检索");
 
 
         et_name = (EditText) findViewById(R.id.et_name);

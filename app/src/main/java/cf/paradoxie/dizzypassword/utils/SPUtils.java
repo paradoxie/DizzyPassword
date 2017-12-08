@@ -165,9 +165,14 @@ public class SPUtils {
     public static void clear() {
         SharedPreferences sp = MyApplication.getContext()
                 .getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sp_1 = MyApplication.getContext()
+                .getSharedPreferences(FILE_NAME_LIST, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
+        SharedPreferences.Editor editor_1 = sp_1.edit();
+        editor_1.clear();
         SharedPreferencesCompat.apply(editor);
+        SharedPreferencesCompat.apply(editor_1);
     }
 
 

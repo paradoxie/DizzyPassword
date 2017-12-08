@@ -85,7 +85,7 @@ public class SettingActivity extends BaseActivity {
                         public void posClickListener(String value) {
                             //校验密码
                             if (value.equals(SPUtils.get("password", "") + "")) {
-                                SPUtils.remove("name");//清除用户记录
+                                SPUtils.clear();//清除用户记录
                                 BmobUser.logOut();   //清除缓存用户对象
                                 AppManager.getAppManager().finishAllActivity();
                                 startActivity(new Intent(SettingActivity.this, SignActivity.class));
