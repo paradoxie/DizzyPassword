@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:SearchView="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,6 +10,14 @@
     tools:context="cf.paradoxie.dizzypassword.activity.MainActivity">
 
     <include layout="@layout/toolbar_layout"/>
+
+    <km.lmy.searchview.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        SearchView:hintText="目前仅支持条目精确名称搜索哦~"
+        android:layout_margin="3dp"
+        android:elevation="5dp"/>
 
     <include layout="@layout/content_main"/>
 
