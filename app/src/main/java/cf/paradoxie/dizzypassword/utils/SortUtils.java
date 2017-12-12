@@ -8,7 +8,7 @@ import cf.paradoxie.dizzypassword.db.AccountBean;
  * Created by xiehehe on 2017/11/4.
  */
 
-public class SortByTime implements Comparator {
+public class SortUtils implements Comparator {
     @Override
     public int compare(Object o, Object t1) {
         AccountBean bean1 = (AccountBean) o;

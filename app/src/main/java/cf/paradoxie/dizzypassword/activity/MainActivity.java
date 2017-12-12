@@ -25,7 +25,10 @@ import com.loopeer.cardstack.CardStackView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,7 +42,7 @@ import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
-import cf.paradoxie.dizzypassword.utils.SortByTime;
+import cf.paradoxie.dizzypassword.utils.SortUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.view.DialogView;
 import cn.bmob.v3.Bmob;
@@ -238,7 +241,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         //获得tag的统计数据
         getTags();
 
-        final SortByTime sortByTime = new SortByTime();
+        final SortUtils sortUtils = new SortUtils();
         RxBus.getInstance().toObserverable(RxBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -254,7 +257,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                 mStackView.clearSelectPosition();
                                 mStackView.removeAllViews();
                             }
-                            findDateByTime(sortByTime);
+                            findDateByTime(sortUtils);
                             return;
                         }
                     }
@@ -419,7 +422,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
     }
 
-    private void findDateByTime(final SortByTime sortByTime) {
+    private void findDateByTime(final SortUtils sortUtils) {
         try {//233，这个地方单独判断isFinish还是会崩，得再捕捉一次
             if (!MainActivity.this.isFinishing()) {
                 pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
@@ -441,7 +444,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 @Override
                 public void done(List<AccountBean> objects, BmobException e) {
                     if (objects != null) {
-                        Collections.sort(objects, Collections.reverseOrder(sortByTime));
+                        Collections.sort(objects, Collections.reverseOrder(sortUtils));
                         mAccountBeans = objects;
                         MyToast.show(MainActivity.this, "已按最近更新时间排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
 
@@ -640,9 +643,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 query.addWhereEqualTo("name", name);
                 query.addWhereEqualTo("user", new BmobPointer(user));
                 boolean isCache = query.hasCachedResult(AccountBean.class);
-                if(isCache){
+                if (isCache) {
                     query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);    // 如果有缓存的话，则设置策略为CACHE_ELSE_NETWORK
-                }else{
+                } else {
                     query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);    // 如果没有缓存的话，则设置策略为NETWORK_ELSE_CACHE
                 }
                 query.findObjects(new FindListener<AccountBean>() {
@@ -667,8 +670,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                             } else {
                                 MyApplication.showToast("好像没有叫这个名字的条目哦~试试Tag看看");
                             }
-                        }else {
-                            MyApplication.showToast("发生了什么~(⊙ˍ⊙)"+e.getMessage());
+                        } else {
+                            MyApplication.showToast("发生了什么~(⊙ˍ⊙)" + e.getMessage());
                         }
                         pDialog.dismiss();
                     }
@@ -681,7 +684,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
     }
 
-    private void getTags(){
+    private void getTags() {
         final List<String> s = new ArrayList<>();
         BmobQuery<AccountBean> bmobQuery = new BmobQuery<>();
         String id = MyApplication.getUser().getObjectId();
@@ -691,17 +694,49 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         bmobQuery.findObjects(new FindListener<AccountBean>() {
             @Override
             public void done(List<AccountBean> object, BmobException e) {
-                if(e==null){
-                    Log.i("bmob","查询成功：共" + object.size() + "条数据。");
-                    //注意：这里的Person对象中只有指定列的数据。
+                if (e == null) {
+                    Log.i("bmob", "查询成功：共" + object.size() + "条数据。");
+                    //获取所有的tag
                     for (int j = 0; j < object.size(); j++) {
                         s.addAll(object.get(j).getTag());
                     }
-                    Log.i("bmob",s.toString());
-                }else{
-                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                    Log.i("bmob", s.toString());
+                    Map map = getTagList(s, 5);
+                    Log.i("bmob", map.toString());
+                } else {
+                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
                 }
             }
         });
     }
+
+    /**
+     * 获得最多的5个标签及重复次数
+     *
+     * @param s 传入的tag数组
+     * @param t 需要几个tag在搜索栏显示
+     * @return map
+     */
+    private Map getTagList(List s, int t) {
+        Map<String, Integer> tagMap = new HashMap<>();
+        Map map = new HashMap();
+        for (Object temp : s) {
+            Integer count = (Integer) map.get(temp);
+            map.put(temp, (count == null) ? 1 : count + 1);
+        }
+        List<Map.Entry<String, Integer>> mappingList = null;
+        mappingList = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
+        //通过比较器实现比较排序
+        Collections.sort(mappingList, new Comparator<Map.Entry<String, Integer>>() {
+            public int compare(Map.Entry<String, Integer> mapping1, Map.Entry<String, Integer> mapping2) {
+                return mapping2.getValue().compareTo(mapping1.getValue());
+            }
+        });
+        for (int i = 0; i < t; i++) {
+            tagMap.put(mappingList.get(i).getKey(), mappingList.get(i).getValue());
+        }
+
+        return tagMap;
+    }
+
 }
