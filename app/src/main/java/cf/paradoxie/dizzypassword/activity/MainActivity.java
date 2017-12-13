@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.loopeer.cardstack.CardStackView;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -86,6 +87,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private ObjectAnimator animator;
     private ImageView refresh, red_package, setting, search;
     private SearchView mSearchView;
+    private FloatingActionButton fab;
+    List<Map.Entry<String, Integer>> mappingList = null;
+    List<String> historys = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +172,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
 
         tip = (TextView) findViewById(R.id.tip);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
         //初始化搜索数据操作
         searchData();
@@ -549,7 +553,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search:
+                mSearchView.setNewHistoryList(getHistory());
                 mSearchView.autoOpenOrClose();
+                fab.setVisibility(View.GONE);
                 break;
 
             case R.id.refresh:
@@ -624,10 +630,34 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             }
         });
 
+        mSearchView.getBackIV().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSearchView.close();
+                fab.setVisibility(View.VISIBLE);
+            }
+        });
+        mSearchView.setNewHistoryList(getHistory());
+        mSearchView.setOnCleanHistoryClickListener(new SearchView.OnCleanHistoryClickListener() {
+            @Override
+            public void onClick() {
+                SPUtils.remove("historyLists");
+                MyApplication.showToast("搜索记录删除成功");
+            }
+        });
         //设置软键盘搜索按钮点击事件
         mSearchView.setOnSearchActionListener(new SearchView.OnSearchActionListener() {
             @Override
             public void onSearchAction(String searchText) {
+                addHistory(searchText);//历史记录存入sp
+                if (searchText.contains("(")) {
+                    String str = searchText.substring(searchText.indexOf("("), searchText.indexOf(")") + 1);
+                    searchText = searchText.replace(str, "");
+                    searchDate(searchText);
+                    mSearchView.close();
+                    fab.setVisibility(View.VISIBLE);
+                    return;
+                }
                 if (mStackView.isExpending()) {
                     mStackView.clearSelectPosition();
                     mStackView.removeAllViews();
@@ -642,12 +672,12 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 BmobQuery<AccountBean> query = new BmobQuery<>();
                 query.addWhereEqualTo("name", name);
                 query.addWhereEqualTo("user", new BmobPointer(user));
-                boolean isCache = query.hasCachedResult(AccountBean.class);
-                if (isCache) {
-                    query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);    // 如果有缓存的话，则设置策略为CACHE_ELSE_NETWORK
-                } else {
-                    query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);    // 如果没有缓存的话，则设置策略为NETWORK_ELSE_CACHE
-                }
+                //                boolean isCache = query.hasCachedResult(AccountBean.class);
+                //                if (isCache) {
+                //                    query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);    // 如果有缓存的话，则设置策略为CACHE_ELSE_NETWORK
+                //                } else {
+                //                    query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);    // 如果没有缓存的话，则设置策略为NETWORK_ELSE_CACHE
+                //                }
                 query.findObjects(new FindListener<AccountBean>() {
 
                     @Override
@@ -678,14 +708,17 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
                 });
                 mSearchView.close();
-                mSearchView.addOneHistory(searchText);
+                fab.setVisibility(View.VISIBLE);
+                //                mSearchView.addOneHistory(searchText);
             }
         });
+
 
     }
 
     private void getTags() {
         final List<String> s = new ArrayList<>();
+
         BmobQuery<AccountBean> bmobQuery = new BmobQuery<>();
         String id = MyApplication.getUser().getObjectId();
         user.setObjectId(id);
@@ -700,9 +733,21 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     for (int j = 0; j < object.size(); j++) {
                         s.addAll(object.get(j).getTag());
                     }
-                    Log.i("bmob", s.toString());
-                    Map map = getTagList(s, 5);
-                    Log.i("bmob", map.toString());
+                    List<Map.Entry<String, Integer>> tags;
+                    List<Map.Entry<String, Integer>> tags_name;
+                    tags = getTagList(s);
+                    tags_name = getTagListByName(s);
+                    String[] strings = new String[tags.size()];
+                    String[] strings_name = new String[tags_name.size()];
+                    for (int i = 0; i < tags.size(); i++) {
+                        strings[i] = tags.get(i).getKey() + "(" + tags.get(i).getValue() + ")";
+                    }
+                    for (int i = 0; i < tags_name.size(); i++) {
+                        strings_name[i] = tags_name.get(i).getKey() + "(" + tags_name.get(i).getValue() + ")";
+                    }
+                    mSearchView.initFlowView(strings);
+                    mSearchView.initFlowViewByName(strings_name);
+
                 } else {
                     Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
                 }
@@ -711,20 +756,19 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     }
 
     /**
-     * 获得最多的5个标签及重复次数
+     * 获得频率最高的标签及重复次数
      *
      * @param s 传入的tag数组
-     * @param t 需要几个tag在搜索栏显示
      * @return map
      */
-    private Map getTagList(List s, int t) {
-        Map<String, Integer> tagMap = new HashMap<>();
+    private ArrayList<Map.Entry<String, Integer>> getTagList(List s) {
+        //        Map<String, Integer> tagMap = new HashMap<>();
         Map map = new HashMap();
         for (Object temp : s) {
             Integer count = (Integer) map.get(temp);
             map.put(temp, (count == null) ? 1 : count + 1);
         }
-        List<Map.Entry<String, Integer>> mappingList = null;
+
         mappingList = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
         //通过比较器实现比较排序
         Collections.sort(mappingList, new Comparator<Map.Entry<String, Integer>>() {
@@ -732,11 +776,49 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 return mapping2.getValue().compareTo(mapping1.getValue());
             }
         });
-        for (int i = 0; i < t; i++) {
-            tagMap.put(mappingList.get(i).getKey(), mappingList.get(i).getValue());
+        return (ArrayList<Map.Entry<String, Integer>>) mappingList;
+    }
+
+    /**
+     * 获得频率最高的标签及重复次数
+     * 按名称排序
+     *
+     * @param s 传入的tag数组
+     * @return map
+     */
+    private ArrayList<Map.Entry<String, Integer>> getTagListByName(List s) {
+        Map map = new HashMap();
+        for (Object temp : s) {
+            Integer count = (Integer) map.get(temp);
+            map.put(temp, (count == null) ? 1 : count + 1);
         }
 
-        return tagMap;
+        mappingList = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
+        //通过比较器实现比较排序
+        Collections.sort(mappingList, new Comparator<Map.Entry<String, Integer>>() {
+            public int compare(Map.Entry<String, Integer> mapping1, Map.Entry<String, Integer> mapping2) {
+                Comparator<Object> com = Collator.getInstance(java.util.Locale.CHINA);
+                return com.compare(mapping1.getKey(), mapping2.getKey());
+            }
+        });
+
+        return (ArrayList<Map.Entry<String, Integer>>) mappingList;
+    }
+
+    private void addHistory(String value) {
+        String historyLists = (String) SPUtils.get("historyLists", "");
+        if (historyLists == "") {
+            SPUtils.put("historyLists", " " + value);
+        } else {
+            historyLists = value + " " + historyLists.trim();
+            SPUtils.put("historyLists", historyLists);
+        }
+    }
+
+    private List<String> getHistory() {
+        String strings = ((String) SPUtils.get("historyLists", "")).trim();
+        historys = java.util.Arrays.asList(strings.split(" "));
+        return historys;
     }
 
 }
