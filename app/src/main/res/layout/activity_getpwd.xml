@@ -2,12 +2,10 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_margin="20dp"
-    android:background="@drawable/search_label"
-    android:padding="10dp">
+    android:id="@+id/dialog"
+    android:padding="20dp">
 
     <TextView
         android:id="@+id/note"
@@ -53,11 +51,11 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="35dp"
         app:bsb_auto_adjust_section_mark="true"
-        app:bsb_bubble_color="@color/green100"
-        app:bsb_bubble_text_color="@color/colorPrimaryDark"
+        app:bsb_bubble_color="#1e545252"
+        app:bsb_bubble_text_color="?colorPrimaryDark"
         app:bsb_max="50"
         app:bsb_min="6"
-        app:bsb_second_track_color="@color/green500"
+        app:bsb_second_track_color="?colorAccent"
         app:bsb_section_count="44"
         app:bsb_section_text_position="bottom_sides"
         app:bsb_show_progress_in_float="false"
@@ -65,7 +63,7 @@
         app:bsb_show_section_text="true"
         app:bsb_show_thumb_text="true"
         app:bsb_touch_to_seek="true"
-        app:bsb_track_color="@color/green50"/>
+        app:bsb_track_color="#1e545252"/>
 
     <LinearLayout
         android:id="@+id/ll_rb"
@@ -87,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:tint="@color/green500"/>
+                android:tint="?colorAccent"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -108,7 +106,7 @@
                 android:id="@+id/ss2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:tint="@color/green500"/>
+                android:tint="?colorAccent"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -129,7 +127,7 @@
                 android:id="@+id/ss3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:tint="@color/green500"/>
+                android:tint="?colorAccent"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -150,7 +148,7 @@
                 android:id="@+id/ss4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:tint="@color/green500"/>
+                android:tint="?colorAccent"/>
 
             <TextView
                 android:layout_width="wrap_content"

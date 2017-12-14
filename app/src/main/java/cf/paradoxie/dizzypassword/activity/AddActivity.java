@@ -1,5 +1,6 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -232,11 +233,12 @@ public class AddActivity extends BaseActivity {
 
     }
 
+    @SuppressLint("ResourceType")
     private void initData() {
         for (int i = 0; i < mVals.length; i++) {
             final TextView tv = (TextView) mInflater.inflate(
                     R.layout.search_label_tv, mFlowLayout, false);
-            tv.setTextColor(getResources().getColor(R.color.title_color));
+            tv.setTextColor(getResources().getColor(R.color.color_bg));
             tv.setText(mVals[i]);
 
             final String str = tv.getText().toString();

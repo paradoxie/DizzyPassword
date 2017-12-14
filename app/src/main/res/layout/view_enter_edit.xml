@@ -95,8 +95,8 @@
             android:background="@drawable/search_label_sure"
             android:gravity="center"
             android:text="确定"
-            android:textColor="@android:color/white"
-            android:textSize="18dip"/>
+            android:textColor="@color/bg_color"
+            android:textSize="18sp"/>
     </LinearLayout>
 
 </LinearLayout>

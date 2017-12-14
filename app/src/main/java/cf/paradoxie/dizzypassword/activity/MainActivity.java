@@ -22,12 +22,9 @@ import android.widget.TextView;
 
 import com.loopeer.cardstack.CardStackView;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -39,6 +36,7 @@ import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.adapter.TestStackAdapter;
 import cf.paradoxie.dizzypassword.db.AccountBean;
 import cf.paradoxie.dizzypassword.db.RxBean;
+import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.RxBus;
@@ -224,7 +222,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView.setItemExpendListener(this);
 
         if (SPUtils.get("key", "") + "" == "") {
-            Bmob.initialize(this, "949a1379183be6d8a655037d1282c146");//测试版
+            Bmob.initialize(this, "");
         } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
@@ -239,11 +237,15 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             } else {
                 findOffLineDate();
             }
+            //获得tag的统计数据
+            //            getTags();
+            new Thread() {
+                public void run() {
+                    getTags();
+                }
+            }.start();
 
         }
-
-        //获得tag的统计数据
-        getTags();
 
         final SortUtils sortUtils = new SortUtils();
         RxBus.getInstance().toObserverable(RxBean.class)
@@ -637,6 +639,13 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 fab.setVisibility(View.VISIBLE);
             }
         });
+        mSearchView.getCloseTv().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSearchView.close();
+                fab.setVisibility(View.VISIBLE);
+            }
+        });
         mSearchView.setNewHistoryList(getHistory());
         mSearchView.setOnCleanHistoryClickListener(new SearchView.OnCleanHistoryClickListener() {
             @Override
@@ -735,8 +744,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     }
                     List<Map.Entry<String, Integer>> tags;
                     List<Map.Entry<String, Integer>> tags_name;
-                    tags = getTagList(s);
-                    tags_name = getTagListByName(s);
+                    tags = DataUtils.getTagList(mappingList, s);
+                    tags_name = DataUtils.getTagListByName(mappingList, s);
                     String[] strings = new String[tags.size()];
                     String[] strings_name = new String[tags_name.size()];
                     for (int i = 0; i < tags.size(); i++) {
@@ -755,55 +764,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         });
     }
 
-    /**
-     * 获得频率最高的标签及重复次数
-     *
-     * @param s 传入的tag数组
-     * @return map
-     */
-    private ArrayList<Map.Entry<String, Integer>> getTagList(List s) {
-        //        Map<String, Integer> tagMap = new HashMap<>();
-        Map map = new HashMap();
-        for (Object temp : s) {
-            Integer count = (Integer) map.get(temp);
-            map.put(temp, (count == null) ? 1 : count + 1);
-        }
-
-        mappingList = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
-        //通过比较器实现比较排序
-        Collections.sort(mappingList, new Comparator<Map.Entry<String, Integer>>() {
-            public int compare(Map.Entry<String, Integer> mapping1, Map.Entry<String, Integer> mapping2) {
-                return mapping2.getValue().compareTo(mapping1.getValue());
-            }
-        });
-        return (ArrayList<Map.Entry<String, Integer>>) mappingList;
-    }
-
-    /**
-     * 获得频率最高的标签及重复次数
-     * 按名称排序
-     *
-     * @param s 传入的tag数组
-     * @return map
-     */
-    private ArrayList<Map.Entry<String, Integer>> getTagListByName(List s) {
-        Map map = new HashMap();
-        for (Object temp : s) {
-            Integer count = (Integer) map.get(temp);
-            map.put(temp, (count == null) ? 1 : count + 1);
-        }
-
-        mappingList = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
-        //通过比较器实现比较排序
-        Collections.sort(mappingList, new Comparator<Map.Entry<String, Integer>>() {
-            public int compare(Map.Entry<String, Integer> mapping1, Map.Entry<String, Integer> mapping2) {
-                Comparator<Object> com = Collator.getInstance(java.util.Locale.CHINA);
-                return com.compare(mapping1.getKey(), mapping2.getKey());
-            }
-        });
-
-        return (ArrayList<Map.Entry<String, Integer>>) mappingList;
-    }
 
     private void addHistory(String value) {
         String historyLists = (String) SPUtils.get("historyLists", "");

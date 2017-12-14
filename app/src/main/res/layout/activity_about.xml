@@ -47,7 +47,7 @@
             android:layout_below="@id/version_info"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:text="图标由小伙伴@W王小丑L(酷安id)  友情提供ಠ౪ಠ"
+            android:text="APP图标征集中，欢迎大佬助攻ಠ౪ಠ"
             android:textColor="@android:color/black"/>
 
         <TextView

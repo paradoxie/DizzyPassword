@@ -41,7 +41,7 @@
             android:windowSoftInputMode="stateHidden|adjustPan"/>
 
         <activity android:name=".activity.GetPwdActivity"
-                  android:theme="@style/myTransparent"/>
+                  android:theme="@style/AppTheme_Dialog"/>
 
         <activity android:name=".activity.AboutActivity"/>
 

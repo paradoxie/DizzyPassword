@@ -221,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
                 android:text="长按单条信息可以实现单独复制哦(*^__^*)"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/bg_color"
                 android:textSize="8sp"/>
         </LinearLayout>
 

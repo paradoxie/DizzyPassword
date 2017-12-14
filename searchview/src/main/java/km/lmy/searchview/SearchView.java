@@ -77,7 +77,7 @@ public class SearchView extends LinearLayout {
 
     CardView cardViewSearch;
 
-    TextView cleanHistory;
+    TextView cleanHistory ,close;
 
     LinearLayout searchLinearLayout;
 
@@ -132,6 +132,7 @@ public class SearchView extends LinearLayout {
         recyclerView = (RecyclerView) mView.findViewById(R.id.recyclerView);
         cardViewSearch = (CardView) mView.findViewById(R.id.cardView_search);
         cleanHistory = (TextView) mView.findViewById(R.id.clearHistory);
+        close = (TextView) mView.findViewById(R.id.close);
         searchLinearLayout = (LinearLayout) mView.findViewById(R.id.search_linearLayout);
     }
 
@@ -155,6 +156,13 @@ public class SearchView extends LinearLayout {
                 switchCleanHistoryDisplay();
                 if (onCleanHistoryClickListener != null)
                     onCleanHistoryClickListener.onClick();
+            }
+        });
+
+        close.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                close();
             }
         });
 
@@ -358,6 +366,12 @@ public class SearchView extends LinearLayout {
      */
     public ImageView getBackIV() {
         return ivSearchBack;
+    }
+ /**
+     * @return 获取关闭按钮
+     */
+    public TextView getCloseTv() {
+        return close;
     }
 
     /**

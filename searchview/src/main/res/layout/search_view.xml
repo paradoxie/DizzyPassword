@@ -135,13 +135,27 @@
             android:id="@+id/clearHistory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/all_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/clear_history"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@id/all_name"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="5dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
-            android:text="@string/clear_history"
+            android:text="@string/close"
             android:textColor="@android:color/darker_gray"
             android:textSize="13sp"/>
 
