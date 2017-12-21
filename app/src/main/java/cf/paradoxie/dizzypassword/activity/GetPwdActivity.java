@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 
 import com.mixiaoxiao.smoothcompoundbutton.SmoothSwitch;
@@ -55,6 +56,7 @@ public class GetPwdActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setFinishOnTouchOutside(true);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_getpwd);
         init();
     }
@@ -83,6 +85,9 @@ public class GetPwdActivity extends BaseActivity {
                 if (num < 6) {
                     MyApplication.showToast("请选择密码位数");
                     return;
+                }
+                if (num==8){
+                    MyApplication.showToast("不建议使用默认位数哦~");
                 }
                 if (ss1.isChecked() && !ss2.isChecked() && !ss3.isChecked() && !ss4.isChecked()) {
                     //1仅数字
@@ -167,6 +172,7 @@ public class GetPwdActivity extends BaseActivity {
         ss2.setChecked(Boolean.parseBoolean(strings[1]));
         ss3.setChecked(Boolean.parseBoolean(strings[2]));
         ss4.setChecked(Boolean.parseBoolean(strings[3]));
+        sb_num.setProgress(8f);
 
     }
 

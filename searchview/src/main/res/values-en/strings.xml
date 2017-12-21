@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="clear_history">Clear history</string>
-    <string name="close">Close SearchView</string>
-    <string name="enter_content">Please enter the content</string>
-</resources>

@@ -5,9 +5,15 @@
         android:title="通用">
         <cf.paradoxie.dizzypassword.view.ThemeChoice
             android:key="theme_change"/>
-        <PreferenceScreen
+        <EditTextPreference
             android:key="id_change"
-            android:title="更换签名"/>
+            android:title="后台时长(单位:秒)"
+            android:paddingLeft="5dp"
+            android:summary="程序进入后台时间达到时长将自杀"
+            android:inputType="number"
+            android:gravity="center"
+            android:hint="默认值为60秒"
+            android:maxLength="3"/>
         <EditTextPreference
             android:key="id_code"
             android:title="更换安全码"

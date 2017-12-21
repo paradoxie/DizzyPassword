@@ -1,5 +1,6 @@
 package cf.paradoxie.dizzypassword;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -33,6 +36,9 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
     public static int first_check = 0;
     public static boolean isShow = true;
     private static Toast mToast;
+    public static String killTime;
+    private int mFinalCount;
+    Handler handler;
 
 
     @Override
@@ -42,6 +48,8 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         mInstance = this;
         mContext = getApplicationContext();
         Thread.setDefaultUncaughtExceptionHandler(this);//开启抓取错误信息
+        handler = new Handler();
+        checkStatus();//监听前后台状态
     }
 
     @Override
@@ -49,6 +57,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         CrashLogActivity.start(this, e);
         System.exit(1);
     }
+
 
     //返回
     public static Context getContext() {
@@ -192,7 +201,6 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         }
     }
 
-
     public static String GetNetworkType() {
         String strNetworkType = "";
 
@@ -206,7 +214,6 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
                 String _strSubTypeName = networkInfo.getSubtypeName();
 
                 Log.e("cocos2d-x", "Network getSubtypeName : " + _strSubTypeName);
-
                 // TD-SCDMA   networkType is 17
                 int networkType = networkInfo.getSubtype();
                 switch (networkType) {
@@ -258,6 +265,77 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
             e.printStackTrace();
         }
         return "";
+    }
+
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            AppManager.getAppManager().finishAllActivity();
+            //杀掉，这个应用程序的进程，释放 内存
+            int id = android.os.Process.myPid();
+            if (id != 0) {
+                android.os.Process.killProcess(id);
+            }
+            handler.postDelayed(this, 1000);
+        }
+    };
+
+    /**
+     * 校验前后台状态
+     */
+    private void checkStatus() {
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+                mFinalCount++;
+                //如果mFinalCount ==1，说明是从后台到前台
+                Log.e("onActivityStarted", mFinalCount + "");
+                if (mFinalCount == 1) {
+                    //说明从后台回到了前台
+                    handler.removeCallbacks(runnable);
+                }
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+                mFinalCount--;
+                //如果mFinalCount ==0，说明是前台到后台
+                Log.i("onActivityStopped", mFinalCount + "");
+                if (mFinalCount == 0) {
+                    //说明从前台回到了后台
+                    killTime = (String) SPUtils.get("killTime", 60 + "");
+                    MyApplication.showToast("程序进入后台啦," + killTime + "秒后将自杀");
+                    Integer i = Integer.parseInt(killTime);
+                    handler.postDelayed(runnable, 1000 * i);//默认30s
+                }
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
     }
 
 }

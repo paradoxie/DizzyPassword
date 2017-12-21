@@ -7,8 +7,9 @@
     <string name="action_note_1">1.首次使用请先注册，注册仅支持邮箱，请务必使用常用邮箱</string>
     <string name="action_note_2">2.数据上传云端之前，除开tag信息，全部已加密，密钥由您的密码决定</string>
     <string name="action_note_3">3.忘记用户密码后不支持帐号找回，因为加密后后端看不见您的帐号信息</string>
-    <string name="action_note_4">4.实在担心您所记录的信息的安全性，可以查看app中教程，将信息记录到自己的后台</string>
-    <string name="action_note_5">6.祝您食用开心(*^__^*)</string>
+    <string name="action_note_4">4.若担心您所记录的信息的安全性，请点击右上角【修改ID】，根据其中的教程，将信息记录到自己的后台</string>
+    <string name="action_note_5">7.祝您食用开心(*^__^*)</string>
+    <string name="action_note_7">6.作为作者，建议用户使用自己的后台储存数据哟~</string>
     <string name="action_note_6">5.如果您需要将信息记录到自己的后台，请先不要注册，按照教程修改完Application ID之后再进行注册登录操作</string>
 
     <string name="copy">帐号、密码信息复制成功！</string>

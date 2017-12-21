@@ -34,7 +34,8 @@
 
         </activity>
 
-        <activity android:name=".activity.SignActivity"/>
+        <activity android:name=".activity.SignActivity"
+                  android:windowSoftInputMode="stateHidden"/>
 
         <activity
             android:name=".activity.AddActivity"

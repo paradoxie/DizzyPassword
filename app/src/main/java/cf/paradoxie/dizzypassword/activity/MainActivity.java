@@ -322,8 +322,13 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             pDialog.show();
         }
         BmobQuery<AccountBean> query = new BmobQuery<AccountBean>();
-        String[] search = {s};
-        query.addWhereContainsAll("tag", Arrays.asList(search));
+        if (s.contains(" ")) {
+            String[] search = s.split(" ");
+            query.addWhereContainsAll("tag", Arrays.asList(search));
+        } else {
+            String[] search = {s};
+            query.addWhereContainsAll("tag", Arrays.asList(search));
+        }
         query.addWhereEqualTo("user", new BmobPointer(user));
         query.findObjects(new FindListener<AccountBean>() {
 
@@ -347,7 +352,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     );
 
                 } else {
-                    MyApplication.showToast("不知道哪里出问题了" + e);
+                    MyApplication.showToast("好像没有这些Tag条目哟");
                 }
                 pDialog.dismiss();
             }
@@ -555,6 +560,10 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search:
+                if (!isConnected()) {
+                    MyApplication.showToast("网络不可用哦~搜不动");
+                    return;
+                }
                 mSearchView.setNewHistoryList(getHistory());
                 mSearchView.autoOpenOrClose();
                 fab.setVisibility(View.GONE);
@@ -660,9 +669,11 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             public void onSearchAction(String searchText) {
                 addHistory(searchText);//历史记录存入sp
                 if (searchText.contains("(")) {
-                    String str = searchText.substring(searchText.indexOf("("), searchText.indexOf(")") + 1);
-                    searchText = searchText.replace(str, "");
-                    searchDate(searchText);
+                    while (searchText.contains("(")) {
+                        String str = searchText.substring(searchText.indexOf("("), searchText.indexOf(")") + 1);
+                        searchText = searchText.replace(str, "");
+                    }
+                    searchDate(searchText.trim());
                     mSearchView.close();
                     fab.setVisibility(View.VISIBLE);
                     return;
@@ -770,6 +781,12 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         if (historyLists == "") {
             SPUtils.put("historyLists", " " + value);
         } else {
+            if (historyLists.contains(value)) {
+                historyLists = historyLists.replace(value, "");
+            }
+            if (historyLists.contains("  ")) {
+                historyLists = historyLists.replace("  ", " ");
+            }
             historyLists = value + " " + historyLists.trim();
             SPUtils.put("historyLists", historyLists);
         }

@@ -163,6 +163,18 @@ public class SettingActivity extends BaseActivity {
                     settingActivity.setColor();
                     //                    this.onCreate(null);
                 }
+            } else if (key.equals("id_change")){
+                Preference pref = findPreference(key);
+                EditTextPreference etp = (EditTextPreference) pref;
+                Editable num = etp.getEditText().getText();
+                String killTime = num.toString();
+                if (!killTime.isEmpty()){
+                    SPUtils.put("killTime", killTime);
+                    MyToast.show(settingActivity, "后台存活时长修改成功:"+killTime+"秒", ThemeUtils.getPrimaryColor(settingActivity));
+
+                }
+                etp.getEditText().setText("");
+
             } else if (key.equals("id_code")) {
                 Preference pref = findPreference(key);
                 EditTextPreference etp = (EditTextPreference) pref;
@@ -185,10 +197,6 @@ public class SettingActivity extends BaseActivity {
 
             switch (preference.getKey()) {
                 case "id_change":
-                    Intent intent = new Intent(AppManager.getAppManager().currentActivity(), TeachActivity.class);
-                    startActivity(intent);
-                    break;
-                case "id_code":
 
                     break;
                 case "about":

@@ -5,10 +5,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
@@ -40,6 +43,18 @@ public class SignActivity extends BaseActivity {
                 Intent intent = new Intent(SignActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.action_change) {
+                    Intent intent = new Intent(AppManager.getAppManager().currentActivity(), TeachActivity.class);
+                    startActivity(intent);
+
+                }
+                return false;
             }
         });
         ThemeUtils.initStatusBarColor(SignActivity.this, ThemeUtils.getPrimaryDarkColor(SignActivity.this));
@@ -199,6 +214,11 @@ public class SignActivity extends BaseActivity {
             passwordWrapper.setError("");
             passwordWrapper.setErrorEnabled(false);
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_sign, menu);
+        return true;
     }
 
     @Override

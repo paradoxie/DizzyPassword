@@ -77,7 +77,7 @@ public class SearchView extends LinearLayout {
 
     CardView cardViewSearch;
 
-    TextView cleanHistory ,close;
+    TextView cleanHistory, close;
 
     LinearLayout searchLinearLayout;
 
@@ -291,7 +291,8 @@ public class SearchView extends LinearLayout {
 
                 @Override
                 public void onClick(View view) {
-                    etSearch.setText(str);
+                    String string = etSearch.getText().toString().trim();
+                    etSearch.setText(string + " " + str);
                 }
             });
 
@@ -320,7 +321,8 @@ public class SearchView extends LinearLayout {
 
                 @Override
                 public void onClick(View view) {
-                    etSearch.setText(str);
+                    String string = etSearch.getText().toString().trim();
+                    etSearch.setText(string + " " + str);
                 }
             });
 
@@ -367,7 +369,8 @@ public class SearchView extends LinearLayout {
     public ImageView getBackIV() {
         return ivSearchBack;
     }
- /**
+
+    /**
      * @return 获取关闭按钮
      */
     public TextView getCloseTv() {
