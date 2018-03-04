@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cf.paradoxie.dizzypassword.db.AccountBean;
+
 /**
  * Created by xiehehe on 2017/12/13.
  */
@@ -57,7 +59,6 @@ public class DataUtils {
             Integer count = (Integer) map.get(temp);
             map.put(temp, (count == null) ? 1 : count + 1);
         }
-
         sMappingListName = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
         //通过比较器实现比较排序
         Collections.sort(sMappingListName, new Comparator<Map.Entry<String, Integer>>() {
@@ -66,8 +67,23 @@ public class DataUtils {
                 return com.compare(mapping1.getKey(), mapping2.getKey());
             }
         });
-
         return (ArrayList<Map.Entry<String, Integer>>) sMappingListName;
+    }
+
+    /**
+     * 将条目按照名称排序
+     * @param accountBean
+     * @return
+     */
+    public static List<AccountBean> getDataByName(List<AccountBean> accountBean){
+
+        Collections.sort(accountBean, new Comparator<AccountBean>() {
+            public int compare(AccountBean accountBean1, AccountBean accountBean2) {
+                Comparator<Object> com = Collator.getInstance(java.util.Locale.CHINA);
+                return com.compare(DesUtil.decrypt(accountBean1.getName(), SPUtils.getKey()),DesUtil.decrypt(accountBean2.getName(), SPUtils.getKey()));
+            }
+        });
+        return accountBean;
     }
 
 }

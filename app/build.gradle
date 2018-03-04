@@ -8,8 +8,8 @@ android {
         applicationId "cf.paradoxie.dizzypassword"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 11
-        versionName "0.0.eleven(名称图标更换计划版)"
+        versionCode 14
+        versionName "0.0.新年快乐"
         multiDexEnabled true //引入指纹lib时出现com.android.dex.DexException
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

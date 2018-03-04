@@ -10,12 +10,13 @@
     <string name="action_note_4">4.若担心您所记录的信息的安全性，请点击右上角【修改ID】，根据其中的教程，将信息记录到自己的后台</string>
     <string name="action_note_5">7.祝您食用开心(*^__^*)</string>
     <string name="action_note_7">6.作为作者，建议用户使用自己的后台储存数据哟~</string>
-    <string name="action_note_6">5.如果您需要将信息记录到自己的后台，请先不要注册，按照教程修改完Application ID之后再进行注册登录操作</string>
+    <string name="action_note_6">5.如果您需要将信息记录到自己的后台，请先不要注册，按照教程修改完Application ID之后再进行注册登录操作，此后每次卸载重装app都需要重新修改设置为修改后的ID才能获取数据</string>
 
     <string name="copy">帐号、密码信息复制成功！</string>
     <string name="copy_account">帐号信息复制成功！</string>
     <string name="copy_password">密码信息复制成功！</string>
     <string name="copy_note">备注信息复制成功！</string>
+    <string name="copy_web">网址信息复制成功！</string>
     <string name="nothing_copy">好像...啥也没复制到...ಥ_ಥ</string>
     <string name="share_note">一个极具个人隐私属性的云端密码记录APP。 这种东西，当然还是安全可靠最重要啦~ 赶紧来【醋安应用市场】搜索下载试试吧(*^__^*) \n https://www.coolapk.com/apk/cf.paradoxie.dizzypassword \n   ---From:【去特么的密码】By Paradoxie</string>
     <string name="web_site">http://www.jianshu.com/p/ab621a5c88fb</string>

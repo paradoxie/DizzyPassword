@@ -9,13 +9,23 @@ import cn.bmob.v3.BmobUser;
  * Created by xiehehe on 2017/10/28.
  */
 
-public class AccountBean extends BmobObject {
+public class AccountBean extends BmobObject{
     private String id;
     private String name;//名字
     private List<String> tag;//标记
     private String account;//帐号
     private String password;//密码
+    private String website;//网址
     private String note;//备注
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
     private BmobUser user;//需要关联的一个用户
 
     public List<String> getTag() {
@@ -74,4 +84,5 @@ public class AccountBean extends BmobObject {
     public void setUser(BmobUser user) {
         this.user = user;
     }
+
 }

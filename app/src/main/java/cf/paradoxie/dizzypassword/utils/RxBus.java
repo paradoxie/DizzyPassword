@@ -1,9 +1,15 @@
 package cf.paradoxie.dizzypassword.utils;
 
+import java.util.HashMap;
+
 import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;
-import rx.subjects.Subject;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by xiehehe on 2017/10/29.
@@ -11,10 +17,12 @@ import rx.subjects.Subject;
 
 public class RxBus{
     private static volatile RxBus mInstance;
-    private final Subject bus;
+//    private final Subject bus;
+    private SerializedSubject<Object, Object> mSubject;
+    private HashMap<String, CompositeSubscription> mSubscriptionMap;
 
     public RxBus() {
-        bus = new SerializedSubject<>(PublishSubject.create());
+        mSubject = new SerializedSubject<>(PublishSubject.create());
     }
 
     /**
@@ -44,8 +52,16 @@ public class RxBus{
      * @param object
      */
     public void post(Object object) {
-        bus.onNext(object);
+        mSubject.onNext(object);
     }
+
+    public <T> Subscription doSubscribe(Class<T> type, Action1<T> next, Action1<Throwable> error) {
+        return toObserverable(type)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(next, error);
+    }
+
 
     /**
      * 接收消息
@@ -55,7 +71,41 @@ public class RxBus{
      * @return
      */
     public <T> Observable<T> toObserverable(Class<T> eventType) {
-        return bus.ofType(eventType);
+        return mSubject.ofType(eventType);
+    }
+    /**
+     * 保存订阅后的subscription
+     */
+    public void addSubscription(Object o, Subscription subscription) {
+        if (mSubscriptionMap == null) {
+            mSubscriptionMap = new HashMap<>();
+        }
+        String key = o.getClass().getName();
+        if (mSubscriptionMap.get(key) != null) {
+            mSubscriptionMap.get(key).add(subscription);
+        } else {
+            CompositeSubscription compositeSubscription = new CompositeSubscription();
+            compositeSubscription.add(subscription);
+            mSubscriptionMap.put(key, compositeSubscription);
+        }
     }
 
+    /**
+     * 取消订阅
+     */
+    public void unSubscribe(Object o) {
+        if (mSubscriptionMap == null) {
+            return;
+        }
+
+        String key = o.getClass().getName();
+        if (!mSubscriptionMap.containsKey(key)){
+            return;
+        }
+        if (mSubscriptionMap.get(key) != null) {
+            mSubscriptionMap.get(key).unsubscribe();
+        }
+
+        mSubscriptionMap.remove(key);
+    }
 }

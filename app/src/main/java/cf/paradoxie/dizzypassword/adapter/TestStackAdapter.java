@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -71,11 +72,12 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         View mLayout;
         View mContainerContent;
         SingleLineTextView mAccount, mPassword;
-        TextView mTextTitle, mNum, mTime, mTime_up, mTag1, mTag2, mTag3, mTag4, mTag5, mPwdvisible, mNote;
+        TextView mTextTitle, mNum, mTime, mTime_up, mTag1, mTag2, mTag3, mTag4, mTag5, mPwdvisible, mNote, mWeb;
         ImageView mChange, mDelete;
-        RxBean rxEvent, rxEvent_1;
+        RxBean rxEvent, rxEvent_1, rxEvent_2;
         ImageView iv_copy;
         private SweetAlertDialog pDialog = null;
+        //        List<AccountBean> ;
 
         public ColorItemViewHolder(View view) {
             super(view);
@@ -91,6 +93,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mPassword = (SingleLineTextView) view.findViewById(R.id.tv_password);
             mPwdvisible = (TextView) view.findViewById(R.id.tv_password_visible);
             mNote = (TextView) view.findViewById(R.id.tv_note);
+            mWeb = (TextView) view.findViewById(R.id.tv_web);
             mChange = (ImageView) view.findViewById(R.id.iv_change);
             mDelete = (ImageView) view.findViewById(R.id.iv_delete);
             iv_copy = (ImageView) view.findViewById(R.id.iv_copy);
@@ -103,20 +106,25 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTag5 = (TextView) view.findViewById(R.id.text_list_card_tag5);
             rxEvent = new RxBean();
             rxEvent_1 = new RxBean();
+            rxEvent_2 = new RxBean();
 
+            mTextTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    rxEvent_2.setAction("name");
+                    RxBus.getInstance().post(rxEvent_2);
 
-            mTime.setOnClickListener(new View.OnClickListener()
+                }
+            });
 
-            {
+            mTime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     rxEvent_1.setAction("done");
                     RxBus.getInstance().post(rxEvent_1);
                 }
             });
-            mTime_up.setOnClickListener(new View.OnClickListener()
-
-            {
+            mTime_up.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     rxEvent_1.setAction("done");
@@ -188,9 +196,17 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTime.setText(time + "  创建");
             mTime_up.setText(time_up + "  更新");
             mAccount.setText(account);
-            //            mPassword.setText(password);
             mPassword.setText("**********");
             mNote.setText(note);
+            String website;
+            //网址记录
+            if (mBeanList.get(position).getWebsite() == null) {
+                mWeb.setText("");
+            } else {
+                website = DesUtil.decrypt(mBeanList.get(position).getWebsite().toString(), SPUtils.getKey());
+                mWeb.setText(website);
+            }
+
             mPwdvisible.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -240,8 +256,28 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     return false;
                 }
             });
+            mWeb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri content_url = Uri.parse("http://"+mWeb.getText().toString());
+                    intent.setData(content_url);
+                    MyApplication.getContext().startActivity(intent);
+                }
+            });
+            mWeb.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm.setText(mWeb.getText());
+                    MyApplication.showSnack(view, R.string.copy_web, ThemeUtils.getPrimaryColor(mContext));
+                    return false;
+                }
+            });
 
             final String finalNote = note;
+            final String finalWeb = mWeb.getText().toString();
 
 
             mChange.setOnClickListener(new View.OnClickListener() {
@@ -251,7 +287,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                         //                        MyApplication.showToast("请先点击左上角解锁操作权限");
                         MyToast.show(mContext, "请先点击左上角解锁操作权限", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
                     } else {
-                        changeDate(name, account, password, finalNote, tag, id);
+                        changeDate(name, account, password, finalWeb, finalNote, tag, id);
                     }
                 }
             });
@@ -327,12 +363,13 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         }
 
 
-        private void changeDate(String name, String account, String password, String finalNote, List<String> tag, String id) {
+        private void changeDate(String name, String account, String password, String web, String finalNote, List<String> tag, String id) {
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
             bundle.putString("name", name);
             bundle.putString("account", account);
             bundle.putString("password", password);
+            bundle.putString("web", web);
             bundle.putString("finalNote", finalNote);
             bundle.putString("tag", DesUtil.listToString(tag, " "));
             bundle.putString("id", id);

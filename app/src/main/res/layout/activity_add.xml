@@ -140,6 +140,37 @@
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="5dp"
                         android:padding="5dp"
+                        android:src="@drawable/web"
+                        android:tint="?attr/colorAccent"/>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/websiteWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        validation:passwordToggleEnabled="true">
+
+                        <cf.paradoxie.dizzypassword.view.ClearableEditText
+                            android:id="@+id/et_website"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="域名网址"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"/>
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="5dp"
+                        android:padding="5dp"
                         android:src="@drawable/note"
                         android:tint="?attr/colorAccent"/>
 
