@@ -86,4 +86,37 @@ public class DataUtils {
         return accountBean;
     }
 
+    /**
+     * 根据list中条目名称获取符合搜索字符的账户集合，tag和备注里面的也可以搜索到
+     * @param accountBeans
+     * @param s
+     * @return
+     */
+    public  static List<AccountBean> searchDataByName(List<AccountBean> accountBeans , String s){
+        List<AccountBean> mAccountBeans = new ArrayList<>();
+        for (AccountBean accountBean:accountBeans){
+            if (DesUtil.decrypt(accountBean.getName(),SPUtils.getKey()).contains(s)||accountBean.getTag().contains(s)||
+                    DesUtil.decrypt(accountBean.getNote(),SPUtils.getKey()).contains(s)){
+                mAccountBeans.add(accountBean);
+            }
+        }
+        return mAccountBeans;
+    }
+
+    /**
+     * 根据tag搜索，暂时去掉多tag联合检索
+     * @param accountBeans
+     * @param s
+     * @return
+     */
+    public  static List<AccountBean> searchDataByTag(List<AccountBean> accountBeans , String s){
+        List<AccountBean> mAccountBeans = new ArrayList<>();
+        for (AccountBean accountBean:accountBeans){
+            if (accountBean.getTag().contains(s)){
+                mAccountBeans.add(accountBean);
+            }
+        }
+        return mAccountBeans;
+    }
+
 }

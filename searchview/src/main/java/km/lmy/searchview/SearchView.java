@@ -291,8 +291,9 @@ public class SearchView extends LinearLayout {
 
                 @Override
                 public void onClick(View view) {
-                    String string = etSearch.getText().toString().trim();
-                    etSearch.setText(string + " " + str);
+//                    String string = etSearch.getText().toString().trim();
+//                    etSearch.setText(string + " " + str);
+                    etSearch.setText(str);
                 }
             });
 
@@ -321,8 +322,9 @@ public class SearchView extends LinearLayout {
 
                 @Override
                 public void onClick(View view) {
-                    String string = etSearch.getText().toString().trim();
-                    etSearch.setText(string + " " + str);
+//                    String string = etSearch.getText().toString().trim();
+//                    etSearch.setText(string + " " + str);
+                    etSearch.setText(str);
                 }
             });
 

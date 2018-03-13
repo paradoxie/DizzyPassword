@@ -271,12 +271,14 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            AppManager.getAppManager().finishAllActivity();
-            //杀掉，这个应用程序的进程，释放 内存
-            int id = android.os.Process.myPid();
-            if (id != 0) {
-                android.os.Process.killProcess(id);
-            }
+            //自杀-->自动关闭验证
+            //            AppManager.getAppManager().finishAllActivity();
+            //            //杀掉，这个应用程序的进程，释放 内存
+            //            int id = android.os.Process.myPid();
+            //            if (id != 0) {
+            //                android.os.Process.killProcess(id);
+            //            }
+            first_check = 2;
             handler.postDelayed(this, 1000);
         }
     };
@@ -320,9 +322,11 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
                 if (mFinalCount == 0) {
                     //说明从前台回到了后台
                     killTime = (String) SPUtils.get("killTime", 60 + "");
-                    MyApplication.showToast("程序进入后台啦," + killTime + "秒后将自杀");
-                    Integer i = Integer.parseInt(killTime);
-                    handler.postDelayed(runnable, 1000 * i);//默认30s
+                    if (first_check != 0) {
+                        MyApplication.showToast("程序进入后台啦," + killTime + "秒后将关闭操作权限");
+                        Integer i = Integer.parseInt(killTime);
+                        handler.postDelayed(runnable, 1000 * i);//默认30s
+                    }
                 }
             }
 

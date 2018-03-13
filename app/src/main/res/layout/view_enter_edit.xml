@@ -71,14 +71,14 @@
         <Button
             android:id="@+id/btn_neg"
             android:layout_width="wrap_content"
-            android:layout_height="50dip"
+            android:layout_height="50dp"
             android:layout_marginRight="20dp"
             android:layout_weight="1"
             android:background="@drawable/search_label"
             android:gravity="center"
             android:text="取消"
             android:textColor="@android:color/black"
-            android:textSize="18dip"/>
+            android:textSize="18sp"/>
 
         <View
             android:layout_width="0.7dip"
@@ -89,7 +89,7 @@
         <Button
             android:id="@+id/btn_pos"
             android:layout_width="wrap_content"
-            android:layout_height="50dip"
+            android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:background="@drawable/search_label_sure"
