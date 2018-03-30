@@ -9,7 +9,7 @@
             android:key="id_change"
             android:title="后台时长(单位:秒)"
             android:paddingLeft="5dp"
-            android:summary="程序进入后台时间达到时长将自杀"
+            android:summary="程序进入后台时间达到时长将自动锁定操作权限"
             android:inputType="number"
             android:gravity="center"
             android:hint="默认值为60秒"
@@ -38,11 +38,11 @@
             android:key="about"
             android:title="关于">
         </PreferenceScreen>
-        <!--<PreferenceScreen-->
-            <!--android:key="group"-->
-            <!--android:title="加群"-->
-            <!--android:summary="点击加入QQ群，一起来玩耍">-->
-        <!--</PreferenceScreen>-->
+        <PreferenceScreen
+            android:key="group"
+            android:title="加群"
+            android:summary="点击复制QQ群号，一起来玩耍">
+        </PreferenceScreen>
         <PreferenceScreen
             android:key="red_package"
             android:title="领红包"

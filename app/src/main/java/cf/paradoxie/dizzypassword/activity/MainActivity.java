@@ -186,6 +186,10 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             public void onClick(View view) {
 
                 if (MyApplication.isSign()) {
+                    if (MyApplication.isNetworkAvailable(MainActivity.this)){
+                        MyApplication.showToast("离线状态下仅能查看信息哦~");
+                        return;
+                    }
                     if (MyApplication.first_check == 0) {
                         checkActivity();
                         mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
@@ -248,6 +252,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
 
         //取缓存数据
+        if(BmobUser.getCurrentUser()==null){
+            return;
+        }
         if (SPUtils.getDataList("beans", AccountBean.class).size() < 1) {
             findOnLineDate();
         } else {
@@ -263,10 +270,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     public void call(RxBean rxBean) {
                         if (rxBean.getMessage() != null) {
                             //按tag检索
-                            if (!isConnected()) {
-                                MyApplication.showToast("网络不可用哦~搜不动");
-                                return;
-                            }
                             searchDate(rxBean.getMessage());
                             return;
                         }
@@ -617,7 +620,12 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         mStackView.setSelectPosition(-1);
                         mStackView.setScrollEnable(true);
                     }
-                    findOnLineDate();
+                    if (MyApplication.isNetworkAvailable(MainActivity.this)){
+                        findOnLineDate();
+                    }else {
+                        findOffLineDate();
+                    }
+
 
                 } else {
                     MyApplication.showToast("您还木有登录哦~");
@@ -709,10 +717,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mSearchView.setOnSearchActionListener(new SearchView.OnSearchActionListener() {
             @Override
             public void onSearchAction(String searchText) {
-                if (!isConnected()) {
-                    MyApplication.showToast("网络不可用哦~搜不动");
-                    return;
-                }
                 addHistory(searchText);//历史记录存入sp
                 if (searchText.contains("(")) {
                     while (searchText.contains("(")) {

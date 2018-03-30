@@ -58,7 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      *
      * @return {@code true}: 是<br>{@code false}: 否
      */
-    public  boolean isConnected() {
+    public boolean isConnected() {
         NetworkInfo info = getActiveNetworkInfo();
         return info != null && info.isConnected();
     }

@@ -15,7 +15,7 @@
         android:id="@+id/searchView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        SearchView:hintText="仅支持条目精确名称搜索哦~"
+        SearchView:hintText="全面支持名称、Tag、备注信息的模糊搜索~"
         android:layout_margin="3dp"
         android:elevation="5dp"/>
 

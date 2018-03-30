@@ -29,6 +29,8 @@ import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.view.DialogView;
 import cn.bmob.v3.BmobUser;
 
+import static cf.paradoxie.dizzypassword.MyApplication.mContext;
+
 
 public class SettingActivity extends BaseActivity {
     private String pwd;
@@ -58,27 +60,6 @@ public class SettingActivity extends BaseActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.action_exit) {
-                    //                    new SweetAlertDialog(SettingActivity.this, SweetAlertDialog.WARNING_TYPE)
-                    //                            .setTitleText("退出登录")
-                    //                            .setContentText(
-                    //                                    "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + getCodePwd(pwd) +
-                    //                                            "\n\n确定要退出当前帐号么？")
-                    //                            .setConfirmText("退出")
-                    //                            .setCancelText("算啦")
-                    //                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    //                                @Override
-                    //                                public void onClick(SweetAlertDialog sDialog) {
-                    //                                    SPUtils.remove("name");//清除用户记录
-                    //                                    BmobUser.logOut();   //清除缓存用户对象
-                    //                                    AppManager.getAppManager().finishAllActivity();
-                    //                                    startActivity(new Intent(SettingActivity.this, SignActivity.class));
-                    //                                    finish();
-                    //
-                    //                                    sDialog.cancel();
-                    //                                }
-                    //                            })
-                    //                            .show();
-
                     checkActivity();
                     mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
                         @Override
@@ -205,6 +186,11 @@ public class SettingActivity extends BaseActivity {
                     break;
                 case "share":
                     DesUtil.share(AppManager.getAppManager().currentActivity(), getString(R.string.share_note));
+                    break;
+                case "group":
+                    ClipboardManager cm1 = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm1.setText("664616715");
+                    MyApplication.showToast("群号码复制成功");
                     break;
                 case "red_package":
                     ClipboardManager cm = (ClipboardManager) AppManager.getAppManager().currentActivity().getSystemService(Context.CLIPBOARD_SERVICE);

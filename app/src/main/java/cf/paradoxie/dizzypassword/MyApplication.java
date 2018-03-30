@@ -134,6 +134,26 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         return bmobUser;
     }
 
+    //判断网络是否可用
+    public static boolean isNetworkAvailable(Context context) {
+
+        ConnectivityManager manager = (ConnectivityManager) context
+                .getApplicationContext().getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+
+        if (manager == null) {
+            return false;
+        }
+
+        NetworkInfo networkinfo = manager.getActiveNetworkInfo();
+
+        if (networkinfo == null || !networkinfo.isAvailable()) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * webview载入网页
      *

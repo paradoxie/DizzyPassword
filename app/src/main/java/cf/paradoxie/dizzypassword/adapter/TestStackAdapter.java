@@ -263,6 +263,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     intent.setAction("android.intent.action.VIEW");
                     Uri content_url = Uri.parse("http://"+mWeb.getText().toString());
                     intent.setData(content_url);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
                     MyApplication.getContext().startActivity(intent);
                 }
             });
