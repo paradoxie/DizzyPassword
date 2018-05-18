@@ -76,24 +76,6 @@
         <item name="colorAccent">@color/lightgreen500</item>
     </style>
 
-    <style name="Theme12" parent="AppTheme.NoActionBar">
-        <item name="colorPrimary">@color/lime400</item>
-        <item name="colorPrimaryDark">@color/lime700</item>
-        <item name="colorAccent">@color/lime500</item>
-    </style>
-
-    <style name="Theme13" parent="AppTheme.NoActionBar">
-        <item name="colorPrimary">@color/yellow400</item>
-        <item name="colorPrimaryDark">@color/yellow700</item>
-        <item name="colorAccent">@color/yellow500</item>
-    </style>
-
-    <style name="Theme14" parent="AppTheme.NoActionBar">
-        <item name="colorPrimary">@color/amber400</item>
-        <item name="colorPrimaryDark">@color/amber700</item>
-        <item name="colorAccent">@color/amber500</item>
-    </style>
-
     <style name="Theme15" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">@color/orange400</item>
         <item name="colorPrimaryDark">@color/orange700</item>
@@ -110,12 +92,6 @@
         <item name="colorPrimary">@color/brown400</item>
         <item name="colorPrimaryDark">@color/brown700</item>
         <item name="colorAccent">@color/brown500</item>
-    </style>
-
-    <style name="Theme18" parent="AppTheme.NoActionBar">
-        <item name="colorPrimary">@color/grey400</item>
-        <item name="colorPrimaryDark">@color/grey700</item>
-        <item name="colorAccent">@color/grey500</item>
     </style>
 
     <style name="Theme19" parent="AppTheme.NoActionBar">

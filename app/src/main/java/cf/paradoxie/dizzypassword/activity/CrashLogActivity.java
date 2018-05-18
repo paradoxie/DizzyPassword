@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.view.View;
 import android.widget.TextView;
 
 import java.io.PrintWriter;
@@ -18,6 +19,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import cf.paradoxie.dizzypassword.AppManager;
+import cf.paradoxie.dizzypassword.Constans;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
@@ -36,7 +38,7 @@ public class CrashLogActivity extends BaseActivity {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.CHINA);
 
-    TextView tvInfo;
+    TextView tvInfo,tvQQ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +48,15 @@ public class CrashLogActivity extends BaseActivity {
         toolbar.setTitle("崩溃日志");
         setSupportActionBar(toolbar);
         tvInfo = (TextView) findViewById(R.id.tv_info);
+        tvQQ = (TextView) findViewById(R.id.QQ);
+
+        tvQQ.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                MyApplication.joinQQGroup(Constans.QQ_ID);
+                return false;
+            }
+        });
 
         Throwable e = (Throwable) getIntent().getSerializableExtra(EXTRA_E);
 
@@ -59,7 +70,7 @@ public class CrashLogActivity extends BaseActivity {
         sb.append("网络环境：");
         sb.append(MyApplication.GetNetworkType()).append("\n");
         sb.append("软件版本：");
-        sb.append(MyApplication.GetVersion()).append("\n");
+        sb.append(MyApplication.GetVersionName()).append("\n");
         sb.append("异常时间：");
         sb.append(dateFormat.format(new Date())).append("\n");
         sb.append("异常类型：");
@@ -92,6 +103,8 @@ public class CrashLogActivity extends BaseActivity {
         ThemeUtils.initStatusBarColor(CrashLogActivity.this, ThemeUtils.getPrimaryDarkColor(CrashLogActivity.this));
 
     }
+
+
 
     @Override
     public void onBackPressed() {

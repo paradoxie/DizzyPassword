@@ -3,14 +3,17 @@ package cf.paradoxie.dizzypassword.activity;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.ClipboardManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -21,6 +24,8 @@ import android.widget.TextView;
 
 import com.loopeer.cardstack.CardStackView;
 
+import org.zackratos.ultimatebar.UltimateBar;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,10 +35,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import cf.paradoxie.dizzypassword.AppManager;
+import cf.paradoxie.dizzypassword.Constans;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.adapter.TestStackAdapter;
 import cf.paradoxie.dizzypassword.db.AccountBean;
+import cf.paradoxie.dizzypassword.db.BaseConfig;
 import cf.paradoxie.dizzypassword.db.RxBean;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
@@ -49,6 +56,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import km.lmy.searchview.SearchView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -84,7 +92,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private LinearLayout main_btn;
     private long mCurrentPlayTime;
     private ObjectAnimator animator;
-    private ImageView refresh, red_package, setting, search;
+    private ImageView refresh, red_package, setting, search, join_qq;
     private Handler handler = new Handler();
     private SearchView mSearchView;
     private String[] strings;
@@ -97,6 +105,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        UltimateBar ultimateBar = new UltimateBar(this);
+        ultimateBar.setTransparentBar(Color.BLUE, 50);
         ThemeUtils.initStatusBarColor(MainActivity.this, ThemeUtils.getPrimaryDarkColor(MainActivity.this));
 
         mSearchView = (SearchView) findViewById(R.id.searchView);
@@ -104,10 +114,12 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         red_package = (ImageView) findViewById(R.id.red_package);
         setting = (ImageView) findViewById(R.id.setting);
         search = (ImageView) findViewById(R.id.search);
+        join_qq = (ImageView) findViewById(R.id.join_qq);
         refresh.setOnClickListener(this);
         red_package.setOnClickListener(this);
         setting.setOnClickListener(this);
         search.setOnClickListener(this);
+        join_qq.setOnClickListener(this);
         main_btn = (LinearLayout) findViewById(R.id.main_btn);
         main_btn.setVisibility(View.VISIBLE);
         //检测menu操作，第二次进入app时是否显示menu
@@ -141,7 +153,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                     toolbar.setNavigationIcon(R.drawable.yep);
                                     mDialogView.dismiss();
                                 } else {
-                                    MyApplication.showToast("密码错了哦~");
+                                    MyApplication.showToast(R.string.error_pwd);
                                 }
                             }
 
@@ -186,8 +198,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             public void onClick(View view) {
 
                 if (MyApplication.isSign()) {
-                    if (MyApplication.isNetworkAvailable(MainActivity.this)){
-                        MyApplication.showToast("离线状态下仅能查看信息哦~");
+                    if (!MyApplication.isNetworkAvailable(MainActivity.this)) {
+                        MyApplication.showToast(R.string.error_offline);
                         return;
                     }
                     if (MyApplication.first_check == 0) {
@@ -204,7 +216,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                     mDialogView.dismiss();
                                     toolbar.setNavigationIcon(R.drawable.yep);
                                 } else {
-                                    MyApplication.showToast("密码错了哦~");
+                                    MyApplication.showToast(R.string.error_pwd);
                                 }
                             }
 
@@ -231,7 +243,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView.setItemExpendListener(this);
 
         if (SPUtils.get("key", "") + "" == "") {
-            Bmob.initialize(this, "");
+            Bmob.initialize(this, Constans.APPLICATION_ID);
         } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
@@ -252,7 +264,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
 
         //取缓存数据
-        if(BmobUser.getCurrentUser()==null){
+        if (BmobUser.getCurrentUser() == null) {
             return;
         }
         if (SPUtils.getDataList("beans", AccountBean.class).size() < 1) {
@@ -292,6 +304,59 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     }
 
                 });
+
+        if (MyApplication.isNetworkAvailable(MainActivity.this)) {
+            //有网的时候判断版本信息
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getVersion();
+                }
+            }, 3000);
+
+        }
+    }
+
+    private void getVersion() {
+        BmobQuery<BaseConfig> bmobQuery = new BmobQuery<>();
+        bmobQuery.getObject(Constans.CONFIG_ID, new QueryListener<BaseConfig>() {
+            @Override
+            public void done(BaseConfig baseConfig, BmobException e) {
+                if (e == null) {
+                    final int newVersion = Integer.parseInt(baseConfig.getNewVersion());
+                    String title = baseConfig.getTitle();
+                    String details = baseConfig.getDetails();
+                    final String toast = baseConfig.getToast();
+                    if (newVersion >
+                            Integer.parseInt(String.valueOf(SPUtils.get("version", MyApplication.GetVersion())))
+                            ) {//新版本大于本地版本
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setTitle(title)
+                                .setMessage(details)
+                                .setCancelable(false)
+                                .setPositiveButton("前往", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        //前往酷安
+                                        MyApplication.launchAppDetail(MyApplication.getContext().getPackageName(), "com.coolapk.market");
+                                    }
+                                })
+                                .setNeutralButton("我就不.GIF", null)
+                                .setNegativeButton("憋弹了！", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        //当前版本永久关闭，更新云端版本信息
+                                        SPUtils.put("version", newVersion);
+                                        MyToast.show(MainActivity.this, toast, ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+
+                                    }
+                                }).show();
+                    }
+                } else {
+                    Log.e("-----", e.getMessage());
+                }
+            }
+        });
     }
 
 
@@ -359,7 +424,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mAccountBeans_tag = DataUtils.searchDataByTag(mAccountBeans, s);
 
         if (mAccountBeans_tag.size() == 0) {
-            MyApplication.showToast("好像没有这些Tag条目哟");
+            MyApplication.showToast(R.string.error_no_item);
             pDialog.dismiss();
             return;
         }
@@ -420,7 +485,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         mAccountBeans = objects;
                         if (mAccountBeans.size() < 1) {
                             if (SPUtils.getDataList("beans", AccountBean.class).size() < 1) {
-                                tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
+                                tip.setText(R.string.on_item);
                                 tip.setVisibility(View.VISIBLE);
                                 pDialog.dismiss();
                                 stopAnim(animator);
@@ -430,6 +495,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         tip.setVisibility(View.GONE);
                         //缓存
                         SPUtils.setDataList("beans", mAccountBeans);
+                        getTags();
                         mTestStackAdapter = new TestStackAdapter(MainActivity.this, mAccountBeans);
                         mStackView.setAdapter(mTestStackAdapter);
                         mTestStackAdapter.notifyDataSetChanged();
@@ -447,12 +513,12 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         );
                     } else {
                         if (e.getErrorCode() == 9016 && SPUtils.getDataList("beans", AccountBean.class).size() > 1) {
-                            MyApplication.showToast("网络好像不可以哦~");
+                            MyApplication.showToast(getString(R.string.offline));
                             stopAnim(animator);
                             pDialog.dismiss();
                             return;
                         } else {
-                            tip.setText("好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)");
+                            tip.setText(R.string.on_item);
                             tip.setVisibility(View.VISIBLE);
                         }
                     }
@@ -576,7 +642,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         if (!isExit) {
             isExit = true;
             // 准备退出
-            MyApplication.showToast("再按一次退出程序");
+            MyApplication.showToast(getString(R.string.exit_app));
             tExit = new Timer();
             tExit.schedule(new TimerTask() {
                 @Override
@@ -608,6 +674,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.join_qq:
+                MyApplication.joinQQGroup(Constans.QQ_ID);
+                break;
             case R.id.search:
                 mSearchView.setNewHistoryList(getHistory());
                 mSearchView.autoOpenOrClose();
@@ -620,15 +689,15 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         mStackView.setSelectPosition(-1);
                         mStackView.setScrollEnable(true);
                     }
-                    if (MyApplication.isNetworkAvailable(MainActivity.this)){
+                    if (MyApplication.isNetworkAvailable(MainActivity.this)) {
                         findOnLineDate();
-                    }else {
+                    } else {
                         findOffLineDate();
                     }
 
 
                 } else {
-                    MyApplication.showToast("您还木有登录哦~");
+                    MyApplication.showToast(getString(R.string.error_login));
 
                 }
                 break;
@@ -710,7 +779,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             @Override
             public void onClick() {
                 SPUtils.remove("historyLists");
-                MyApplication.showToast("搜索记录删除成功");
+                MyApplication.showToast(getString(R.string.succes_delete));
             }
         });
         //设置软键盘搜索按钮点击事件
@@ -739,7 +808,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 //                String name = DesUtil.encrypt(searchText.trim(), SPUtils.getKey());//关键词
                 mAccountBeans_name = DataUtils.searchDataByName(mAccountBeans, searchText.trim());
                 if (mAccountBeans_name.size() == 0) {
-                    MyApplication.showToast("好像没有叫这个名字的条目哦~试试Tag看看");
+                    MyApplication.showToast(getString(R.string.no_item_name));
                     pDialog.dismiss();
                     return;
                 }

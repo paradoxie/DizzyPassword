@@ -1,6 +1,8 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -11,25 +13,33 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.ClipboardManager;
 import android.text.Editable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import cf.paradoxie.dizzypassword.AppManager;
+import cf.paradoxie.dizzypassword.Constans;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.db.BaseConfig;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.view.DialogView;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static cf.paradoxie.dizzypassword.MyApplication.mContext;
+import static cf.paradoxie.dizzypassword.MyApplication.launchAppDetail;
 
 
 public class SettingActivity extends BaseActivity {
@@ -74,7 +84,7 @@ public class SettingActivity extends BaseActivity {
                                 hideInputWindow();
                                 mDialogView.dismiss();
                             } else {
-                                MyApplication.showToast("密码错了哦~");
+                                MyApplication.showToast(R.string.error_pwd);
                             }
                         }
 
@@ -107,7 +117,8 @@ public class SettingActivity extends BaseActivity {
         getFragmentManager().beginTransaction().replace(R.id.frame_content, new SettingPreferenceFragment()).commit();
     }
 
-    public static class SettingPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    @SuppressLint("ValidFragment")
+    public class SettingPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
         private int theme;
         private SharedPreferences sp;
@@ -144,14 +155,14 @@ public class SettingActivity extends BaseActivity {
                     settingActivity.setColor();
                     //                    this.onCreate(null);
                 }
-            } else if (key.equals("id_change")){
+            } else if (key.equals("id_change")) {
                 Preference pref = findPreference(key);
                 EditTextPreference etp = (EditTextPreference) pref;
                 Editable num = etp.getEditText().getText();
                 String killTime = num.toString();
-                if (!killTime.isEmpty()){
+                if (!killTime.isEmpty()) {
                     SPUtils.put("killTime", killTime);
-                    MyToast.show(settingActivity, "后台存活时长修改成功:"+killTime+"秒", ThemeUtils.getPrimaryColor(settingActivity));
+                    MyToast.show(settingActivity, "后台存活时长修改成功:" + killTime + "秒", ThemeUtils.getPrimaryColor(settingActivity));
 
                 }
                 etp.getEditText().setText("");
@@ -188,15 +199,16 @@ public class SettingActivity extends BaseActivity {
                     DesUtil.share(AppManager.getAppManager().currentActivity(), getString(R.string.share_note));
                     break;
                 case "group":
-                    ClipboardManager cm1 = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                    cm1.setText("664616715");
-                    MyApplication.showToast("群号码复制成功");
+                    MyApplication.joinQQGroup(Constans.QQ_ID);
+                    break;
+                case "update":
+                    getVersion();
                     break;
                 case "red_package":
                     ClipboardManager cm = (ClipboardManager) AppManager.getAppManager().currentActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                     cm.setText(getString(R.string.red_package_string));
                     try {
-                        MyApplication.openAppByPackageName(AppManager.getAppManager().currentActivity(),"com.eg.android.AlipayGphone");
+                        MyApplication.openAppByPackageName(AppManager.getAppManager().currentActivity(), "com.eg.android.AlipayGphone");
                     } catch (PackageManager.NameNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -206,6 +218,46 @@ public class SettingActivity extends BaseActivity {
             }
             return true;
         }
+    }
+
+    private void getVersion() {
+        final SweetAlertDialog pDialog = new SweetAlertDialog(SettingActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+        pDialog.setTitleText("检查中");
+        pDialog.setCancelable(false);
+        pDialog.show();
+        BmobQuery<BaseConfig> bmobQuery = new BmobQuery<>();
+        bmobQuery.getObject(Constans.CONFIG_ID, new QueryListener<BaseConfig>() {
+            @Override
+            public void done(BaseConfig baseConfig, BmobException e) {
+                if (e == null) {
+                    int newVersion = Integer.parseInt(baseConfig.getNewVersion());
+                    String title = baseConfig.getTitle();
+                    String details = baseConfig.getDetails();
+                    if (newVersion > MyApplication.GetVersion()) {//新版本大于本地版本
+                        new AlertDialog.Builder(SettingActivity.this, R.style.AlertDialogCustom)
+                                .setTitle(title)
+                                .setMessage(details)
+                                .setCancelable(false)
+                                .setPositiveButton("前往", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        //前往酷安
+                                        launchAppDetail(MyApplication.getContext().getPackageName(), "com.coolapk.market");
+                                    }
+                                })
+                                .setNeutralButton("我就不.GIF", null)
+                                .show();
+                    } else {
+                        MyToast.show(MyApplication.getContext(), "没有新版本哦~", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+
+                    }
+                } else {
+                    Log.e("-----", e.getMessage());
+                }
+                pDialog.dismiss();
+            }
+        });
     }
 
     @Override

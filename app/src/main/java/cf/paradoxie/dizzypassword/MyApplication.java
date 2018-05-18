@@ -10,10 +10,12 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -275,7 +277,11 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         return strNetworkType;
     }
 
-    public static String GetVersion() {
+    /**
+     * 获取版本号名称
+     * @return
+     */
+    public static String GetVersionName() {
         PackageInfo pi = null;
         try {
             pi = MyApplication.getContext().getPackageManager().getPackageInfo(MyApplication.getContext().getPackageName(), 0);
@@ -285,6 +291,53 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
             e.printStackTrace();
         }
         return "";
+    }
+
+    /**
+     * 获取版本号
+     * @return
+     */
+    public static int GetVersion() {
+        int localVersion = 0;
+        try {
+            PackageInfo packageInfo = MyApplication.getContext()
+                    .getPackageManager()
+                    .getPackageInfo(MyApplication.getContext().getPackageName(), 0);
+            localVersion = packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return localVersion;
+    }
+
+    public static boolean joinQQGroup(String key) {
+        Intent intent = new Intent();
+        intent.setData(Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D" + key));
+        // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        try {
+            getContext().startActivity(intent);
+            return true;
+        } catch (Exception e) {
+            // 未安装手Q或安装的版本不支持
+            return false;
+        }
+    }
+
+    public static void launchAppDetail(String appPkg, String marketPkg) {
+        try {
+            if (TextUtils.isEmpty(appPkg))
+                return;
+
+            Uri uri = Uri.parse("market://details?id=" + appPkg);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            if (!TextUtils.isEmpty(marketPkg)) {
+                intent.setPackage(marketPkg);
+            }
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -362,4 +415,13 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         });
     }
 
+    public static void showToast(int error_pwd) {
+        if (isShow && !MyApplication.isStrNull(error_pwd + ""))
+            if (mToast == null) {
+                mToast = Toast.makeText(getContext(), error_pwd, Toast.LENGTH_SHORT);
+            } else {
+                mToast.setText(error_pwd);
+            }
+        mToast.show();
+    }
 }

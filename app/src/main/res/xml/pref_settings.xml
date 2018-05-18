@@ -41,7 +41,12 @@
         <PreferenceScreen
             android:key="group"
             android:title="加群"
-            android:summary="点击复制QQ群号，一起来玩耍">
+            android:summary="点击加群，一起来玩耍">
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:key="update"
+            android:title="更新"
+            android:summary="点击检查更新">
         </PreferenceScreen>
         <PreferenceScreen
             android:key="red_package"

@@ -48,7 +48,7 @@ public class AboutActivity extends BaseActivity {
         });
         version_info = (TextView) findViewById(R.id.version_info);
 
-        version_info.setText("V" + MyApplication.GetVersion());
+        version_info.setText("V" + MyApplication.GetVersionName());
         ThemeUtils.initStatusBarColor(AboutActivity.this, ThemeUtils.getPrimaryDarkColor(AboutActivity.this));
     }
 

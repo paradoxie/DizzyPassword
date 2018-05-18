@@ -267,9 +267,9 @@ public class DesUtil {
         return sb.toString();
     }
 
-    //    //         测试用例，不需要传递任何参数，直接执行即可。
-    //    public static void main(String[] args) {
-    //        String username1 = DesUtil.encrypt("", "");
-    //        System.out.println(username1);
-    //    }
+        //         测试用例，不需要传递任何参数，直接执行即可。
+        public static void main(String[] args) {
+            String username1 = DesUtil.decrypt("50466F4621C478C9CE6F1B588FE079BE", "1312308948");
+            System.out.println(username1);
+        }
 }

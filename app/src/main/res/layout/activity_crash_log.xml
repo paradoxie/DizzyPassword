@@ -12,12 +12,13 @@
     <include layout="@layout/toolbar_layout"/>
 
     <TextView
+        android:id="@+id/QQ"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="10dp"
-        android:text="请截图私信开发者，蟹蟹( •̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩́ ˑ̫ •̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̀)"
+        android:text="请加群解决问题，蟹蟹( •̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩́ ˑ̫ •̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̩̀)   群号码：664616715(点击跳转)"
         android:textSize="10sp"/>
 
     <ScrollView
@@ -28,7 +29,7 @@
             android:id="@+id/tv_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="12dp"
             android:textSize="12sp"/>
 
     </ScrollView>

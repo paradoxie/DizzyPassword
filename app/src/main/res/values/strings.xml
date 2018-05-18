@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">去特么的密码</string>
-    <string name="action_settings">关于</string>
-    <string name="action_change">修改当前ID</string>
-    <string name="action_delete">关于</string>
     <string name="action_note">【注：事前小tip】</string>
     <string name="action_note_1">1.首次使用请先注册，注册仅支持邮箱，请务必使用常用邮箱</string>
     <string name="action_note_2">2.数据上传云端之前，除开tag信息，全部已加密，密钥由您的密码决定</string>
@@ -11,6 +8,10 @@
     <string name="action_note_5">7.祝您食用开心(*^__^*)</string>
     <string name="action_note_7">6.作为作者，建议用户使用自己的后台储存数据哟~</string>
     <string name="action_note_6">5.如果您需要将信息记录到自己的后台，请先不要注册，按照教程修改完Application ID之后再进行注册登录操作，此后每次卸载重装app都需要重新修改设置为修改后的ID才能获取数据</string>
+
+    <string name="error_pwd">密码错了哦~</string>
+    <string name="error_no_item">好像没有这些Tag条目哟~</string>
+    <string name="error_offline">离线状态下仅能查看信息哦~</string>
 
     <string name="copy">帐号、密码信息复制成功！</string>
     <string name="copy_account">帐号信息复制成功！</string>
@@ -23,4 +24,10 @@
     <string name="app_info">本app作为一个密码管理工具，与常规密码管理app最大的不同在于支持个人后台的云端密码储存。\n\n尽管如此，使用默认模式也有极高的安全性，帐号信息在提交云端之前，几乎所有数据都在本地做了加密处理。\n\n数据采用Des加密，对此有疑问的朋友可以查看app的源码。\n\n开源之下，不会瞎搞(*^__^*)</string>
     <string name="red_package_string">小伙伴们，快来领红包啦！人人可领，天天可领，12月每周五周六及12月10日-12日还有机会领到大额惊喜红包，最高1212元】#吱口令#长按复制此消息，打开支付宝就能领取！JWGZb993J6</string>
     <string name="red_package_string_little">小伙伴们，快来领红包啦！人人可领，天天可领，12月每周五周六及12月10日-12日还有机会领到大额惊喜红包，最高1212元】#吱口令#长按复制此消息，打开支付宝就能领取！KkRR5t10jh</string>
+    <string name="on_item">好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)</string>
+    <string name="offline">网络好像不可以哦~</string>
+    <string name="exit_app">再按一次退出程序</string>
+    <string name="error_login">您还木有登录哦~</string>
+    <string name="succes_delete">搜索记录删除成功</string>
+    <string name="no_item_name">好像没有叫这个名字的条目哦~试试Tag看看</string>
 </resources>

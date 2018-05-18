@@ -49,6 +49,7 @@ public class SafeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_safe);
+
         rl_support_finger = (RelativeLayout) findViewById(R.id.rl_support_finger);
         rl_unsupport_finger = (RelativeLayout) findViewById(R.id.rl_unsupport_finger);
         btn_open = (Button) findViewById(R.id.btn_open);

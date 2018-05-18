@@ -14,11 +14,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="myTransparent" parent="@android:style/Theme.Dialog">
-        <item name="android:windowBackground">@color/transparent</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+
+        <item name="android:background">#ffffff</item>
     </style>
 
     <style name="AppTheme_Dialog" parent="Theme.AppCompat.Light.Dialog">
@@ -31,18 +29,6 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
         <!-- <item name="android:backgroundDimEnabled">false</item> -->
         <!--  <item name="android:windowBackground">@null</item> --><!--除去背景色-->
-    </style>
-
-    <style name="SettingsCellSingleCompoundButton">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:layout_marginTop">0dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:checked">true</item>
-        <item name="android:background">@android:color/white</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:singleLine">true</item>
     </style>
 
     <style name="MyDialogStyle" parent="@android:style/Theme.Dialog">
@@ -121,24 +107,6 @@
         <item name="colorAccent">@color/lightgreen500</item>
     </style>
 
-    <style name="Theme12" parent="AppTheme.NoActionBar">
-        <item name="colorPrimary">@color/lime400</item>
-        <item name="colorPrimaryDark">@color/lime700</item>
-        <item name="colorAccent">@color/lime500</item>
-    </style>
-
-    <style name="Theme13" parent="AppTheme.NoActionBar">
-        <item name="colorPrimary">@color/yellow400</item>
-        <item name="colorPrimaryDark">@color/yellow700</item>
-        <item name="colorAccent">@color/yellow500</item>
-    </style>
-
-    <style name="Theme14" parent="AppTheme.NoActionBar">
-        <item name="colorPrimary">@color/amber400</item>
-        <item name="colorPrimaryDark">@color/amber700</item>
-        <item name="colorAccent">@color/amber500</item>
-    </style>
-
     <style name="Theme15" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">@color/orange400</item>
         <item name="colorPrimaryDark">@color/orange700</item>
@@ -155,12 +123,6 @@
         <item name="colorPrimary">@color/brown400</item>
         <item name="colorPrimaryDark">@color/brown700</item>
         <item name="colorAccent">@color/brown500</item>
-    </style>
-
-    <style name="Theme18" parent="AppTheme.NoActionBar">
-        <item name="colorPrimary">@color/grey400</item>
-        <item name="colorPrimaryDark">@color/grey700</item>
-        <item name="colorAccent">@color/grey500</item>
     </style>
 
     <style name="Theme19" parent="AppTheme.NoActionBar">

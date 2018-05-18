@@ -15,7 +15,6 @@
         android:textSize="16sp"/>
 
     <ImageView
-        android:id="@+id/img_theme"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_alignParentRight="true"
