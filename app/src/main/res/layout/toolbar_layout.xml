@@ -31,7 +31,6 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="30dp"
                 android:scaleType="center"
-                android:visibility="visible"
                 android:src="@drawable/join_selector"/>
             <ImageView
                 android:id="@+id/search"

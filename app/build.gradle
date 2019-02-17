@@ -8,15 +8,15 @@ android {
         applicationId "cf.paradoxie.dizzypassword"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 19
-        versionName "0.0.19"
+        versionCode 20
+        versionName "0.0.20"
         multiDexEnabled true //引入指纹lib时出现com.android.dex.DexException
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
-            shrinkResources true
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -33,6 +33,7 @@ dependencies {
     compile 'com.loopeer.library:cardstack:1.0.2'
     compile 'cn.pedant.sweetalert:library:1.3'//dialog
     compile 'org.zackratos:ultimatebar:1.0.3'//终极沉浸
+    compile 'com.github.paradoxie:AutoVerticalTextview:0.1'//垂直tv
 
     compile project(path: ':lib')
     compile project(':searchview')

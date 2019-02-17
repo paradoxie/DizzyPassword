@@ -111,8 +111,8 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTextTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    rxEvent_2.setAction("name");
-                    RxBus.getInstance().post(rxEvent_2);
+//                    rxEvent_2.setAction("name");
+//                    RxBus.getInstance().post(rxEvent_2);
 
                 }
             });
@@ -120,15 +120,15 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    rxEvent_1.setAction("done");
-                    RxBus.getInstance().post(rxEvent_1);
+//                    rxEvent_1.setAction("done");
+//                    RxBus.getInstance().post(rxEvent_1);
                 }
             });
             mTime_up.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    rxEvent_1.setAction("done");
-                    RxBus.getInstance().post(rxEvent_1);
+//                    rxEvent_1.setAction("done");
+//                    RxBus.getInstance().post(rxEvent_1);
                 }
             });
 

@@ -67,9 +67,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private boolean optionMenuOn = true;  //显示optionmenu
     private Menu aMenu;         //获取optionmenu
     public static Integer[] TEST_DATAS = new Integer[]{
-            R.color.color_1, R.color.color_2, R.color.color_3, R.color.color_4
-            , R.color.color_5, R.color.color_6
-            , R.color.color_7, R.color.color_8,
+            R.color.color_1, R.color.color_2, R.color.color_3, R.color.color_4, R.color.color_5, R.color.color_6, R.color.color_7, R.color.color_8,
             R.color.color_9, R.color.color_10, R.color.color_11, R.color.color_12,
             R.color.color_13, R.color.color_14, R.color.color_15, R.color.color_16,
             R.color.color_17, R.color.color_18, R.color.color_19, R.color.color_20,
@@ -100,6 +98,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private FloatingActionButton fab;
     List<Map.Entry<String, Integer>> mappingList = null;
     List<String> historys = new ArrayList<>();
+    private SortUtils mSortUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +119,16 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         setting.setOnClickListener(this);
         search.setOnClickListener(this);
         join_qq.setOnClickListener(this);
+        //长按按名称排序
+        join_qq.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                MyToast.show(MainActivity.this, "长按，已按条目名称排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+
+                findOffLineDateByName();
+                return false;
+            }
+        });
         main_btn = (LinearLayout) findViewById(R.id.main_btn);
         main_btn.setVisibility(View.VISIBLE);
         //检测menu操作，第二次进入app时是否显示menu
@@ -273,7 +282,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             findOffLineDate();
         }
 
-        final SortUtils sortUtils = new SortUtils();
+        mSortUtils = new SortUtils();
         RxBus.getInstance().toObserverable(RxBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -292,10 +301,10 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                     mStackView.setSelectPosition(-1);
                                     mStackView.setScrollEnable(true);
                                 }
-                                findDateByTime(sortUtils);
+                                findDateByTime(mSortUtils);
                             } else if (rxBean.getAction() == "name") {
                                 //点击条目名称，根据名称排序
-                                MyToast.show(MainActivity.this, "已按条目名称排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                                MyToast.show(MainActivity.this, "长按，已按条目名称排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
 
                                 findOffLineDateByName();
                             }
@@ -581,7 +590,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
 
         Collections.sort(mAccountBeans, Collections.reverseOrder(sortUtils));
-        MyToast.show(MainActivity.this, "已按最近更新时间排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+        MyToast.show(MainActivity.this, "短按，已按最近更新时间排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
 
         mTestStackAdapter = new TestStackAdapter(MainActivity.this, mAccountBeans);
         mStackView.setAdapter(mTestStackAdapter);
@@ -674,8 +683,15 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            //短按按时间排序
             case R.id.join_qq:
-                MyApplication.joinQQGroup(Constans.QQ_ID);
+//                MyApplication.joinQQGroup(Constans.QQ_ID);
+                //点击新建/更新时间排序
+                if (mStackView.isExpending()) {
+                    mStackView.setSelectPosition(-1);
+                    mStackView.setScrollEnable(true);
+                }
+                findDateByTime(mSortUtils);
                 break;
             case R.id.search:
                 mSearchView.setNewHistoryList(getHistory());
@@ -703,10 +719,10 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 break;
             case R.id.red_package:
                 new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                        .setTitleText("口令复制成功")
-                        .setContentText("支付宝红包，金额随机，最高￥99喔😃\n" +
-                                "\n每天都可以来领取一次哈\n话说最近的红包好像都变大了呢...\n")
-                        .setConfirmText("前往支付宝领取")
+                        .setTitleText("口令复制成功,去支付宝搜索吧")
+                        .setContentText("支付宝大红包，金额随机，最高￥99喔😃\n" +
+                                "\n每天都可以来领取一次哈\n大红包可以来找我套现哦\n")
+                        .setConfirmText("前往支付宝搜索")
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
