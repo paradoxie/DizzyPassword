@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_head"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:background="@color/blue400">
+
+    <ImageView
+        android:id="@+id/iv_user_photo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/tv_name"
+        android:layout_marginLeft="20dp"
+        android:src="@mipmap/ic_logo" />
+
+    <TextView
+        android:id="@+id/tv_words"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="true"
+        android:padding="8dp"
+        android:textColor="#fff"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:padding="5dp"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:layout_above="@id/tv_words"
+        android:text="账号"
+        android:textSize="16sp" />
+
+
+
+</RelativeLayout>

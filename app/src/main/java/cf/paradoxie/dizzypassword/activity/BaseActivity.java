@@ -38,7 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void onPreCreate() {
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-        theme = sp.getInt("theme_change", R.style.Theme7);
+        theme = sp.getInt("theme_change", R.style.Theme10);
         setTheme(theme);
 
     }

@@ -24,7 +24,14 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 
 import cf.paradoxie.dizzypassword.activity.CrashLogActivity;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
@@ -279,6 +286,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
 
     /**
      * 获取版本号名称
+     *
      * @return
      */
     public static String GetVersionName() {
@@ -295,6 +303,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
 
     /**
      * 获取版本号
+     *
      * @return
      */
     public static int GetVersion() {
@@ -423,5 +432,53 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
                 mToast.setText(error_pwd);
             }
         mToast.show();
+    }
+
+    public static String get(final String url) {
+        final StringBuilder sb = new StringBuilder();
+        FutureTask<String> task = new FutureTask<String>(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                BufferedReader br = null;
+                InputStreamReader isr = null;
+                URLConnection conn;
+                try {
+                    URL geturl = new URL(url);
+                    conn = geturl.openConnection();//创建连接
+                    conn.connect();//get连接
+                    isr = new InputStreamReader(conn.getInputStream());//输入流
+                    br = new BufferedReader(isr);
+                    String line = null;
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line);//获取输入流数据
+                    }
+                    System.out.println(sb.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {//执行流的关闭
+                    if (br != null) {
+                        try {
+                            if (br != null) {
+                                br.close();
+                            }
+                            if (isr != null) {
+                                isr.close();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                return sb.toString();
+            }
+        });
+        new Thread(task).start();
+        String s = null;
+        try {
+            s = task.get();//异步获取返回值
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return s;
     }
 }

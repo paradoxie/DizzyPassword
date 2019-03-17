@@ -123,6 +123,10 @@ public class SettingActivity extends BaseActivity {
         private int theme;
         private SharedPreferences sp;
 
+        public SettingPreferenceFragment(){
+
+        }
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

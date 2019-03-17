@@ -35,7 +35,7 @@ public class ThemeUtils {
                 //            状态栏
                 window.setStatusBarColor(color);
                 //            底部导航栏
-//                window.setNavigationBarColor(color);
+                window.setNavigationBarColor(color);
             }
         }
 

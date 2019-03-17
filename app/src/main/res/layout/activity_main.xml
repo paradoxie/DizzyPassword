@@ -28,7 +28,7 @@
         android:layout_gravity="center"
         android:layout_margin="20dp"
         android:gravity="center"
-        android:text="您还没有登录哟~\n点击右下角注册登录吧\n或者点击右上角修改当前ID后再注册登录\n【注意:注册登录后进行修改ID操作，需要重新进行注册】"
+        android:text="您还没有登录哟~\n点击右下角注册登录吧\n或在注册页点击右上角修改当前ID后再注册登录\n【注意:注册登录后进行修改ID操作，需要重新进行注册】"
         android:textColor="@android:color/black"
         android:visibility="gone"/>
 
@@ -38,6 +38,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/add"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="90dp"
+        android:layout_marginRight="@dimen/fab_margin"
         app:srcCompat="@drawable/add"/>
 
 </android.support.design.widget.CoordinatorLayout>
