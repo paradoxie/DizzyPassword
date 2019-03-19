@@ -98,6 +98,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private List<AccountBean> mAccountBeans;
     private List<AccountBean> mAccountBeans_name;
     private List<AccountBean> mAccountBeans_tag;
+    private List<AccountBean> currentBean;
     private TextView tip, tv_name, tv_words;
     private SweetAlertDialog pDialog = null;
     private static Boolean isExit = false;
@@ -184,7 +185,12 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             public boolean onLongClick(View view) {
                 MyToast.show(MainActivity.this, "长按，已按条目名称排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
 
-                findOffLineDateByName();
+                if (toolbar.getTitle().toString().equals("全部")) {
+                    mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
+                    findOffLineDateByName(mAccountBeans);
+                } else {
+                    findOffLineDateByName(currentBean);
+                }
                 return false;
             }
         });
@@ -267,7 +273,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
         tip = (TextView) findViewById(R.id.tip);
 
-        tv_name.setText(SPUtils.get("name", "账号") + "");
+        tv_name.setText(SPUtils.get("name", "点击去登录") + "");
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
 
@@ -332,7 +338,22 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
         if (!MyApplication.isSign()) {
             tip.setVisibility(View.VISIBLE);
+//            toolbar.setTitle("未登录");
+            fab_1.setVisibility(View.GONE);
+            fab.setImageResource(R.drawable.login);
+            tv_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //缓存用户对象为空时， 可打开用户注册界面…
+                    Intent intent = new Intent(MainActivity.this, SignActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
         } else {
+            toolbar.setTitle("全部");
+            fab.setImageResource(R.drawable.add);
+            fab_1.setVisibility(View.VISIBLE);
             search.setVisibility(View.VISIBLE);
             refresh.setVisibility(View.VISIBLE);
             join_qq.setVisibility(View.VISIBLE);
@@ -376,12 +397,12 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                                     mStackView.setSelectPosition(-1);
                                     mStackView.setScrollEnable(true);
                                 }
-                                findDateByTime(mSortUtils);
+//                                findDateByTime(mSortUtils);
                             } else if (rxBean.getAction() == "name") {
                                 //点击条目名称，根据名称排序
-                                MyToast.show(MainActivity.this, "长按，已按条目名称排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
-
-                                findOffLineDateByName();
+//                                MyToast.show(MainActivity.this, "长按，已按条目名称排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+//
+//                                findOffLineDateByName();
                             }
                             return;
                         }
@@ -431,7 +452,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         String dateNowStr = sdf.format(d);
 
                         if (time.equals(dateNowStr)) {//如果更新日期为当前日期，就直接取bmob数据
-                            tv_words.setText(wordsBean.getFamous_saying() + "      ---      " + wordsBean.getFamous_name());
+                            tv_words.setText(wordsBean.getFamous_saying() + "      ---" + wordsBean.getFamous_name());
                         } else {//如果更新日期不是当前日期，就请求接口并更新到bmob
                             getWordsByAvatar(id);
                         }
@@ -440,6 +461,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     }
                 } else {
                     Log.e("-----", e.getMessage());
+                    tv_words.setText(SPUtils.get("text", "世上无难事，只要肯放弃") + "");
                 }
             }
         });
@@ -454,7 +476,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             final WordsBean wordsBean = new WordsBean();
             wordsBean.setFamous_name(obj.getJSONObject("result").getString("famous_name"));
             wordsBean.setFamous_saying(obj.getJSONObject("result").getString("famous_saying"));
-            String text = wordsBean.getFamous_saying() + "      ---      " + wordsBean.getFamous_name();
+            String text = wordsBean.getFamous_saying() + "      ---" + wordsBean.getFamous_name();
             tv_words.setText(text);
             SPUtils.put("text", text);
             if (id.equals("")) {//上传
@@ -538,7 +560,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
 
         pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryDarkColor(MainActivity.this));
         pDialog.setTitleText("离线数据加载中...");
         pDialog.show();
         mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
@@ -585,13 +607,15 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             mStackView.setScrollEnable(true);
         }
         pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryDarkColor(MainActivity.this));
         pDialog.setTitleText("查找中...");
         if (!MainActivity.this.isFinishing()) {
             pDialog.show();
         }
 
+        toolbar.setTitle(s);
         mAccountBeans_tag = DataUtils.searchDataByTag(mAccountBeans, s);
+        currentBean = mAccountBeans_tag;
 
         if (mAccountBeans_tag.size() == 0) {
             MyApplication.showToast(R.string.error_no_item);
@@ -630,15 +654,17 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             //取缓存数据
             if (SPUtils.getDataList("beans", AccountBean.class).size() < 1) {
                 findOnLineDate();
+                toolbar.setTitle("全部");
             } else {
                 findOffLineDate();
+                toolbar.setTitle("全部");
             }
         }
     }
 
     private void findOnLineDate() {
         pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryDarkColor(MainActivity.this));
         pDialog.setTitleText("联网加载中...");
         pDialog.show();
         startAnim();
@@ -701,16 +727,16 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
     }
 
-    private void findOffLineDateByName() {
+    private void findOffLineDateByName(List<AccountBean> mAccountBeans) {
 
         pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryDarkColor(MainActivity.this));
         pDialog.setTitleText("按名称排序中...");
         if (!isFinishing()) {
             pDialog.show();
         }
 
-        mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
+//        mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
 
         if (mStackView.isExpending()) {
             mStackView.setSelectPosition(-1);
@@ -722,12 +748,13 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView.setAdapter(mTestStackAdapter);
 
         mTestStackAdapter.notifyDataSetChanged();
+        final List<AccountBean> finalMAccountBeans = mAccountBeans;
         new Handler().postDelayed(
                 new Runnable() {
                     @Override
                     public void run() {
                         //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
-                        mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
+                        mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, finalMAccountBeans.size())));
                         if (pDialog.isShowing()) {
                             pDialog.dismiss();
                         }
@@ -738,18 +765,17 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     }
 
 
-    private void findDateByTime(final SortUtils sortUtils) {
+    private void findDateByTime(final SortUtils sortUtils, final List<AccountBean> mAccountBeans) {
         try {//233，这个地方单独判断isFinish还是会崩，得再捕捉一次
             if (!MainActivity.this.isFinishing()) {
                 pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryDarkColor(MainActivity.this));
                 pDialog.setTitleText("加载中");
                 pDialog.show();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
 
         Collections.sort(mAccountBeans, Collections.reverseOrder(sortUtils));
         MyToast.show(MainActivity.this, "短按，已按最近更新时间排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
@@ -853,12 +879,18 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     mStackView.setSelectPosition(-1);
                     mStackView.setScrollEnable(true);
                 }
-                findDateByTime(mSortUtils);
+                if (toolbar.getTitle().toString().equals("全部")) {
+                    mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
+                    findDateByTime(mSortUtils, mAccountBeans);
+                } else {
+                    findDateByTime(mSortUtils, currentBean);
+                }
                 break;
             case R.id.search:
                 mSearchView.setNewHistoryList(getHistory());
                 mSearchView.autoOpenOrClose();
                 fab.setVisibility(View.GONE);
+                fab_1.setVisibility(View.GONE);
                 break;
 
             case R.id.refresh:
@@ -883,7 +915,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
                         .setTitleText("口令复制成功,去支付宝搜索吧")
                         .setContentText("支付宝大红包，金额随机，最高￥99喔😃\n" +
-                                "\n每天都可以来领取一次哈\n大红包可以来找我套现哦\n")
+                                "\n每天都可以来领取一次哈\n大红包可以联系套现哦\n")
                         .setConfirmText("前往支付宝搜索")
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
@@ -943,6 +975,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             public void onClick(View view) {
                 mSearchView.close();
                 fab.setVisibility(View.VISIBLE);
+                fab_1.setVisibility(View.VISIBLE);
             }
         });
         mSearchView.getCloseTv().setOnClickListener(new View.OnClickListener() {
@@ -950,6 +983,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             public void onClick(View view) {
                 mSearchView.close();
                 fab.setVisibility(View.VISIBLE);
+                fab_1.setVisibility(View.VISIBLE);
             }
         });
         mSearchView.setNewHistoryList(getHistory());
@@ -973,6 +1007,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     searchDate(searchText.trim());
                     mSearchView.close();
                     fab.setVisibility(View.VISIBLE);
+                    fab_1.setVisibility(View.VISIBLE);
                     return;
                 }
                 if (mStackView.isExpending()) {
@@ -980,11 +1015,13 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     mStackView.setScrollEnable(true);
                 }
                 pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryDarkColor(MainActivity.this));
                 pDialog.setTitleText("搜索中...");
                 pDialog.show();
                 //                String name = DesUtil.encrypt(searchText.trim(), SPUtils.getKey());//关键词
+                toolbar.setTitle(searchText.trim());
                 mAccountBeans_name = DataUtils.searchDataByName(mAccountBeans, searchText.trim());
+                currentBean = mAccountBeans_name;
                 if (mAccountBeans_name.size() == 0) {
                     MyApplication.showToast(getString(R.string.no_item_name));
                     pDialog.dismiss();
@@ -1009,6 +1046,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
                 mSearchView.close();
                 fab.setVisibility(View.VISIBLE);
+                fab_1.setVisibility(View.VISIBLE);
             }
         });
 

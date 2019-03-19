@@ -66,7 +66,7 @@
             android:layout_above="@id/note"
             android:layout_marginTop="15dp"
             android:gravity="center"
-            android:text="Copyright © 2017 Paradoxie"
+            android:text="Copyright © 2017-2019 Paradoxie"
             android:textColor="@android:color/black"
             android:textStyle="bold"/>
 

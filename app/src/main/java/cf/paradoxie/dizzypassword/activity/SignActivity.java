@@ -60,7 +60,7 @@ public class SignActivity extends BaseActivity {
         ThemeUtils.initStatusBarColor(SignActivity.this, ThemeUtils.getPrimaryDarkColor(SignActivity.this));
 
         pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryDarkColor(SignActivity.this));
         pDialog.setTitleText("进行中...");
 
         nameWrapper = (TextInputLayout) findViewById(R.id.nameWrapper);

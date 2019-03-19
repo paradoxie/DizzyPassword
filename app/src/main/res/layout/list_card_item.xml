@@ -244,7 +244,7 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/account"
                     android:drawablePadding="5dp"
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/white"
                     android:textSize="18sp"/>
 
                 <cf.paradoxie.dizzypassword.view.SingleLineTextView
@@ -254,7 +254,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="32dp"
                     android:maxLines="1"
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/white"
                     android:textSize="16sp"/>
 
             </LinearLayout>
@@ -282,7 +282,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="32dp"
                     android:maxLines="1"
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/white"
                     android:textSize="16sp"/>
             </LinearLayout>
 
@@ -312,7 +312,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="20dp"
-                        android:textColor="@android:color/black"
+                        android:textColor="@android:color/white"
                         android:textSize="16sp"/>
                 </ScrollView>
             </LinearLayout>

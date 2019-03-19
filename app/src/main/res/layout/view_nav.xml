@@ -33,7 +33,7 @@
         android:textColor="#fff"
         android:textStyle="bold"
         android:layout_above="@id/tv_words"
-        android:text="账号"
+        android:text="点击去登录"
         android:textSize="16sp" />
 
 
