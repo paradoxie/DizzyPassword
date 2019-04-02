@@ -42,7 +42,7 @@ public class SafeActivity extends BaseActivity {
     private RxFingerPrinter rxfingerPrinter;
     private RelativeLayout rl_support_finger, rl_unsupport_finger;
     private TextView tv_message;
-    private Button btn_open;
+    private TextView btn_open;
     private int code = 999;
 
     @Override
@@ -52,7 +52,7 @@ public class SafeActivity extends BaseActivity {
 
         rl_support_finger = (RelativeLayout) findViewById(R.id.rl_support_finger);
         rl_unsupport_finger = (RelativeLayout) findViewById(R.id.rl_unsupport_finger);
-        btn_open = (Button) findViewById(R.id.btn_open);
+        btn_open = (TextView) findViewById(R.id.btn_open);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("安全验证");
         setSupportActionBar(toolbar);
