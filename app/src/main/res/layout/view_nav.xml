@@ -9,8 +9,9 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_above="@+id/tv_name"
+        android:onClick="smallImgClick"
         android:layout_marginLeft="20dp"
-        android:src="@mipmap/ic_logo" />
+        android:src="@mipmap/ic_logo"/>
 
     <TextView
         android:id="@+id/tv_words"

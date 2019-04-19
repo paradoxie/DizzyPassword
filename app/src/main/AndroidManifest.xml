@@ -45,6 +45,9 @@
                   android:theme="@style/AppTheme_Dialog"/>
 
         <activity android:name=".activity.AboutActivity"/>
+        <activity android:name=".activity.BackupActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            android:configChanges="orientation|keyboardHidden"/>
 
         <activity
             android:name=".activity.CrashLogActivity"/>

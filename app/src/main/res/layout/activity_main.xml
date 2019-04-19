@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:id="@+id/cl_main"
     tools:context="cf.paradoxie.dizzypassword.activity.MainActivity">
 
     <include layout="@layout/toolbar_layout"/>

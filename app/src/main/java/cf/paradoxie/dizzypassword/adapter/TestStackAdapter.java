@@ -211,7 +211,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 @Override
                 public void onClick(View view) {
                     if (MyApplication.first_check == 0) {
-                        MyToast.show(mContext, "请先点击左上角解锁操作权限", ThemeUtils.getPrimaryColor(mContext));
+                        MyToast.show(mContext, "请先点击右下角解锁操作权限", ThemeUtils.getPrimaryColor(mContext));
                     } else {
                         if (mPassword.getText().equals("**********")) {
                             mPassword.setText(password);
@@ -285,8 +285,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 @Override
                 public void onClick(View view) {
                     if (MyApplication.first_check == 0) {
-                        //                        MyApplication.showToast("请先点击左上角解锁操作权限");
-                        MyToast.show(mContext, "请先点击左上角解锁操作权限", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                        MyToast.show(mContext, "请先点击右下角解锁操作权限", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
                     } else {
                         changeDate(name, account, password, finalWeb, finalNote, tag, id);
                     }
@@ -299,7 +298,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 @Override
                 public void onClick(View view) {
                     if (MyApplication.first_check == 0) {
-                        MyToast.show(mContext, "请先点击左上角解锁操作权限"
+                        MyToast.show(mContext, "请先点击右下角解锁操作权限"
                                 , ThemeUtils.getPrimaryColor(mContext));
 
                     } else {

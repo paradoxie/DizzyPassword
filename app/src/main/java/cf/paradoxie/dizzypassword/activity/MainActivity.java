@@ -2,48 +2,52 @@ package cf.paradoxie.dizzypassword.activity;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopeer.cardstack.CardStackView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.zackratos.ultimatebar.UltimateBar;
 
-import java.text.SimpleDateFormat;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -73,7 +77,6 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
-import cn.bmob.v3.update.UpdateStatus;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import km.lmy.searchview.SearchView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -99,7 +102,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private List<AccountBean> mAccountBeans_name;
     private List<AccountBean> mAccountBeans_tag;
     private List<AccountBean> currentBean;
-    private TextView tip, tv_name, tv_words;
+    private TextView tip, tv_name, tv_words,tv_words_chicken;
     private SweetAlertDialog pDialog = null;
     private static Boolean isExit = false;
     private BmobUser user = new BmobUser();
@@ -108,7 +111,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private LinearLayout main_btn;
     private long mCurrentPlayTime;
     private ObjectAnimator animator;
-    private ImageView refresh, red_package, setting, search, join_qq;
+    private ImageView refresh, red_package, setting, search, join_qq,iv_user_photo;
     private Handler handler = new Handler();
     private SearchView mSearchView;
     private String[] strings;
@@ -119,6 +122,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private SortUtils mSortUtils;
     private DrawerLayout mDrawerLayout;
     private ListView mListNames, mListTimes;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +130,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         setContentView(R.layout.activity_main_layout);
 //        UltimateBar ultimateBar = new UltimateBar(this);
 //        ultimateBar.setTransparentBar(Color.BLUE, 50);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         ThemeUtils.initStatusBarColor(MainActivity.this, ThemeUtils.getPrimaryDarkColor(MainActivity.this));
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("全部");
@@ -135,6 +140,24 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         View headerView = navigationView.getHeaderView(0);//获取头布局
         tv_name = (TextView) headerView.findViewById(R.id.tv_name);
         tv_words = (TextView) headerView.findViewById(R.id.tv_words);
+        tv_words.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(tv_words.getText());
+                MyApplication.showSnack(v, R.string.str_copy, ThemeUtils.getPrimaryColor(MainActivity.this));
+            }
+        });
+        tv_words_chicken = (TextView) navigationView.findViewById(R.id.tv_words_chicken);
+        tv_words_chicken.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(tv_words_chicken.getText());
+                MyApplication.showSnack(v, R.string.str_copy, ThemeUtils.getPrimaryColor(MainActivity.this));
+            }
+        });
+        tv_words_chicken.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(MainActivity.this));
 //        Button button = (Button) navigationView.findViewById(R.id.button);
         mListNames = (ListView) navigationView.findViewById(R.id.list_names);
         mListTimes = (ListView) navigationView.findViewById(R.id.list_times);
@@ -417,12 +440,83 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 public void run() {
                     getVersion();
                     getWords();
+                    getWordsChicken();
+                    getPic();
                 }
             }, 3000);
 
         } else {
             tv_words.setText(SPUtils.get("text", "世上无难事，只要肯放弃") + "");
         }
+    }
+
+    private void getWordsChicken() {
+        String s = MyApplication.get(Constans.WORDS_ID_CHICKEN+MyApplication.getData());
+        JSONObject obj = null;
+        try {
+            obj = new JSONObject(s);
+            JSONArray jsonArray = new JSONArray(obj.getString("data"));
+            JSONObject words = new JSONObject(jsonArray.get(jsonArray.length()-1).toString());
+            String text = words.getString("data");
+            tv_words_chicken.setText(text);
+            SPUtils.put("text_chicken", text);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void getPic() {
+        int a = (int) (1 + Math.random() * (10 - 1 + 1));
+        int b = (int) (1 + Math.random() * (10 - 1 + 1));
+//        int c = (int) (1 + Math.random() * (b - 1 + 1));
+        int c = new Random().nextInt(b);
+        String s = MyApplication.get(Constans.PIC_ID + a + "/" + b);
+        try {
+            JSONObject obj = new JSONObject(s);
+            JSONArray jsonArray = new JSONArray(obj.getString("results"));
+            JSONObject pic = new JSONObject(jsonArray.get(c).toString());
+            url = pic.getString("url");
+            Log.d("----pic", url);
+            iv_user_photo = (ImageView) findViewById(R.id.iv_user_photo);
+            MyApplication.loadImg(iv_user_photo,url,true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void smallImgClick(View v) {
+        //有背景图
+         //全屏显示的方法
+     final Dialog dialog = new Dialog(this, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
+     ImageView imgView = getView();
+     MyApplication.loadImg(imgView,url,false);
+     dialog.setContentView(imgView);
+     dialog.getWindow().setWindowAnimations(R.style.DialogOutAndInStyle);   //设置dialog的显示动画
+     dialog.show();
+
+        // 点击图片消失
+        imgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                dialog.dismiss();
+            }
+        });
+    }
+
+
+    private ImageView getView() {
+        ImageView imgView = new ImageView(this);
+        imgView.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
+
+        @SuppressLint("ResourceType") InputStream is = getResources().openRawResource(R.mipmap.ic_logo);
+        Drawable drawable = BitmapDrawable.createFromStream(is, null);
+        imgView.setImageDrawable(drawable);
+
+        return imgView;
     }
 
     private void getWords() {
@@ -446,10 +540,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     if (!wordsBean.getFamous_saying().equals("")) {
                         String time = wordsBean.getUpdatedAt().substring(0, 11).trim();
                         String id = wordsBean.getObjectId();
-                        Date d = new Date();
-                        System.out.println(d);
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                        String dateNowStr = sdf.format(d);
+                        String dateNowStr = MyApplication.getData();
 
                         if (time.equals(dateNowStr)) {//如果更新日期为当前日期，就直接取bmob数据
                             tv_words.setText(wordsBean.getFamous_saying() + "      ---" + wordsBean.getFamous_name());
@@ -641,9 +732,22 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        Drawable drawable = getResources().getDrawable(R.drawable.bg_trans_navigation);
+//        Log.e("onActivityonPause",  "蒙版");
+//        cl_main.setForeground(drawable);
+    }
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onResume() {
         super.onResume();
+//        Drawable drawable = getResources().getDrawable(R.drawable.bg_all_trans_navigation);
+//        Log.e("onActivityonResume",  "蒙版消失");
+//        cl_main.setForeground(drawable);
+
         if (SPUtils.get("key", "") + "" != "") {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
@@ -829,6 +933,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
     }
 
+
+
     @Override
     public void onBackPressed() {
         exitBy2Click();
@@ -860,13 +966,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         RxBus.getInstance().unSubscribe(this);
     }
 
-    /**
-     * 隐藏软键盘
-     */
-    private void hideInputWindow() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-    }
+
 
     @Override
     public void onClick(View view) {

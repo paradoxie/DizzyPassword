@@ -1,7 +1,9 @@
 package cf.paradoxie.dizzypassword.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
+import android.text.ClipboardManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -16,6 +18,7 @@ import cf.paradoxie.dizzypassword.db.RxBean;
 import cf.paradoxie.dizzypassword.utils.GetPwdUtils;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.view.SingleLineTextView;
 
 /**
@@ -162,6 +165,9 @@ public class GetPwdActivity extends BaseActivity {
                     MyApplication.showToast("啥也没有哦~");
                     return;
                 }
+                ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(et_pwd.getText().toString().trim());
+                MyApplication.showToast(R.string.copy_password);
                 mRxBean.setPwd(et_pwd.getText().toString().trim());
                 RxBus.getInstance().post(mRxBean);
                 finish();

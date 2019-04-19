@@ -30,4 +30,5 @@
     <string name="error_login">您还木有登录哦~</string>
     <string name="succes_delete">搜索记录删除成功</string>
     <string name="no_item_name">好像没有叫这个名字的条目哦~试试Tag看看</string>
+    <string name="str_copy">复制成功</string>
 </resources>

@@ -34,17 +34,17 @@
         </android.support.v7.widget.CardView>
 
         <TextView
-            android:id="@+id/btn_open"
+            android:id="@+id/tv_open"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_below="@+id/cv"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:background="@drawable/search_label_sure"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
             android:text="当前支持指纹验证，等待验证中..."
             android:textColor="@color/bg_color"
             android:textSize="14sp" />
@@ -90,10 +90,15 @@
             android:layout_height="40dp"
             android:layout_below="@+id/psw_input"
             android:layout_centerInParent="true"
-            android:layout_margin="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/search_label_sure"
             android:gravity="center"
-            android:text="验证提示信息"
-            android:textColor="@android:color/black" />
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:text="当前支持指纹验证，等待验证中..."
+            android:textColor="@color/bg_color" />
 
     </RelativeLayout>
 

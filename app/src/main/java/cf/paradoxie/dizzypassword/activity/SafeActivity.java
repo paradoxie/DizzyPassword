@@ -42,7 +42,7 @@ public class SafeActivity extends BaseActivity {
     private RxFingerPrinter rxfingerPrinter;
     private RelativeLayout rl_support_finger, rl_unsupport_finger;
     private TextView tv_message;
-    private TextView btn_open;
+    private TextView tv_open;
     private int code = 999;
 
     @Override
@@ -52,14 +52,19 @@ public class SafeActivity extends BaseActivity {
 
         rl_support_finger = (RelativeLayout) findViewById(R.id.rl_support_finger);
         rl_unsupport_finger = (RelativeLayout) findViewById(R.id.rl_unsupport_finger);
-        btn_open = (TextView) findViewById(R.id.btn_open);
+        tv_open = (TextView) findViewById(R.id.tv_open);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("安全验证");
         setSupportActionBar(toolbar);
         //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {//sdk23以下的版本直接数字码验证
+        String isFinger = SPUtils.get("isFinger", "true") + "";
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || isFinger.equals("false")) {//sdk23以下的版本直接数字码验证，或者勾选了不启用指纹
             codeCheck();
+            if (isFinger.equals("false")){
+                tv_message.setText("已启用6位数字码进行安全验证");
+            }else {
             tv_message.setText("当前设备版本过低，请使用6位数字码进行安全验证");
+            }
         } else {//SDK23以上显示指纹
             fingerCheck();
             if (code != 999) {
@@ -95,15 +100,15 @@ public class SafeActivity extends BaseActivity {
             public void onChange(int state) {
                 if (state == FingerPrinterView.STATE_CORRECT_PWD) {
                     fingerErrorNum = 0;
-                    btn_open.setText("指纹验证成功，正在进入app...");
+                    tv_open.setText("指纹验证成功，正在进入app...");
                     startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
                     finish();
                 }
                 if (state == FingerPrinterView.STATE_WRONG_PWD) {
-                    btn_open.setText("指纹认证失败，还剩" + (5 - fingerErrorNum) + "次机会");
+                    tv_open.setText("指纹认证失败，还剩" + (5 - fingerErrorNum) + "次机会");
                     if (fingerErrorNum == 5) {
-                        btn_open.setText("指纹验证失败，请退出等待一段时间后重试");
-                        btn_open.setBackgroundResource(R.drawable.red_button_background);
+                        tv_open.setText("指纹验证失败，请退出等待一段时间后重试");
+                        tv_open.setBackgroundResource(R.drawable.red_button_background);
                     }
                     fingerPrinterView.setState(STATE_NO_SCANING);
                 }
@@ -203,8 +208,8 @@ public class SafeActivity extends BaseActivity {
                 if (e instanceof FPerException) {
                     code = ((FPerException) e).getCode();
                     if (code == 6) {
-                        btn_open.setText("指纹验证失败，请退出等待一段时间后重试");
-                        btn_open.setBackgroundResource(R.drawable.red_button_background);
+                        tv_open.setText("指纹验证失败，请退出等待一段时间后重试");
+                        tv_open.setBackgroundResource(R.drawable.red_button_background);
                     }
                 }
 
@@ -232,11 +237,5 @@ public class SafeActivity extends BaseActivity {
         fingerErrorNum = 0;
     }
 
-    /**
-     * 隐藏软键盘
-     */
-    private void hideInputWindow() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-    }
+
 }

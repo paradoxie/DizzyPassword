@@ -1,19 +1,16 @@
 package cf.paradoxie.dizzypassword.view;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -37,8 +34,6 @@ public class PswInputView extends View {
     private int mDotColor;//掩盖点的颜色
     private RectF mRoundRect;//外面的圆角矩形
     private int mRoundRadius;//圆角矩形的圆角程度
-    private float mFocusLineLength;//
-    private ObjectAnimator mFocusAnim;//焦点转换动画
 
     public PswInputView(Context context) {
         super(context);
@@ -86,16 +81,15 @@ public class PswInputView extends View {
         size = (int) (dp * 30);//默认30dp一格
         //color
         mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBorderPaint.setStrokeWidth(2);
+        mBorderPaint.setStrokeWidth(1);
         mBorderPaint.setStyle(Paint.Style.STROKE);
         mBorderPaint.setColor(mBorderColor);
         mDotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mDotPaint.setStrokeWidth(3);
         mDotPaint.setStyle(Paint.Style.FILL);
-        mDotPaint.setColor(mDotColor);
+        mDotPaint.setColor(mBorderColor);
         mRoundRect = new RectF();
-        mRoundRadius = (int) (5 * dp);
-        mFocusLineLength = 0;
+        mRoundRadius = (int) (10 * dp);
         this.setOnKeyListener(new MyKeyListener());
     }
 
@@ -153,22 +147,6 @@ public class PswInputView extends View {
         return super.onTouchEvent(event);
     }
 
-    @Override
-    protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
-        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
-        if (mFocusAnim != null) {
-            mFocusAnim.end();
-        }
-        if (gainFocus) {
-            mFocusAnim = ObjectAnimator.ofFloat(this, "FocusLine", mFocusLineLength, (float) (getWidth() - 2 * mRoundRadius));
-            input.showSoftInput(this, InputMethodManager.SHOW_FORCED);
-        } else {
-            mFocusAnim = ObjectAnimator.ofFloat(this, "FocusLine", mFocusLineLength, 0);
-            input.hideSoftInputFromInputMethod(this.getWindowToken(), 0);
-        }
-        mFocusAnim.setDuration(1000).setInterpolator(new OvershootInterpolator());
-        mFocusAnim.start();
-    }
 
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
@@ -200,12 +178,6 @@ public class PswInputView extends View {
             final float y = size / 2;
             canvas.drawCircle(x, y, dotRadius, mDotPaint);
         }
-        //画提示线
-        if (mFocusLineLength != 0) {
-            final float sx = (width - mFocusLineLength) / 2;
-            final float ex = sx + mFocusLineLength;
-            canvas.drawLine(sx, height, ex, height, mDotPaint);
-        }
     }
 
     @Override
@@ -226,11 +198,6 @@ public class PswInputView extends View {
 
     public void clearResult() {
         result.clear();
-        invalidate();
-    }
-
-    private void setFocusLine(float length) {
-        mFocusLineLength = length;
         invalidate();
     }
 

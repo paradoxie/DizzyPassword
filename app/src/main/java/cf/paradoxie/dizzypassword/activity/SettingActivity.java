@@ -12,6 +12,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -118,13 +119,13 @@ public class SettingActivity extends BaseActivity {
     }
 
     @SuppressLint("ValidFragment")
-    public class SettingPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public class SettingPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener,Preference.OnPreferenceChangeListener {
 
         private int theme;
         private SharedPreferences sp;
-
-        public SettingPreferenceFragment(){
-
+        private  Context mContext;
+        public SettingPreferenceFragment() {
+            mContext = MyApplication.mContext;
         }
 
         @Override
@@ -132,6 +133,9 @@ public class SettingActivity extends BaseActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_settings);
             sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SwitchPreference switch_preference = (SwitchPreference) findPreference("is_finger");
+            switch_preference.setOnPreferenceChangeListener(this);
+
             theme = sp.getInt("theme_change", R.style.Theme7);
         }
 
@@ -195,6 +199,10 @@ public class SettingActivity extends BaseActivity {
                 case "id_change":
 
                     break;
+
+                case "is_finger":
+
+                    break;
                 case "about":
                     Intent intent1 = new Intent(AppManager.getAppManager().currentActivity(), AboutActivity.class);
                     startActivity(intent1);
@@ -217,9 +225,21 @@ public class SettingActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
+
+                case "back_up":
+                    Intent intent2 = new Intent(AppManager.getAppManager().currentActivity(), BackupActivity.class);
+                    startActivity(intent2);
+                    break;
                 default:
                     break;
             }
+            return true;
+        }
+
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+           Log.d("-----",newValue+"");
+            SPUtils.put("isFinger", newValue+"");
             return true;
         }
     }
@@ -287,13 +307,7 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 隐藏软键盘
-     */
-    private void hideInputWindow() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-    }
+
 
     private String getCodePwd(String string) {
         if (string.isEmpty() || string == null) {

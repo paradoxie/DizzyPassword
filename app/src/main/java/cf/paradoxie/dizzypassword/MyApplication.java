@@ -21,14 +21,22 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -434,6 +442,34 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         mToast.show();
     }
 
+    public static void loadImg(ImageView imageView, String imgUrl,boolean a) {
+
+        if (null == imageView || TextUtils.isEmpty(imgUrl)) {
+            return;
+        }
+
+        //设置图片圆角角度
+        RoundedCorners roundedCorners = new RoundedCorners(30);
+        //通过RequestOptions扩展功能
+        RequestOptions options = RequestOptions.bitmapTransform(roundedCorners).override(300, 300).circleCrop();
+        if (a){
+            Glide.with(getContext())
+                    .load(imgUrl)
+                .apply(options)
+                    .error(R.mipmap.ic_logo)
+                    .placeholder(R.mipmap.ic_logo)
+                    .into(imageView);
+        }else {
+            Glide.with(getContext())
+                    .load(imgUrl)
+//                .apply(options)
+                    .error(R.mipmap.ic_logo)
+                    .placeholder(R.mipmap.ic_logo)
+                    .into(imageView);
+        }
+
+    }
+
     public static String get(final String url) {
         final StringBuilder sb = new StringBuilder();
         FutureTask<String> task = new FutureTask<String>(new Callable<String>() {
@@ -480,5 +516,13 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
             e.printStackTrace();
         }
         return s;
+    }
+
+    public static String getData(){
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateNowStr = sdf.format(d);
+
+        return dateNowStr;
     }
 }

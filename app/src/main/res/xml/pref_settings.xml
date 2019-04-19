@@ -3,27 +3,32 @@
     <PreferenceCategory
         android:key="pref_cate_base"
         android:title="通用">
-        <cf.paradoxie.dizzypassword.view.ThemeChoice
-            android:key="theme_change"/>
+        <cf.paradoxie.dizzypassword.view.ThemeChoice android:key="theme_change" />
+
+
         <EditTextPreference
+            android:hint="默认值为60秒"
+            android:inputType="number"
             android:key="id_change"
-            android:title="后台时长(单位:秒)"
+            android:maxLength="3"
             android:paddingLeft="5dp"
             android:summary="程序进入后台时间达到时长将自动锁定操作权限"
-            android:inputType="number"
-            android:gravity="center"
-            android:hint="默认值为60秒"
-            android:maxLength="3"/>
+            android:title="后台时长(单位:秒)" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="is_finger"
+            android:title="启用指纹验证"
+            android:summary="关闭时将启用6位安全码代替指纹验证"/>
+
         <EditTextPreference
+            android:hint="请输入6位新的安全码"
+            android:inputType="number"
             android:key="id_code"
-            android:title="更换安全码"
+            android:maxLength="6"
             android:paddingLeft="5dp"
             android:summary="更换进入App时的六位安全码，指纹用户请忽略(*^__^*)"
-            android:inputType="number"
-            android:gravity="center"
-            android:hint="请输入6位新的安全码"
-            android:maxLength="6">
-        </EditTextPreference>
+            android:title="更换安全码"></EditTextPreference>
 
     </PreferenceCategory>
 
@@ -32,27 +37,27 @@
         android:title="其他">
         <PreferenceScreen
             android:key="share"
-            android:title="分享">
-        </PreferenceScreen>
+            android:title="分享"></PreferenceScreen>
         <PreferenceScreen
             android:key="about"
-            android:title="关于">
-        </PreferenceScreen>
+            android:title="关于"></PreferenceScreen>
         <PreferenceScreen
             android:key="group"
-            android:title="加群"
-            android:summary="点击加群，一起来玩耍">
-        </PreferenceScreen>
+            android:summary="点击加群，一起来玩耍"
+            android:title="加群"></PreferenceScreen>
         <PreferenceScreen
             android:key="update"
-            android:title="更新"
-            android:summary="点击检查更新">
-        </PreferenceScreen>
+            android:summary="点击检查更新"
+            android:title="更新"></PreferenceScreen>
         <PreferenceScreen
             android:key="red_package"
-            android:title="领红包"
-            android:summary="点击复制搜索码，支付宝搜索，大红包联系套现哦">
-        </PreferenceScreen>
+            android:summary="点击复制搜索码，支付宝搜索，大红包联系套现哦"
+            android:title="领红包"></PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="back_up"
+            android:summary="仅支持json格式"
+            android:title="导出"></PreferenceScreen>
 
     </PreferenceCategory>
 </PreferenceScreen>

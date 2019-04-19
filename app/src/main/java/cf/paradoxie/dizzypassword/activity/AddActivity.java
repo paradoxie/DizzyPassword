@@ -35,8 +35,8 @@ import rx.schedulers.Schedulers;
 
 public class AddActivity extends BaseActivity {
     private TextInputLayout nameWrapper, accountWrapper, passwordWrapper, tagWrapper, noteWrapper;
-    private EditText et_name, et_note, et_account, et_password, et_tag,et_web;
-    private String name, note, acount, password, tag, id,web;
+    private EditText et_name, et_note, et_account, et_password, et_tag, et_web;
+    private String name, note, acount, password, tag, id, web;
     private ImageView btn_get_pwd;
     private FlowLayout mFlowLayout;
     private LayoutInflater mInflater;
@@ -124,9 +124,9 @@ public class AddActivity extends BaseActivity {
             passwordWrapper.setErrorEnabled(true);
             passwordWrapper.setError("密码不能为空哦~");
             return;
-        } else if (tag.isEmpty()) {
+        } else if (tag.split("\\s+").length < 2) {
             tagWrapper.setErrorEnabled(true);
-            tagWrapper.setError("请至少选择一个Tag");
+            tagWrapper.setError("请至少选择2-3个Tag");
             return;
         } else {
             nameWrapper.setError("");// 必须加上这个，否则会导致内容删除后，error信息显示为空白
@@ -246,8 +246,8 @@ public class AddActivity extends BaseActivity {
             final TextView tv = (TextView) mInflater.inflate(
                     R.layout.search_label_tv, mFlowLayout, false);
             tv.setTextColor(getResources().getColor(R.color.color_bg));
+            tv.setTextSize(14);
             tv.setText(mVals[i]);
-
             final String str = tv.getText().toString();
 
             //点击事件

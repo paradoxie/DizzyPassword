@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.inputmethod.InputMethodManager;
 
 import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
@@ -38,9 +39,20 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void onPreCreate() {
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-        theme = sp.getInt("theme_change", R.style.Theme3);
+
+        theme = sp.getInt("theme_change", getDefaultTheme());
         setTheme(theme);
 
+    }
+
+    private int getDefaultTheme() {
+        int theme;
+        int[] a = new int[]{R.style.Theme1, R.style.Theme2, R.style.Theme3, R.style.Theme4, R.style.Theme5, R.style.Theme6, R.style.Theme7, R.style.Theme8,
+                R.style.Theme9, R.style.Theme10, R.style.Theme11, R.style.Theme15, R.style.Theme16, R.style.Theme17, R.style.Theme19
+        };
+        int index = (int) (Math.random() * a.length);
+        theme = a[index];
+        return theme;
     }
 
     @Override
@@ -71,5 +83,13 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     private static NetworkInfo getActiveNetworkInfo() {
         return ((ConnectivityManager) MyApplication.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    public void hideInputWindow() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }
