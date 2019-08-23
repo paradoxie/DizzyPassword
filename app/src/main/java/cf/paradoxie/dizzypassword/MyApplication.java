@@ -42,6 +42,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
 import cf.paradoxie.dizzypassword.activity.CrashLogActivity;
+import cf.paradoxie.dizzypassword.db.AccountBean;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cn.bmob.v3.BmobUser;
 
@@ -64,7 +65,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         super.onCreate();
         mInstance = this;
         mContext = getApplicationContext();
-        Thread.setDefaultUncaughtExceptionHandler(this);//开启抓取错误信息
+//        Thread.setDefaultUncaughtExceptionHandler(this);//开启抓取错误信息
         handler = new Handler();
         checkStatus();//监听前后台状态
     }
@@ -147,7 +148,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
     }
 
     public static BmobUser getUser() {
-        BmobUser bmobUser = BmobUser.getCurrentUser();
+        BmobUser bmobUser = BmobUser.getCurrentUser(BmobUser.class);
         return bmobUser;
     }
 

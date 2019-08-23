@@ -65,6 +65,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="cn.bmob.v3.util.BmobContentProvider"
+            android:authorities="cf.paradoxie.dizzypassword.BmobContentProvider">
+        </provider>
     </application>
 
 </manifest>

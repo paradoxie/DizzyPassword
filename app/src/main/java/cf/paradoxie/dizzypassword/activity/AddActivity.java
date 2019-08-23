@@ -29,9 +29,10 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
 
 public class AddActivity extends BaseActivity {
     private TextInputLayout nameWrapper, accountWrapper, passwordWrapper, tagWrapper, noteWrapper;
@@ -282,18 +283,16 @@ public class AddActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        RxBus.getInstance().toObserverable(RxBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<RxBean>() {
+        RxBus.getInstance().register(RxBean.class,new Consumer<RxBean>() {
                     @Override
-                    public void call(RxBean rxBean) {
+                    public void accept(RxBean rxBean) throws Exception {
                         if (rxBean.getPwd() == "") {
                             return;
                         } else {
                             et_password.setText(rxBean.getPwd());
                         }
                     }
+
                 });
     }
 

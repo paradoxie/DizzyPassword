@@ -78,10 +78,11 @@ import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import km.lmy.searchview.SearchView;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity implements CardStackView.ItemExpendListener, View.OnClickListener {
     private boolean optionMenuOn = true;  //显示optionmenu
@@ -355,7 +356,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView.setItemExpendListener(this);
 
         if (SPUtils.get("key", "") + "" == "") {
+            Bmob.resetDomain("http://password.usql.club/8/");
             Bmob.initialize(this, Constans.APPLICATION_ID);
+
         } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
@@ -392,7 +395,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
 
         //取缓存数据
-        if (BmobUser.getCurrentUser() == null) {
+        if (BmobUser.getCurrentUser(BmobUser.class) == null) {
             return;
         }
         if (SPUtils.getDataList("beans", AccountBean.class).size() < 1) {
@@ -402,12 +405,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
 
         mSortUtils = new SortUtils();
-        RxBus.getInstance().toObserverable(RxBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<RxBean>() {
+        RxBus.getInstance().register(RxBean.class,new Consumer<RxBean>() {
                     @Override
-                    public void call(RxBean rxBean) {
+                    public void accept(RxBean rxBean) throws Exception {
                         if (rxBean.getMessage() != null) {
                             //按tag检索
                             searchDate(rxBean.getMessage());

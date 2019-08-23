@@ -1,97 +1,122 @@
 package cf.paradoxie.dizzypassword.utils;
 
-import java.util.HashMap;
+import android.support.annotation.NonNull;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
-import rx.subjects.SerializedSubject;
-import rx.subscriptions.CompositeSubscription;
+
+import java.util.HashMap;
+import java.util.List;
+
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 /**
- * Created by xiehehe on 2017/10/29.
+ * Created by Administrator on 2018/1/3.
+ * 该类的作用就是为了替代eventBus
+ *http://blog.csdn.net/zcphappy/article/details/75255918
  */
 
-public class RxBus{
-    private static volatile RxBus mInstance;
-//    private final Subject bus;
-    private SerializedSubject<Object, Object> mSubject;
-    private HashMap<String, CompositeSubscription> mSubscriptionMap;
-
-    public RxBus() {
-        mSubject = new SerializedSubject<>(PublishSubject.create());
-    }
+public class RxBus {
+    private final Subject<Object> mBus;
+    private static  volatile RxBus instance;
+//    private final FlowableProcessor<Object> mBus;//背压测试
 
     /**
-     * 单例模式RxBus
-     *
-     * @return
+     * 默认私有化构造函数
+     * 当前这个地方没有进行背压
+     * 背压：http://flyou.ren/2017/04/05/%E5%85%B3%E4%BA%8ERxJava%E8%83%8C%E5%8E%8B/?utm_source=tuicool&utm_medium=referral
+     */
+    private RxBus() {
+        mBus = PublishSubject.create().toSerialized();
+    }
+/**背压测试*/
+/*    private RxBus(){
+                mBus = PublishProcessor.create().toSerialized();
+    }*/
+
+    /**
+     * 单例模式
      */
     public static RxBus getInstance() {
-        RxBus rxBus2 = mInstance;
-        if (mInstance == null) {
+        if (instance == null) {
             synchronized (RxBus.class) {
-                rxBus2 = mInstance;
-                if (mInstance == null) {
-                    rxBus2 = new RxBus();
-                    mInstance = rxBus2;
+                if (instance == null) {
+                    instance = new RxBus();
                 }
             }
         }
-
-        return rxBus2;
+        return instance;
     }
-
 
     /**
-     * 发送消息
-     *
-     * @param object
+     * 将数据添加到订阅
+     * 这个地方是再添加订阅的地方。最好创建一个新的类用于数据的传递
      */
-    public void post(Object object) {
-        mSubject.onNext(object);
+    public void post(@NonNull Object obj) {
+        if (mBus.hasObservers()) {//判断当前是否已经添加订阅
+            mBus.onNext(obj);
+        }
     }
-
-    public <T> Subscription doSubscribe(Class<T> type, Action1<T> next, Action1<Throwable> error) {
-        return toObserverable(type)
+    /**这个是传递集合如果有需要的话你也可以进行更改*/
+    public void post(@NonNull List<Object> obj) {
+        if (mBus.hasObservers()) {//判断当前是否已经添加订阅
+            mBus.onNext(obj);
+        }
+    }
+    /**
+     * 注册，传递tClass的时候最好创建一个封装的类。这对数据的传递作用
+     *新更改仅仅抛出生成类和解析
+     */
+    public <T> Disposable register(Class<T> tClass,Consumer<T> consumer) {
+        return mBus.ofType(tClass)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(next, error);
+                .subscribe(consumer);
     }
 
 
+
     /**
-     * 接收消息
-     *
-     * @param eventType
+     * 确定接收消息的类型
+     * @param aClass
      * @param <T>
      * @return
+     * 下面为背压使用方式
      */
-    public <T> Observable<T> toObserverable(Class<T> eventType) {
-        return mSubject.ofType(eventType);
-    }
+/*    public <T> Flowable<T> toFlowable(Class<T> aClass) {
+        return mBus.ofType(aClass);
+    }*/
+
     /**
-     * 保存订阅后的subscription
+     * 保存订阅后的disposable
+     * @param o
+     * @param disposable
      */
-    public void addSubscription(Object o, Subscription subscription) {
+    private HashMap<String, CompositeDisposable> mSubscriptionMap;
+    public void addSubscription(Object o, Disposable disposable) {
         if (mSubscriptionMap == null) {
             mSubscriptionMap = new HashMap<>();
         }
         String key = o.getClass().getName();
         if (mSubscriptionMap.get(key) != null) {
-            mSubscriptionMap.get(key).add(subscription);
+            mSubscriptionMap.get(key).add(disposable);
         } else {
-            CompositeSubscription compositeSubscription = new CompositeSubscription();
-            compositeSubscription.add(subscription);
-            mSubscriptionMap.put(key, compositeSubscription);
+            //一次性容器,可以持有多个并提供 添加和移除。
+            CompositeDisposable disposables = new CompositeDisposable();
+            disposables.add(disposable);
+            mSubscriptionMap.put(key, disposables);
         }
     }
 
     /**
      * 取消订阅
+     * @param o 这个是你添加到订阅的的对象
      */
     public void unSubscribe(Object o) {
         if (mSubscriptionMap == null) {
@@ -103,9 +128,10 @@ public class RxBus{
             return;
         }
         if (mSubscriptionMap.get(key) != null) {
-            mSubscriptionMap.get(key).unsubscribe();
+            mSubscriptionMap.get(key).dispose();
         }
 
         mSubscriptionMap.remove(key);
     }
 }
+

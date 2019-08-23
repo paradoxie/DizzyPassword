@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidStudioProjects-DizzyPassword.iml" filepath="$PROJECT_DIR$/AndroidStudioProjects-DizzyPassword.iml" />
       <module fileurl="file://$PROJECT_DIR$/DizzyPassword.iml" filepath="$PROJECT_DIR$/DizzyPassword.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/DizzyPassword-app.iml" filepath="$PROJECT_DIR$/app/DizzyPassword-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib/DizzyPassword-lib.iml" filepath="$PROJECT_DIR$/lib/DizzyPassword-lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/searchview/DizzyPassword-searchview.iml" filepath="$PROJECT_DIR$/searchview/DizzyPassword-searchview.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/searchview/searchview.iml" filepath="$PROJECT_DIR$/searchview/searchview.iml" />
