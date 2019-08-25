@@ -12,7 +12,7 @@
     <RelativeLayout
         android:id="@+id/rl_support_finger"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:visibility="gone">
 
@@ -48,6 +48,24 @@
             android:text="当前支持指纹验证，等待验证中..."
             android:textColor="@color/bg_color"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_open_unsupport_finger"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:text="使用安全码"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/gray_btn_bg_pressed_color"
+            android:textSize="14sp" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -97,7 +115,7 @@
             android:paddingTop="5dp"
             android:paddingRight="10dp"
             android:paddingBottom="5dp"
-            android:text="当前支持指纹验证，等待验证中..."
+            android:text="启用6位数字码进行安全验证"
             android:textColor="@color/bg_color" />
 
     </RelativeLayout>

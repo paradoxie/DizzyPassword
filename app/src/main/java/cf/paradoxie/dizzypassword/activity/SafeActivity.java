@@ -1,20 +1,13 @@
 package cf.paradoxie.dizzypassword.activity;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
@@ -24,11 +17,9 @@ import cf.paradoxie.dizzypassword.view.FingerPrinterView;
 import cf.paradoxie.dizzypassword.view.PswInputView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.observers.DisposableObserver;
-import zwh.com.lib.FPerException;
 import zwh.com.lib.IdentificationInfo;
 import zwh.com.lib.RxFingerPrinter;
 
-import static cf.paradoxie.dizzypassword.view.FingerPrinterView.STATE_NO_SCANING;
 import static zwh.com.lib.CodeException.FINGERPRINTERS_FAILED_ERROR;
 import static zwh.com.lib.CodeException.HARDWARE_MISSIING_ERROR;
 import static zwh.com.lib.CodeException.KEYGUARDSECURE_MISSIING_ERROR;
@@ -48,6 +39,7 @@ public class SafeActivity extends BaseActivity {
     private RelativeLayout rl_support_finger, rl_unsupport_finger;
     private TextView tv_message;
     private TextView tv_open;
+    private TextView tv_open_unsupport_finger;
     private int code = 999;
 
     @Override
@@ -58,6 +50,7 @@ public class SafeActivity extends BaseActivity {
         rl_support_finger = (RelativeLayout) findViewById(R.id.rl_support_finger);
         rl_unsupport_finger = (RelativeLayout) findViewById(R.id.rl_unsupport_finger);
         tv_open = (TextView) findViewById(R.id.tv_open);
+        tv_open_unsupport_finger = (TextView) findViewById(R.id.tv_open_unsupport_finger);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("安全验证");
         setSupportActionBar(toolbar);
@@ -100,6 +93,16 @@ public class SafeActivity extends BaseActivity {
      */
     private void fingerCheck() {
         fingerPrinterView = (FingerPrinterView) findViewById(R.id.fpv);
+
+        tv_open_unsupport_finger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                codeCheck();
+                rl_support_finger.setVisibility(View.GONE);
+                rxfingerPrinter.onStop();
+                rxfingerPrinter.stopListening();
+            }
+        });
 
         fingerPrinterView.setOnStateChangedListener(new FingerPrinterView.OnStateChangedListener() {
             @Override public void onChange(int state) {
@@ -230,12 +233,12 @@ public class SafeActivity extends BaseActivity {
             public void onNext(IdentificationInfo info) {
                 if(info.isSuccessful()){
                     fingerPrinterView.setState(FingerPrinterView.STATE_CORRECT_PWD);
-                    Toast.makeText(SafeActivity.this, "指纹识别成功", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(SafeActivity.this, "指纹识别成功", Toast.LENGTH_SHORT).show();
                 }else{
-                    FPerException exception = info.getException();
-                    if (exception != null){
-                        Toast.makeText(SafeActivity.this,exception.getDisplayMessage(),Toast.LENGTH_SHORT).show();
-                    }
+//                    FPerException exception = info.getException();
+//                    if (exception != null){
+//                        Toast.makeText(SafeActivity.this,exception.getDisplayMessage(),Toast.LENGTH_SHORT).show();
+//                    }
                     fingerPrinterView.setState(FingerPrinterView.STATE_WRONG_PWD);
                 }
             }

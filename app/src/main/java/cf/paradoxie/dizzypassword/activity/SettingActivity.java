@@ -119,11 +119,12 @@ public class SettingActivity extends BaseActivity {
     }
 
     @SuppressLint("ValidFragment")
-    public class SettingPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener,Preference.OnPreferenceChangeListener {
+    public class SettingPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
 
         private int theme;
         private SharedPreferences sp;
-        private  Context mContext;
+        private Context mContext;
+
         public SettingPreferenceFragment() {
             mContext = MyApplication.mContext;
         }
@@ -135,6 +136,8 @@ public class SettingActivity extends BaseActivity {
             sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SwitchPreference switch_preference = (SwitchPreference) findPreference("is_finger");
             switch_preference.setOnPreferenceChangeListener(this);
+            SwitchPreference switch_preference_image = (SwitchPreference) findPreference("is_head_image");
+            switch_preference_image.setOnPreferenceChangeListener(this);
 
             theme = sp.getInt("theme_change", R.style.Theme7);
         }
@@ -203,6 +206,9 @@ public class SettingActivity extends BaseActivity {
                 case "is_finger":
 
                     break;
+                case "is_head_image":
+
+                    break;
                 case "about":
                     Intent intent1 = new Intent(AppManager.getAppManager().currentActivity(), AboutActivity.class);
                     startActivity(intent1);
@@ -238,8 +244,20 @@ public class SettingActivity extends BaseActivity {
 
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
-           Log.d("-----",newValue+"");
-            SPUtils.put("isFinger", newValue+"");
+            switch (preference.getKey()) {
+                case "is_finger":
+                    Log.d("-----", newValue + "");
+                    SPUtils.put("isFinger", newValue + "");
+                    break;
+
+                case "is_head_image":
+                    Log.d("-----", newValue + "");
+                    SPUtils.put("isHeadImage", newValue + "");
+                    break;
+
+                default:
+                    break;
+            }
             return true;
         }
     }
@@ -306,7 +324,6 @@ public class SettingActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
-
 
 
     private String getCodePwd(String string) {

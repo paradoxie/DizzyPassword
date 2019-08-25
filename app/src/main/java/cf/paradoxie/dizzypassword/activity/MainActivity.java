@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -103,7 +102,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private List<AccountBean> mAccountBeans_name;
     private List<AccountBean> mAccountBeans_tag;
     private List<AccountBean> currentBean;
-    private TextView tip, tv_name, tv_words,tv_words_chicken;
+    private TextView tip, tv_name, tv_words, tv_words_chicken;
     private SweetAlertDialog pDialog = null;
     private static Boolean isExit = false;
     private BmobUser user = new BmobUser();
@@ -112,7 +111,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private LinearLayout main_btn;
     private long mCurrentPlayTime;
     private ObjectAnimator animator;
-    private ImageView refresh, red_package, setting, search, join_qq,iv_user_photo;
+    private ImageView refresh, red_package, setting, search, join_qq, iv_user_photo;
     private Handler handler = new Handler();
     private SearchView mSearchView;
     private String[] strings;
@@ -144,7 +143,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         tv_words.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setText(tv_words.getText());
                 MyApplication.showSnack(v, R.string.str_copy, ThemeUtils.getPrimaryColor(MainActivity.this));
             }
@@ -153,7 +152,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         tv_words_chicken.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setText(tv_words_chicken.getText());
                 MyApplication.showSnack(v, R.string.str_copy, ThemeUtils.getPrimaryColor(MainActivity.this));
             }
@@ -355,10 +354,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView = (CardStackView) findViewById(R.id.stackview_main);
         mStackView.setItemExpendListener(this);
 
+        Bmob.resetDomain("http://password.usql.club/8/");
         if (SPUtils.get("key", "") + "" == "") {
-            Bmob.resetDomain("http://password.usql.club/8/");
             Bmob.initialize(this, Constans.APPLICATION_ID);
-
         } else {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
@@ -405,33 +403,33 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
 
         mSortUtils = new SortUtils();
-        RxBus.getInstance().register(RxBean.class,new Consumer<RxBean>() {
-                    @Override
-                    public void accept(RxBean rxBean) throws Exception {
-                        if (rxBean.getMessage() != null) {
-                            //按tag检索
-                            searchDate(rxBean.getMessage());
-                            return;
+        RxBus.getInstance().register(RxBean.class, new Consumer<RxBean>() {
+            @Override
+            public void accept(RxBean rxBean) throws Exception {
+                if (rxBean.getMessage() != null) {
+                    //按tag检索
+                    searchDate(rxBean.getMessage());
+                    return;
+                }
+                if (rxBean.getAction() != null) {
+                    if (rxBean.getAction() == "done") {
+                        //点击新建/更新时间排序
+                        if (mStackView.isExpending()) {
+                            mStackView.setSelectPosition(-1);
+                            mStackView.setScrollEnable(true);
                         }
-                        if (rxBean.getAction() != null) {
-                            if (rxBean.getAction() == "done") {
-                                //点击新建/更新时间排序
-                                if (mStackView.isExpending()) {
-                                    mStackView.setSelectPosition(-1);
-                                    mStackView.setScrollEnable(true);
-                                }
 //                                findDateByTime(mSortUtils);
-                            } else if (rxBean.getAction() == "name") {
-                                //点击条目名称，根据名称排序
+                    } else if (rxBean.getAction() == "name") {
+                        //点击条目名称，根据名称排序
 //                                MyToast.show(MainActivity.this, "长按，已按条目名称排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
 //
 //                                findOffLineDateByName();
-                            }
-                            return;
-                        }
                     }
+                    return;
+                }
+            }
 
-                });
+        });
 
         if (MyApplication.isNetworkAvailable(MainActivity.this)) {
             //有网的时候判断版本信息
@@ -441,7 +439,11 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     getVersion();
                     getWords();
                     getWordsChicken();
-                    getPic();
+
+                    String isHeadImage = SPUtils.get("isHeadImage", "false") + "";
+                    if (isHeadImage.equals("true")) {
+                        getPic();
+                    }
                 }
             }, 3000);
 
@@ -451,12 +453,12 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     }
 
     private void getWordsChicken() {
-        String s = MyApplication.get(Constans.WORDS_ID_CHICKEN+MyApplication.getData());
+        String s = MyApplication.get(Constans.WORDS_ID_CHICKEN + MyApplication.getData());
         JSONObject obj = null;
         try {
             obj = new JSONObject(s);
             JSONArray jsonArray = new JSONArray(obj.getString("data"));
-            JSONObject words = new JSONObject(jsonArray.get(jsonArray.length()-1).toString());
+            JSONObject words = new JSONObject(jsonArray.get(jsonArray.length() - 1).toString());
             String text = words.getString("data");
             tv_words_chicken.setText(text);
             SPUtils.put("text_chicken", text);
@@ -480,7 +482,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             url = pic.getString("url");
             Log.d("----pic", url);
             iv_user_photo = (ImageView) findViewById(R.id.iv_user_photo);
-            MyApplication.loadImg(iv_user_photo,url,true);
+            MyApplication.loadImg(iv_user_photo, url, true);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -489,13 +491,13 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
     public void smallImgClick(View v) {
         //有背景图
-         //全屏显示的方法
-     final Dialog dialog = new Dialog(this, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
-     ImageView imgView = getView();
-     MyApplication.loadImg(imgView,url,false);
-     dialog.setContentView(imgView);
-     dialog.getWindow().setWindowAnimations(R.style.DialogOutAndInStyle);   //设置dialog的显示动画
-     dialog.show();
+        //全屏显示的方法
+        final Dialog dialog = new Dialog(this, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
+        ImageView imgView = getView();
+        MyApplication.loadImg(imgView, url, false);
+        dialog.setContentView(imgView);
+        dialog.getWindow().setWindowAnimations(R.style.DialogOutAndInStyle);   //设置dialog的显示动画
+        dialog.show();
 
         // 点击图片消失
         imgView.setOnClickListener(new View.OnClickListener() {
@@ -740,6 +742,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 //        Log.e("onActivityonPause",  "蒙版");
 //        cl_main.setForeground(drawable);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onResume() {
@@ -934,7 +937,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     }
 
 
-
     @Override
     public void onBackPressed() {
         exitBy2Click();
@@ -965,7 +967,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         super.finish();
         RxBus.getInstance().unSubscribe(this);
     }
-
 
 
     @Override

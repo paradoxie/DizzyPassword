@@ -6,6 +6,20 @@
         <cf.paradoxie.dizzypassword.view.ThemeChoice android:key="theme_change" />
 
 
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="is_finger"
+            android:title="启用指纹验证"
+            android:summary="关闭时将启用6位安全码代替指纹验证"/>
+
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="is_head_image"
+            android:title="启用随机头像"
+            android:summary="绅士专用,重启生效"/>
+
         <EditTextPreference
             android:hint="默认值为60秒"
             android:inputType="number"
@@ -14,12 +28,6 @@
             android:paddingLeft="5dp"
             android:summary="程序进入后台时间达到时长将自动锁定操作权限"
             android:title="后台时长(单位:秒)" />
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="is_finger"
-            android:title="启用指纹验证"
-            android:summary="关闭时将启用6位安全码代替指纹验证"/>
 
         <EditTextPreference
             android:hint="请输入6位新的安全码"
