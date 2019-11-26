@@ -46,6 +46,7 @@ import static cf.paradoxie.dizzypassword.MyApplication.launchAppDetail;
 public class SettingActivity extends BaseActivity {
     private String pwd;
     private DialogView mDialogView;
+    private String copyCode="";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +67,10 @@ public class SettingActivity extends BaseActivity {
         pwd = String.valueOf(SPUtils.get("password", ""));
         mDialogView = new DialogView(SettingActivity.this);
 
+
+        Intent intent = getIntent();
+        copyCode = intent.getStringExtra("copyCode");
+        Log.d("----piccodee", copyCode);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -224,7 +229,11 @@ public class SettingActivity extends BaseActivity {
                     break;
                 case "red_package":
                     ClipboardManager cm = (ClipboardManager) AppManager.getAppManager().currentActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                    cm.setText(getString(R.string.red_package_string));
+                    if (copyCode.equals("")) {
+                        cm.setText(getString(R.string.red_package_string));
+                    } else {
+                        cm.setText(copyCode);
+                    }
                     try {
                         MyApplication.openAppByPackageName(AppManager.getAppManager().currentActivity(), "com.eg.android.AlipayGphone");
                     } catch (PackageManager.NameNotFoundException e) {

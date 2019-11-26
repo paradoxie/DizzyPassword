@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.mixiaoxiao.smoothcompoundbutton.SmoothSwitch;
 import com.xw.repo.BubbleSeekBar;
@@ -15,6 +16,7 @@ import com.xw.repo.BubbleSeekBar;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.db.RxBean;
+import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.GetPwdUtils;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
@@ -53,6 +55,7 @@ public class GetPwdActivity extends BaseActivity {
     private int num;
     private String pwd;
     private RxBean mRxBean;
+    private TextView note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class GetPwdActivity extends BaseActivity {
 
     @SuppressLint("WrongViewCast")
     private void init() {
+        note = (TextView) findViewById(R.id.note);
         et_pwd = (SingleLineTextView) findViewById(R.id.et_pwd);
         sb_num = (BubbleSeekBar) findViewById(R.id.sb_num);
         ss1 = (SmoothSwitch) findViewById(R.id.ss1);
@@ -89,7 +93,7 @@ public class GetPwdActivity extends BaseActivity {
                     MyApplication.showToast("请选择密码位数");
                     return;
                 }
-                if (num==8){
+                if (num == 8) {
                     MyApplication.showToast("不建议使用默认位数哦~");
                 }
                 if (ss1.isChecked() && !ss2.isChecked() && !ss3.isChecked() && !ss4.isChecked()) {
@@ -154,6 +158,7 @@ public class GetPwdActivity extends BaseActivity {
                     savePwdWays(true, true, true, true);
                 }
                 et_pwd.setText(pwd);
+                note.setText(DataUtils.GetPwdSecurityLevel(pwd));
             }
         });
         btn_sure = (Button) findViewById(R.id.btn_sure);
@@ -165,7 +170,7 @@ public class GetPwdActivity extends BaseActivity {
                     MyApplication.showToast("啥也没有哦~");
                     return;
                 }
-                ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setText(et_pwd.getText().toString().trim());
                 MyApplication.showToast(R.string.copy_password);
                 mRxBean.setPwd(et_pwd.getText().toString().trim());

@@ -5,7 +5,7 @@ package cf.paradoxie.dizzypassword;
  */
 
 public class Constans {
-    public static final String APPLICATION_ID = "";//正式
+    public static final String APPLICATION_ID = "46b1709520ec4d0afa17e505680202da";//正式
     public static final String CONFIG_ID = "1590689a00";//正式
     public static final String WORDS_ID = "b47f703f38";//正式
     public static final String PIC_ID = "http://gank.io/api/data/福利/";//正式

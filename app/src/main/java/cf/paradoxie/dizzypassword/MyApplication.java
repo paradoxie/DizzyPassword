@@ -179,7 +179,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
      * @param str 地址
      * @param bar 进度条
      */
-    public static void loadUri(WebView wb, int str, final ProgressBar bar) {
+    public static void loadUri(WebView wb, int str, String url, final ProgressBar bar) {
         wb.getSettings().setJavaScriptEnabled(true);//支持js
         wb.setWebViewClient(new WebViewClient() {//屏蔽自动浏览器打开
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -205,7 +205,11 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
                 super.onProgressChanged(view, newProgress);
             }
         });
-        wb.loadUrl(getContext().getString(str));
+        if (url == null) {
+            wb.loadUrl(getContext().getString(str));
+        } else {
+            wb.loadUrl(url);
+        }
     }
 
 
@@ -443,7 +447,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         mToast.show();
     }
 
-    public static void loadImg(ImageView imageView, String imgUrl,boolean a) {
+    public static void loadImg(ImageView imageView, String imgUrl, boolean a) {
 
         if (null == imageView || TextUtils.isEmpty(imgUrl)) {
             return;
@@ -453,14 +457,14 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         RoundedCorners roundedCorners = new RoundedCorners(30);
         //通过RequestOptions扩展功能
         RequestOptions options = RequestOptions.bitmapTransform(roundedCorners).override(300, 300).circleCrop();
-        if (a){
+        if (a) {
             Glide.with(getContext())
                     .load(imgUrl)
-                .apply(options)
+                    .apply(options)
                     .error(R.mipmap.ic_logo)
                     .placeholder(R.mipmap.ic_logo)
                     .into(imageView);
-        }else {
+        } else {
             Glide.with(getContext())
                     .load(imgUrl)
 //                .apply(options)
@@ -519,7 +523,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         return s;
     }
 
-    public static String getData(){
+    public static String getData() {
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateNowStr = sdf.format(d);

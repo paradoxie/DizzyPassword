@@ -9,8 +9,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.view.FingerPrinterView;
@@ -105,15 +107,24 @@ public class SafeActivity extends BaseActivity {
         });
 
         fingerPrinterView.setOnStateChangedListener(new FingerPrinterView.OnStateChangedListener() {
-            @Override public void onChange(int state) {
+            @Override
+            public void onChange(int state) {
                 if (state == FingerPrinterView.STATE_WRONG_PWD) {
                     fingerPrinterView.setState(FingerPrinterView.STATE_NO_SCANING);
                 }
                 if (state == FingerPrinterView.STATE_CORRECT_PWD) {
                     fingerErrorNum = 0;
-                    tv_open.setText("指纹验证成功，正在进入app...");
-                    startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
-                    finish();
+                    String str = SPUtils.get("pwd", "") + "";
+                    if (str.equals("")) {
+                        MyToast.show(SafeActivity.this, "首次使用app，请设置安全码，此码仅保存本地", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                        codeCheck();
+                        rl_support_finger.setVisibility(View.GONE);
+                    } else {
+                        tv_open.setText("指纹验证成功，正在进入app...");
+                        startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
+                        finish();
+                    }
+
                 }
             }
         });
@@ -231,10 +242,10 @@ public class SafeActivity extends BaseActivity {
 
             @Override
             public void onNext(IdentificationInfo info) {
-                if(info.isSuccessful()){
+                if (info.isSuccessful()) {
                     fingerPrinterView.setState(FingerPrinterView.STATE_CORRECT_PWD);
 //                    Toast.makeText(SafeActivity.this, "指纹识别成功", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
 //                    FPerException exception = info.getException();
 //                    if (exception != null){
 //                        Toast.makeText(SafeActivity.this,exception.getDisplayMessage(),Toast.LENGTH_SHORT).show();

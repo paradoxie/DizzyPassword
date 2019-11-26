@@ -43,12 +43,12 @@
     <PreferenceCategory
         android:key="pref_cate_other"
         android:title="其他">
+
         <PreferenceScreen
-            android:key="share"
-            android:title="分享"></PreferenceScreen>
-        <PreferenceScreen
-            android:key="about"
-            android:title="关于"></PreferenceScreen>
+            android:key="red_package"
+            android:summary="😀点击复制搜索码，支付宝搜索，大额生活费喔"
+            android:title="领红包"></PreferenceScreen>
+
         <PreferenceScreen
             android:key="group"
             android:summary="点击加群，一起来玩耍"
@@ -57,15 +57,20 @@
             android:key="update"
             android:summary="点击检查更新"
             android:title="更新"></PreferenceScreen>
+
         <PreferenceScreen
-            android:key="red_package"
-            android:summary="点击复制搜索码，支付宝搜索，大红包联系套现哦"
-            android:title="领红包"></PreferenceScreen>
+            android:key="share"
+            android:summary="希望也能帮到其他人啦"
+            android:title="分享"></PreferenceScreen>
 
         <PreferenceScreen
             android:key="back_up"
             android:summary="仅支持json格式"
             android:title="导出"></PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="about"
+            android:title="关于"></PreferenceScreen>
 
     </PreferenceCategory>
 </PreferenceScreen>

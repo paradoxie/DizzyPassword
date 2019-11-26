@@ -54,7 +54,7 @@ public class TeachActivity extends BaseActivity {
     private void init() {
         final ProgressBar bar = (ProgressBar) findViewById(R.id.myProgressBar);
         wb = (WebView) findViewById(R.id.web);
-        MyApplication.loadUri(wb, R.string.web_site, bar);
+        MyApplication.loadUri(wb, R.string.web_site,null, bar);
 
         et_key = (EditText) findViewById(R.id.et_key);
         bt_go = (Button) findViewById(R.id.bt_go);

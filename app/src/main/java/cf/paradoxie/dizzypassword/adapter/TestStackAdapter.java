@@ -15,6 +15,7 @@ import android.text.ClipboardManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loopeer.cardstack.CardStackView;
@@ -28,6 +29,7 @@ import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.AddActivity;
 import cf.paradoxie.dizzypassword.db.AccountBean;
 import cf.paradoxie.dizzypassword.db.RxBean;
+import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.RxBus;
@@ -76,6 +78,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         ImageView mChange, mDelete;
         RxBean rxEvent, rxEvent_1, rxEvent_2;
         ImageView iv_copy;
+        LinearLayout ll_notice;
         private SweetAlertDialog pDialog = null;
         //        List<AccountBean> ;
 
@@ -85,6 +88,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
 
             mLayout = view.findViewById(R.id.frame_list_card_item);
             mContainerContent = view.findViewById(R.id.container_list_content);
+            ll_notice = (LinearLayout) view.findViewById(R.id.ll_notice);
             mTextTitle = (TextView) view.findViewById(R.id.text_list_card_title);
             mNum = (TextView) view.findViewById(R.id.text_list_card_num);
             mTime = (TextView) view.findViewById(R.id.text_list_card_time);
@@ -190,9 +194,17 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             }
             final List<String> tag = mBeanList.get(position).getTag();
 
+
+            boolean shouldChange = DataUtils.shouldChange(time_up);
             mLayout.getBackground().setColorFilter(ContextCompat.getColor(getContext(), data), PorterDuff.Mode.SRC_IN);
             mTextTitle.setText(name);
             mNum.setText(String.valueOf(position + 1) + "-" + mBeanList.size());
+            if (shouldChange) {
+                mNum.setTextColor(mContext.getResources().getColor(R.color.red600));
+                ll_notice.setVisibility(View.VISIBLE);
+            }else {
+                ll_notice.setVisibility(View.GONE);
+            }
             mTime.setText(time + "  创建");
             mTime_up.setText(time_up + "  更新");
             mAccount.setText(account);
@@ -261,7 +273,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 public void onClick(View view) {
                     Intent intent = new Intent();
                     intent.setAction("android.intent.action.VIEW");
-                    Uri content_url = Uri.parse("http://"+mWeb.getText().toString());
+                    Uri content_url = Uri.parse("http://" + mWeb.getText().toString());
                     intent.setData(content_url);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
                     MyApplication.getContext().startActivity(intent);

@@ -78,10 +78,7 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import km.lmy.searchview.SearchView;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity implements CardStackView.ItemExpendListener, View.OnClickListener {
     private boolean optionMenuOn = true;  //显示optionmenu
@@ -102,6 +99,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private List<AccountBean> mAccountBeans_name;
     private List<AccountBean> mAccountBeans_tag;
     private List<AccountBean> currentBean;
+    private BaseConfig config;
+
     private TextView tip, tv_name, tv_words, tv_words_chicken;
     private SweetAlertDialog pDialog = null;
     private static Boolean isExit = false;
@@ -194,6 +193,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mSearchView = (SearchView) findViewById(R.id.searchView);
         refresh = (ImageView) findViewById(R.id.refresh);
         red_package = (ImageView) findViewById(R.id.red_package);
+        final String isRotate = SPUtils.get("iconRotate", true) + "";
+
         setting = (ImageView) findViewById(R.id.setting);
         search = (ImageView) findViewById(R.id.search);
         join_qq = (ImageView) findViewById(R.id.join_qq);
@@ -444,6 +445,10 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     if (isHeadImage.equals("true")) {
                         getPic();
                     }
+                    //吃饭动画
+                    if (isRotate.equals("true")) {
+                        startAnim(red_package, 7000);
+                    }
                 }
             }, 3000);
 
@@ -608,9 +613,15 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             @Override
             public void done(BaseConfig baseConfig, BmobException e) {
                 if (e == null) {
+                    config = baseConfig;
                     final int newVersion = Integer.parseInt(baseConfig.getNewVersion());
                     String title = baseConfig.getTitle();
                     String details = baseConfig.getDetails();
+                    if (baseConfig.isIconRotate()) {
+                        startAnim(red_package, 7000);
+                    }
+                    SPUtils.put("iconRotate", baseConfig.isIconRotate());
+
                     final String toast = baseConfig.getToast();
                     if (newVersion >
                             Integer.parseInt(String.valueOf(SPUtils.get("version", MyApplication.GetVersion())))
@@ -774,7 +785,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryDarkColor(MainActivity.this));
         pDialog.setTitleText("联网加载中...");
         pDialog.show();
-        startAnim();
+        startAnim(refresh, 500);
         BmobQuery<AccountBean> query = new BmobQuery<>();
         if (MyApplication.getUser() != null) {
             String id = MyApplication.getUser().getObjectId();
@@ -1013,28 +1024,49 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 }
                 break;
             case R.id.red_package:
-                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                        .setTitleText("口令复制成功,去支付宝搜索吧")
-                        .setContentText("支付宝大红包，金额随机，最高￥99喔😃\n" +
-                                "\n每天都可以来领取一次哈\n大红包可以联系套现哦\n")
-                        .setConfirmText("前往支付宝搜索")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                ClipboardManager cm = (ClipboardManager) MainActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
-                                cm.setText(getString(R.string.red_package_string_little));
-                                try {
-                                    MyApplication.openAppByPackageName(MainActivity.this, "com.eg.android.AlipayGphone");
-                                } catch (PackageManager.NameNotFoundException e) {
-                                    e.printStackTrace();
+
+                if (!MyApplication.isNetworkAvailable(MainActivity.this)) {
+                    MyApplication.showToast("网络不可用喔");
+                    return;
+                }
+
+                if (config == null) {
+                    MyApplication.showToast("还没有准备好喔，等会儿再点击才行");
+                    return;
+                }
+
+                if (config.getRiceUrl() == null || config.getRiceUrl().equals("")) {
+                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText(config.getWindowTitle())
+                            .setContentText(config.getWindowDetailsContent())
+                            .setConfirmText(config.getWindowConfirm())
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    ClipboardManager cm = (ClipboardManager) MainActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
+                                    cm.setText(config.getWindowCopyContent());
+                                    try {
+                                        MyApplication.openAppByPackageName(MainActivity.this, config.getWindowJumpPackage());
+                                    } catch (PackageManager.NameNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
+                                    sDialog.cancel();
                                 }
-                                sDialog.cancel();
-                            }
-                        })
-                        .show();
+                            })
+                            .show();
+                } else {
+                    Intent intent = new Intent(AppManager.getAppManager().currentActivity(), EatRiceActivity.class);
+                    intent.putExtra("url", config.getRiceUrl());
+                    startActivity(intent);
+                }
                 break;
             case R.id.setting:
+
                 Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                if (config.getWindowCopyContent() != null || !config.getWindowCopyContent().equals("")) {
+                    intent.putExtra("copyCode", config.getWindowCopyContent());
+                    Log.d("23333", config.getWindowCopyContent());
+                }
                 startActivity(intent);
                 break;
             default:
@@ -1042,9 +1074,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
     }
 
-    private void startAnim() {
+    private void startAnim(ImageView refresh, long time) {
         animator = ObjectAnimator.ofFloat(refresh, "rotation", 0f, 360.0f);
-        animator.setDuration(500);
+        animator.setDuration(time);
         animator.setInterpolator(new LinearInterpolator());//不停顿
         animator.setRepeatCount(-1);//设置动画重复次数
         animator.setRepeatMode(ValueAnimator.RESTART);//动画重复模式

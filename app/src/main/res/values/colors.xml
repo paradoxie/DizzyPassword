@@ -47,7 +47,7 @@
     <color name="red400">#e84e40</color>
     <color name="red500">#e51c23</color>
     <color name="red600">#dd191d</color>
-    <color name="red700">#d01716</color>
+<!--    <color name="red700">d#01716</color>-->
 
     <color name="pink400">#ec407a</color>
     <color name="pink500">#e91e63</color>
