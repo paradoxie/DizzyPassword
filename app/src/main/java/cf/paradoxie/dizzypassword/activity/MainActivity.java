@@ -34,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.loopeer.cardstack.CardStackView;
 
 import org.json.JSONArray;
@@ -193,7 +194,22 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mSearchView = (SearchView) findViewById(R.id.searchView);
         refresh = (ImageView) findViewById(R.id.refresh);
         red_package = (ImageView) findViewById(R.id.red_package);
-        final String isRotate = SPUtils.get("iconRotate", true) + "";
+//        final String isRotate = SPUtils.get("iconRotate", true) + "";
+
+        config = getConfig();
+        if (config == null) {
+            config = new BaseConfig(MyApplication.GetVersion() + "",
+                    "震惊！新版！GKD！！",
+                    "好像有新版本发布了哦~快去醋安看看吧！",
+                    "你等着！",
+                    "com.eg.android.AlipayGphone",
+                    "支付宝发生活费啦，金额最高￥99😃\n现在玩的人不多，赶紧去支付宝粘贴搜索叭\n",
+                    "生活费85193",
+                    "复制成功,去支付宝吧",
+                    "前往搜索",
+                    "",
+                    false);
+        }
 
         setting = (ImageView) findViewById(R.id.setting);
         search = (ImageView) findViewById(R.id.search);
@@ -446,9 +462,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         getPic();
                     }
                     //吃饭动画
-                    if (isRotate.equals("true")) {
-                        startAnim(red_package, 7000);
-                    }
+
                 }
             }, 3000);
 
@@ -617,10 +631,11 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     final int newVersion = Integer.parseInt(baseConfig.getNewVersion());
                     String title = baseConfig.getTitle();
                     String details = baseConfig.getDetails();
+
                     if (baseConfig.isIconRotate()) {
                         startAnim(red_package, 7000);
                     }
-                    SPUtils.put("iconRotate", baseConfig.isIconRotate());
+                    storeConfig(baseConfig);
 
                     final String toast = baseConfig.getToast();
                     if (newVersion >
@@ -655,6 +670,19 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         });
     }
 
+    private void storeConfig(BaseConfig config) {
+        String s = new Gson().toJson(config);
+        SPUtils.put("config", s);
+    }
+
+    private BaseConfig getConfig() {
+        String con = (String) SPUtils.get("config", "");
+        if (con.equals("")) {
+            return null;
+        }
+        BaseConfig baseConfig = new Gson().fromJson(con, BaseConfig.class);
+        return baseConfig;
+    }
 
     private void findOffLineDate() {
 

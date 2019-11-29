@@ -112,29 +112,28 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             rxEvent_1 = new RxBean();
             rxEvent_2 = new RxBean();
 
-            mTextTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+//            mTextTitle.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
 //                    rxEvent_2.setAction("name");
 //                    RxBus.getInstance().post(rxEvent_2);
+//                }
+//            });
 
-                }
-            });
-
-            mTime.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+//            mTime.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
 //                    rxEvent_1.setAction("done");
 //                    RxBus.getInstance().post(rxEvent_1);
-                }
-            });
-            mTime_up.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+//                }
+//            });
+//            mTime_up.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
 //                    rxEvent_1.setAction("done");
 //                    RxBus.getInstance().post(rxEvent_1);
-                }
-            });
+//                }
+//            });
 
             mTag1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -202,7 +201,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             if (shouldChange) {
                 mNum.setTextColor(mContext.getResources().getColor(R.color.red600));
                 ll_notice.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 ll_notice.setVisibility(View.GONE);
             }
             mTime.setText(time + "  创建");
@@ -217,6 +216,17 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             } else {
                 website = DesUtil.decrypt(mBeanList.get(position).getWebsite().toString(), SPUtils.getKey());
                 mWeb.setText(website);
+                mWeb.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent();
+                        intent.setAction("android.intent.action.VIEW");
+                        Uri content_url = Uri.parse("http://" + mWeb.getText().toString());
+                        intent.setData(content_url);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
+                        MyApplication.getContext().startActivity(intent);
+                    }
+                });
             }
 
             mPwdvisible.setOnClickListener(new View.OnClickListener() {
@@ -268,17 +278,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     return false;
                 }
             });
-            mWeb.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent();
-                    intent.setAction("android.intent.action.VIEW");
-                    Uri content_url = Uri.parse("http://" + mWeb.getText().toString());
-                    intent.setData(content_url);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
-                    MyApplication.getContext().startActivity(intent);
-                }
-            });
+
             mWeb.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -292,7 +292,6 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             final String finalNote = note;
             final String finalWeb = mWeb.getText().toString();
 
-
             mChange.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -303,7 +302,6 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     }
                 }
             });
-
 
             mDelete.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.M)

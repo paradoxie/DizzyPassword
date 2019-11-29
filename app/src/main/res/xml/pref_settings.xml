@@ -6,19 +6,18 @@
         <cf.paradoxie.dizzypassword.view.ThemeChoice android:key="theme_change" />
 
 
-
         <SwitchPreference
             android:defaultValue="true"
             android:key="is_finger"
-            android:title="启用指纹验证"
-            android:summary="关闭时将启用6位安全码代替指纹验证"/>
+            android:summary="关闭时将启用6位安全码代替指纹验证"
+            android:title="启用指纹验证" />
 
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="is_head_image"
-            android:title="启用随机头像"
-            android:summary="绅士专用,重启生效"/>
+            android:summary="绅士专用,重启生效"
+            android:title="启用随机头像" />
 
         <EditTextPreference
             android:hint="默认值为60秒"
@@ -46,12 +45,12 @@
 
         <PreferenceScreen
             android:key="red_package"
-            android:summary="😀点击复制搜索码，支付宝搜索，大额生活费喔"
+            android:summary="点击复制搜索码，支付宝搜索，大额生活费喔"
             android:title="领红包"></PreferenceScreen>
 
         <PreferenceScreen
             android:key="group"
-            android:summary="点击加群，一起来玩耍"
+            android:summary="反馈bug，一起玩耍"
             android:title="加群"></PreferenceScreen>
         <PreferenceScreen
             android:key="update"
@@ -66,7 +65,7 @@
         <PreferenceScreen
             android:key="back_up"
             android:summary="仅支持json格式"
-            android:title="导出"></PreferenceScreen>
+            android:title="导出导入"></PreferenceScreen>
 
         <PreferenceScreen
             android:key="about"

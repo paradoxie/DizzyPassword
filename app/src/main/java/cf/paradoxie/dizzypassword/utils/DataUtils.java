@@ -133,14 +133,12 @@ public class DataUtils {
      */
     public static boolean shouldChange(String updated) {
         long currentTime = Calendar.getInstance().getTimeInMillis();
-        System.out.println(currentTime + "");
         long updateTime = 0;
         try {
             updateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(updated).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println(updateTime + "");
         if (currentTime - updateTime > 7776000000L) {
             return true;
         }

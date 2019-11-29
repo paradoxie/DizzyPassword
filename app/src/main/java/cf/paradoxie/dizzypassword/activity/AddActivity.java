@@ -29,9 +29,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 
 public class AddActivity extends BaseActivity {
@@ -43,7 +41,7 @@ public class AddActivity extends BaseActivity {
     private LayoutInflater mInflater;
     private SweetAlertDialog pDialog = null;
     private String[] mVals = new String[]{//常用tag
-            "重要", "个人", "公司", "工作", "娱乐", "家庭", "小号", "区块链", "虚拟币"
+            "重要", "个人", "公司", "工作", "娱乐", "家庭", "小号"
             , "邮箱", "论坛", "游戏", "社交", "视频", "新闻", "阅读", "技术", "看图", "社区"
             , "购物", "玩机", "学术", "福利", "音乐", "摄影", "漫画", "学习", "开车", "公众号", "WIFI"
             , "云盘", "QQ", "浏览器", "羊毛", "支付", "VPN", "贴吧", "二次元"
@@ -63,8 +61,6 @@ public class AddActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //                Intent intent = new Intent(AddActivity.this, MainActivity.class);
-                //                startActivity(intent);
                 finish();
             }
         });

@@ -19,6 +19,20 @@ public class BaseConfig extends BmobObject {
     private String riceUrl;
     private boolean iconRotate;
 
+    public BaseConfig(String newVersion, String title, String details, String toast, String windowJumpPackage, String windowDetailsContent, String windowCopyContent, String windowTitle, String windowConfirm, String riceUrl, boolean iconRotate) {
+        this.newVersion = newVersion;
+        this.title = title;
+        this.details = details;
+        this.toast = toast;
+        this.windowJumpPackage = windowJumpPackage;
+        this.windowDetailsContent = windowDetailsContent;
+        this.windowCopyContent = windowCopyContent;
+        this.windowTitle = windowTitle;
+        this.windowConfirm = windowConfirm;
+        this.riceUrl = riceUrl;
+        this.iconRotate = iconRotate;
+    }
+
     public String getToast() {
         return toast;
     }
@@ -106,4 +120,6 @@ public class BaseConfig extends BmobObject {
     public void setIconRotate(boolean iconRotate) {
         this.iconRotate = iconRotate;
     }
+
+
 }

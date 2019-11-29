@@ -7,7 +7,7 @@
     <string name="action_note_4">4.若担心您所记录的信息的安全性，请点击右上角【修改ID】，根据其中的教程，将信息记录到自己的后台</string>
     <string name="action_note_5">7.祝您食用开心(*^__^*)</string>
     <string name="action_note_7">6.作为作者，建议用户使用自己的后台储存数据哟~</string>
-    <string name="action_note_6">5.如果您需要将信息记录到自己的后台，请先不要注册，按照教程修改完Application ID之后再进行注册登录操作，此后每次卸载重装app都需要重新修改设置为修改后的ID才能获取数据</string>
+    <string name="action_note_6">5.如果您需要将信息记录到自己的后台，请先不要注册，点击右上角，按照教程修改完Application ID之后再进行注册登录操作，此后每次卸载重装app都需要重新修改设置为修改后的ID才能获取数据</string>
 
     <string name="error_pwd">密码错了哦~</string>
     <string name="error_no_item">好像没有这些Tag条目哟~</string>
@@ -31,4 +31,19 @@
     <string name="succes_delete">搜索记录删除成功</string>
     <string name="no_item_name">好像没有叫这个名字的条目哦~试试Tag看看</string>
     <string name="str_copy">复制成功</string>
+    <string name="test">导出\n点击生成导出后，长按文本框，全选->复制，然后粘贴到目标文档。仅支持json格式导出，若要导入到其他app，请按照相应的导入规则更改数据结构即可。\n\n导入\n冒号前为key,后为value,引号为必需，key值必须，value可以为空\n正确导入格式：\n[{
+	\"account\": \"帐号\",\n
+	\"name\": \"条目名1\",\n
+	\"note\": \"备注信息\",\n
+	\"password\": \"密码\",\n
+	\"tag\": [\"标签1\", \"标签2\", \"标签3\"],\n
+	\"website\": \"网址信息\"\n
+}, {\n
+	\"account\": \"帐号\",\n
+	\"name\": \"条目名2\",\n
+	\"note\": \"备注信息\",\n
+	\"password\": \"密码\",\n
+	\"tag\": [\"标签2\", \"标签3\", \"标签4\", \"标签1\"],\n
+	\"website\": \"网址信息\"\n
+}]</string>
 </resources>
