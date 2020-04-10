@@ -54,13 +54,13 @@
                 android:visibility="gone"
                 android:src="@drawable/refresh"/>
 
-            <ImageView
-                android:id="@+id/red_package"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginLeft="30dp"
-                android:src="@drawable/red_package_selector"/>
+<!--            <ImageView-->
+<!--                android:id="@+id/red_package"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginLeft="30dp"-->
+<!--                android:src="@drawable/red_package_selector"/>-->
 
             <ImageView
                 android:id="@+id/setting"

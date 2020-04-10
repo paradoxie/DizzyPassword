@@ -16,7 +16,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="is_head_image"
-            android:summary="绅士专用,重启生效"
+            android:summary="绅士专用，重启生效，长按大图即可保存"
             android:title="启用随机头像" />
 
         <EditTextPreference
@@ -34,7 +34,7 @@
             android:key="id_code"
             android:maxLength="6"
             android:paddingLeft="5dp"
-            android:summary="更换进入App时的六位安全码，指纹用户请忽略(*^__^*)"
+            android:summary="更换进入App时的六位安全码"
             android:title="更换安全码"></EditTextPreference>
 
     </PreferenceCategory>
@@ -45,8 +45,8 @@
 
         <PreferenceScreen
             android:key="red_package"
-            android:summary="点击复制搜索码，支付宝搜索，大额生活费喔"
-            android:title="领红包"></PreferenceScreen>
+            android:summary=""
+            android:title="捐赠"></PreferenceScreen>
 
         <PreferenceScreen
             android:key="group"
@@ -64,7 +64,7 @@
 
         <PreferenceScreen
             android:key="back_up"
-            android:summary="仅支持json格式"
+            android:summary="导出支持json和csv格式"
             android:title="导出导入"></PreferenceScreen>
 
         <PreferenceScreen

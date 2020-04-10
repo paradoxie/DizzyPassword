@@ -5,10 +5,11 @@ package cf.paradoxie.dizzypassword;
  */
 
 public class Constans {
-    public static final String APPLICATION_ID = "46b1709520ec4d0afa17e505680202da";//正式
+    public static final String APPLICATION_ID = "";//正式
     public static final String CONFIG_ID = "1590689a00";//正式
     public static final String WORDS_ID = "b47f703f38";//正式
-    public static final String PIC_ID = "http://gank.io/api/data/福利/";//正式
+//    public static final String PIC_ID = "http://gank.io/api/data/福利/";//正式
+    public static final String PIC_ID = "https://api.66mz8.com/api/rand.img.php?type=%E7%BE%8E%E5%A5%B3&format=json";//正式
     public static final String WORDS_ID_CHICKEN = "http://www.dutangapp.cn/u/toxic?date=";//正式
 
 //    public static final String APPLICATION_ID = "949a1379183be6d8a655037d1282c146";//测试

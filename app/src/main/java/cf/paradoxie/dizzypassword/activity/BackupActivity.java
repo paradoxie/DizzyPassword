@@ -1,9 +1,15 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,7 +28,9 @@ import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.db.AccountBean;
 import cf.paradoxie.dizzypassword.db.BackupBean;
+import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
+import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.view.DialogView;
@@ -50,8 +58,41 @@ public class BackupActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 finish();
+            }
+        });
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.action_csv) {
+                    checkActivity();
+                    mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+                        @Override
+                        public void posClickListener(String value) {
+                            //校验密码
+                            requestAllPower();
+                            if (value.equals(SPUtils.get("password", "") + "")) {
+
+                                if (DataUtils.exportCsv()) {
+                                    MyApplication.showToast("成功导出至根目录");
+                                } else {
+                                    MyApplication.showToast("导出失败,请检查应用是否具体权限读写手机储存");
+                                }
+                                mDialogView.dismiss();
+                            } else {
+                                MyApplication.showToast(R.string.error_pwd);
+                            }
+                        }
+
+                        @Override
+                        public void negCliclListener(String value) {
+                            //取消查看
+                        }
+                    });
+                }
+                return false;
             }
         });
 
@@ -125,6 +166,20 @@ public class BackupActivity extends BaseActivity {
 
     }
 
+    //申请权限，需要使用之前申请
+    public void requestAllPower() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.INTERNET}, 1);
+            }
+        }
+    }
 
     private void addAccount(List<AccountBean> accountBeans) {
 
@@ -213,5 +268,11 @@ public class BackupActivity extends BaseActivity {
     public void onBackPressed() {
 
         finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_backup, menu);
+        return true;
     }
 }

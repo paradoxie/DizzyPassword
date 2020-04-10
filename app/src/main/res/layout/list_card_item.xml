@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/frame_list_card_item"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="165dp"
         android:background="@drawable/shape_rectangle_with_radius">
 
         <cf.paradoxie.dizzypassword.view.SingleLineTextView
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/text_list_card_num"
             android:layout_alignRight="@id/text_list_card_num"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="25dp"
             android:textColor="@color/bg_color"
             android:textSize="10sp"
             tools:text="更新" />

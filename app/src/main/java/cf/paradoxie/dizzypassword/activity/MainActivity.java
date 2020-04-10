@@ -1,5 +1,6 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -8,14 +9,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -23,6 +29,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.ClipboardManager;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
@@ -33,6 +40,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopeer.cardstack.CardStackView;
@@ -41,13 +49,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -55,10 +68,12 @@ import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.Constans;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.adapter.NameAdapter;
 import cf.paradoxie.dizzypassword.adapter.TestStackAdapter;
 import cf.paradoxie.dizzypassword.db.AccountBean;
 import cf.paradoxie.dizzypassword.db.BaseConfig;
 import cf.paradoxie.dizzypassword.db.RxBean;
+import cf.paradoxie.dizzypassword.db.SortBean;
 import cf.paradoxie.dizzypassword.db.WordsBean;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
@@ -68,6 +83,7 @@ import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.SortUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.view.DialogView;
+import cf.paradoxie.dizzypassword.view.MyLetterSortView;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -85,12 +101,14 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private boolean optionMenuOn = true;  //显示optionmenu
     private Menu aMenu;         //获取optionmenu
     public static Integer[] TEST_DATAS = new Integer[]{
-            R.color.color_1, R.color.color_2, R.color.color_3, R.color.color_4, R.color.color_5, R.color.color_6, R.color.color_7, R.color.color_8,
-            R.color.color_9, R.color.color_10, R.color.color_11, R.color.color_12,
-            R.color.color_13, R.color.color_14, R.color.color_15, R.color.color_16,
-            R.color.color_17, R.color.color_18, R.color.color_19, R.color.color_20,
-            R.color.color_21, R.color.color_22, R.color.color_23, R.color.color_24,
-            R.color.color_25, R.color.color_26
+            R.color.color_1, R.color.color_2, R.color.color_3, R.color.color_4, R.color.color_5, R.color.color_6, R.color.color_7, R.color.color_8, R.color.color_9, R.color.color_10,
+            R.color.color_11, R.color.color_12, R.color.color_13, R.color.color_14, R.color.color_15, R.color.color_16, R.color.color_17, R.color.color_18, R.color.color_19, R.color.color_20,
+            R.color.color_21, R.color.color_22, R.color.color_23, R.color.color_24, R.color.color_25, R.color.color_26, R.color.color_27, R.color.color_28, R.color.color_29, R.color.color_30,
+            R.color.color_31, R.color.color_32, R.color.color_33, R.color.color_34, R.color.color_35, R.color.color_36, R.color.color_37, R.color.color_38, R.color.color_39, R.color.color_40,
+            R.color.color_41, R.color.color_42, R.color.color_43, R.color.color_44, R.color.color_45, R.color.color_46, R.color.color_47, R.color.color_48, R.color.color_49, R.color.color_50,
+            R.color.color_51, R.color.color_52, R.color.color_53, R.color.color_54, R.color.color_55, R.color.color_56, R.color.color_57, R.color.color_58, R.color.color_59, R.color.color_60,
+            R.color.color_61, R.color.color_62, R.color.color_63, R.color.color_64, R.color.color_65, R.color.color_66, R.color.color_67, R.color.color_68, R.color.color_69, R.color.color_70,
+            R.color.color_71, R.color.color_72, R.color.color_73
     };
 
     private CardStackView mStackView;
@@ -111,18 +129,26 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private LinearLayout main_btn;
     private long mCurrentPlayTime;
     private ObjectAnimator animator;
-    private ImageView refresh, red_package, setting, search, join_qq, iv_user_photo;
+    private ImageView refresh, setting, search, join_qq, iv_user_photo;
     private Handler handler = new Handler();
     private SearchView mSearchView;
     private String[] strings;
     private String[] strings_name;
-    private FloatingActionButton fab, fab_1;
+    private FloatingActionButton fab, fab_1, fab_2;
     List<Map.Entry<String, Integer>> mappingList = null;
     List<String> historys = new ArrayList<>();
     private SortUtils mSortUtils;
     private DrawerLayout mDrawerLayout;
     private ListView mListNames, mListTimes;
+    private MyLetterSortView left_letter;
     private String url;
+    private NameAdapter nameAdapter;
+    private List<SortBean> mFriends;
+    private TextView mTvDialog;
+
+    private ImageView imgView;
+    String path = Environment.getExternalStorageDirectory().getPath()
+            + "/头像/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +158,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 //        ultimateBar.setTransparentBar(Color.BLUE, 50);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         ThemeUtils.initStatusBarColor(MainActivity.this, ThemeUtils.getPrimaryDarkColor(MainActivity.this));
+
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("全部");
         setSupportActionBar(toolbar);
@@ -160,8 +188,11 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         tv_words_chicken.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(MainActivity.this));
 //        Button button = (Button) navigationView.findViewById(R.id.button);
         mListNames = (ListView) navigationView.findViewById(R.id.list_names);
+        left_letter = (MyLetterSortView) navigationView.findViewById(R.id.left_letter);
         mListTimes = (ListView) navigationView.findViewById(R.id.list_times);
 //        button.setText("测试");
+        mTvDialog = (TextView) findViewById(R.id.tv_dialog);
+        left_letter.setTvDialog(mTvDialog);
         mListNames.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -175,6 +206,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 toolbar.setTitle(searchText.trim());
             }
         });
+
+
         mListTimes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -193,7 +226,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
         mSearchView = (SearchView) findViewById(R.id.searchView);
         refresh = (ImageView) findViewById(R.id.refresh);
-        red_package = (ImageView) findViewById(R.id.red_package);
 //        final String isRotate = SPUtils.get("iconRotate", true) + "";
 
         config = getConfig();
@@ -215,7 +247,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         search = (ImageView) findViewById(R.id.search);
         join_qq = (ImageView) findViewById(R.id.join_qq);
         refresh.setOnClickListener(this);
-        red_package.setOnClickListener(this);
         setting.setOnClickListener(this);
         search.setOnClickListener(this);
         join_qq.setOnClickListener(this);
@@ -243,6 +274,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
 
         fab_1 = (FloatingActionButton) findViewById(R.id.fab_1);
+        fab_2 = (FloatingActionButton) findViewById(R.id.fab_2);
+        fab_2.setOnClickListener(this);
 
         toolbar.setNavigationIcon(R.drawable.navigation);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -399,14 +432,6 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             refresh.setVisibility(View.VISIBLE);
             join_qq.setVisibility(View.VISIBLE);
 
-            //获得tag的统计数据
-            //            getTags();
-            new Thread() {
-                public void run() {
-                    getTags();
-                }
-            }.start();
-
         }
 
         //取缓存数据
@@ -417,6 +442,13 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
             findOnLineDate();
         } else {
             findOffLineDate();
+            //获得tag的统计数据
+            //            getTags();
+            new Thread() {
+                public void run() {
+                    getTags();
+                }
+            }.start();
         }
 
         mSortUtils = new SortUtils();
@@ -489,16 +521,16 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     }
 
     private void getPic() {
-        int a = (int) (1 + Math.random() * (10 - 1 + 1));
-        int b = (int) (1 + Math.random() * (10 - 1 + 1));
-//        int c = (int) (1 + Math.random() * (b - 1 + 1));
-        int c = new Random().nextInt(b);
-        String s = MyApplication.get(Constans.PIC_ID + a + "/" + b);
+//        int a = (int) (1 + Math.random() * (10 - 1 + 1));
+//        int b = (int) (1 + Math.random() * (10 - 1 + 1));
+////        int c = (int) (1 + Math.random() * (b - 1 + 1));
+//        int c = new Random().nextInt(b);
+        String s = MyApplication.get(Constans.PIC_ID);
         try {
             JSONObject obj = new JSONObject(s);
-            JSONArray jsonArray = new JSONArray(obj.getString("results"));
-            JSONObject pic = new JSONObject(jsonArray.get(c).toString());
-            url = pic.getString("url");
+//            JSONArray jsonArray = new JSONArray(obj.getString("results"));
+//            JSONObject pic = new JSONObject(jsonArray.get(c).toString());
+            url = obj.getString("pic_url");
             Log.d("----pic", url);
             iv_user_photo = (ImageView) findViewById(R.id.iv_user_photo);
             MyApplication.loadImg(iv_user_photo, url, true);
@@ -512,7 +544,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         //有背景图
         //全屏显示的方法
         final Dialog dialog = new Dialog(this, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
-        ImageView imgView = getView();
+        imgView = getView();
         MyApplication.loadImg(imgView, url, false);
         dialog.setContentView(imgView);
         dialog.getWindow().setWindowAnimations(R.style.DialogOutAndInStyle);   //设置dialog的显示动画
@@ -526,8 +558,99 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 dialog.dismiss();
             }
         });
+        imgView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                requestAllPower();
+                popSave();
+                return false;
+            }
+        });
     }
 
+    private void popSave() {
+
+        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("保存图片")
+                .setContentText("保存路径：" + path)
+                .setConfirmText("保存")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        saveBitmap(imgView, path);
+                        sDialog.cancel();
+                    }
+                })
+                .show();
+
+    }
+
+    public void saveBitmap(View view, String filePath) {
+
+        // 创建对应大小的bitmap
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),
+                Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        //存储
+        FileOutputStream outStream = null;
+
+        isFolderExists(filePath);
+
+        File file = new File(filePath + Calendar.getInstance().getTimeInMillis() + ".png");
+        if (file.isDirectory()) {//如果是目录不允许保存
+            Toast.makeText(MainActivity.this, "该路径为目录路径", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            outStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            outStream.flush();
+            Toast.makeText(MainActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("error", e.getMessage() + "#");
+            Toast.makeText(MainActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+        } finally {
+            try {
+                bitmap.recycle();
+                if (outStream != null) {
+                    outStream.close();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private boolean isFolderExists(String strFolder) {
+        File file = new File(strFolder);
+
+        if (!file.exists()) {
+            if (file.mkdir()) {
+                return true;
+            } else
+                return false;
+        }
+        return true;
+    }
+
+    //申请权限，需要使用之前申请
+    public void requestAllPower() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.INTERNET}, 1);
+            }
+        }
+    }
 
     private ImageView getView() {
         ImageView imgView = new ImageView(this);
@@ -539,6 +662,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
         return imgView;
     }
+
 
     private void getWords() {
 //        WordsBean wordsBean = new WordsBean();
@@ -633,7 +757,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     String details = baseConfig.getDetails();
 
                     if (baseConfig.isIconRotate()) {
-                        startAnim(red_package, 7000);
+                        startAnim(fab_2, 7000);
                     }
                     storeConfig(baseConfig);
 
@@ -777,24 +901,19 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     @Override
     protected void onPause() {
         super.onPause();
-//        Drawable drawable = getResources().getDrawable(R.drawable.bg_trans_navigation);
-//        Log.e("onActivityonPause",  "蒙版");
-//        cl_main.setForeground(drawable);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onResume() {
         super.onResume();
-//        Drawable drawable = getResources().getDrawable(R.drawable.bg_all_trans_navigation);
-//        Log.e("onActivityonResume",  "蒙版消失");
-//        cl_main.setForeground(drawable);
+
 
         if (SPUtils.get("key", "") + "" != "") {
             Bmob.initialize(this, SPUtils.get("key", "") + "");
         }
         if (MyApplication.first_check == 2) {//校验后台时长
-//            toolbar.setNavigationIcon(R.drawable.yep_selector);
             fab_1.setImageResource(R.drawable.yep_selector);
             MyApplication.first_check = 0;
             //取缓存数据
@@ -1031,6 +1150,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 mSearchView.autoOpenOrClose();
                 fab.setVisibility(View.GONE);
                 fab_1.setVisibility(View.GONE);
+                fab_2.setVisibility(View.GONE);
                 break;
 
             case R.id.refresh:
@@ -1051,8 +1171,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
                 }
                 break;
-            case R.id.red_package:
-
+            case R.id.fab_2:
                 if (!MyApplication.isNetworkAvailable(MainActivity.this)) {
                     MyApplication.showToast("网络不可用喔");
                     return;
@@ -1064,24 +1183,27 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 }
 
                 if (config.getRiceUrl() == null || config.getRiceUrl().equals("")) {
-                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText(config.getWindowTitle())
-                            .setContentText(config.getWindowDetailsContent())
-                            .setConfirmText(config.getWindowConfirm())
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    ClipboardManager cm = (ClipboardManager) MainActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
-                                    cm.setText(config.getWindowCopyContent());
-                                    try {
-                                        MyApplication.openAppByPackageName(MainActivity.this, config.getWindowJumpPackage());
-                                    } catch (PackageManager.NameNotFoundException e) {
-                                        e.printStackTrace();
-                                    }
-                                    sDialog.cancel();
-                                }
-                            })
-                            .show();
+//                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+//                            .setTitleText(config.getWindowTitle())
+//                            .setContentText(config.getWindowDetailsContent())
+//                            .setConfirmText(config.getWindowConfirm())
+//                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                @Override
+//                                public void onClick(SweetAlertDialog sDialog) {
+//                                    ClipboardManager cm = (ClipboardManager) MainActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
+//                                    cm.setText(config.getWindowCopyContent());
+//                                    try {
+//                                        MyApplication.openAppByPackageName(MainActivity.this, config.getWindowJumpPackage());
+//                                    } catch (PackageManager.NameNotFoundException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                    sDialog.cancel();
+//                                }
+//                            })
+//                            .show();
+                    Intent intent = new Intent(AppManager.getAppManager().currentActivity(), EatRiceActivity.class);
+                    intent.putExtra("url", "http://suo.im/6iPEP4");
+                    startActivity(intent);
                 } else {
                     Intent intent = new Intent(AppManager.getAppManager().currentActivity(), EatRiceActivity.class);
                     intent.putExtra("url", config.getRiceUrl());
@@ -1137,6 +1259,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 mSearchView.close();
                 fab.setVisibility(View.VISIBLE);
                 fab_1.setVisibility(View.VISIBLE);
+                fab_2.setVisibility(View.VISIBLE);
             }
         });
         mSearchView.getCloseTv().setOnClickListener(new View.OnClickListener() {
@@ -1145,6 +1268,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 mSearchView.close();
                 fab.setVisibility(View.VISIBLE);
                 fab_1.setVisibility(View.VISIBLE);
+                fab_2.setVisibility(View.VISIBLE);
             }
         });
         mSearchView.setNewHistoryList(getHistory());
@@ -1169,6 +1293,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     mSearchView.close();
                     fab.setVisibility(View.VISIBLE);
                     fab_1.setVisibility(View.VISIBLE);
+                    fab_2.setVisibility(View.VISIBLE);
                     return;
                 }
                 if (mStackView.isExpending()) {
@@ -1208,6 +1333,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                 mSearchView.close();
                 fab.setVisibility(View.VISIBLE);
                 fab_1.setVisibility(View.VISIBLE);
+                fab_2.setVisibility(View.VISIBLE);
             }
         });
 
@@ -1223,7 +1349,9 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }
         List<Map.Entry<String, Integer>> tags;
         List<Map.Entry<String, Integer>> tags_name;
+
         tags = DataUtils.getTagList(mappingList, s);
+
         tags_name = DataUtils.getTagListByName(mappingList, s);
         strings = new String[tags.size()];
         strings_name = new String[tags_name.size()];
@@ -1233,6 +1361,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         for (int i = 0; i < tags_name.size(); i++) {
             strings_name[i] = tags_name.get(i).getKey() + "(" + tags_name.get(i).getValue() + ")";
         }
+
+        mFriends = fillData(strings_name);
         //更新搜索框内的标签
         new Thread() {
             @Override
@@ -1243,8 +1373,24 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         mSearchView.initFlowView(strings);
                         mSearchView.initFlowViewByName(strings_name);
 
-                        ArrayAdapter<String> adapterNames = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, strings_name);
-                        mListNames.setAdapter(adapterNames);
+//                        final ArrayAdapter<String> adapterNames = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, strings_name);
+                        nameAdapter = new NameAdapter(MainActivity.this, mFriends);
+
+
+                        left_letter.setOnTouchLetterChangeListener(new MyLetterSortView.OnTouchLetterChangeListener() {
+                            @Override
+                            public void letterChange(String s) {
+                                // 该字母首次出现的位置
+                                int position = nameAdapter.getPositionForSection(s.charAt(0));
+                                if (position != -1) {
+                                    mListNames.setSelection(position);
+                                }
+                                Log.d("dianji", position + "");
+                            }
+                        });
+
+                        mListNames.setAdapter(nameAdapter);
+
                         ArrayAdapter<String> adapterTimes = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, strings);
                         mListTimes.setAdapter(adapterTimes);
                     }
@@ -1253,6 +1399,25 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         }.start();
 
 
+    }
+
+    //填充数据
+    private List<SortBean> fillData(String[] data) {
+        List<SortBean> entities = new ArrayList<>();
+        for (int i = 0; i < data.length; i++) {
+            SortBean sortEntity = new SortBean();
+            sortEntity.setName(data[i]);
+
+            String alphabet = data[i].substring(0, 1);
+            /*判断首字符是否为中文，如果是中文便将首字符拼音的首字母拿出来*/
+            if (alphabet.matches("[\\u4e00-\\u9fa5]+")) {
+                sortEntity.setSortLetters(DataUtils.getAlphabet(data[i]));
+            } else {
+                sortEntity.setSortLetters(data[i].substring(0, 1).toUpperCase());
+            }
+            entities.add(sortEntity);
+        }
+        return entities;
     }
 
 

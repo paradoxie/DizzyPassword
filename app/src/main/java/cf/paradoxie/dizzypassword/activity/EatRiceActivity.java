@@ -37,7 +37,7 @@ public class EatRiceActivity extends BaseActivity {
         setContentView(R.layout.activity_eatrice);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("吃饭时间");
+        toolbar.setTitle("新鲜玩意");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -49,7 +49,6 @@ public class EatRiceActivity extends BaseActivity {
 
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
-
 
         init();
         ThemeUtils.initStatusBarColor(EatRiceActivity.this, ThemeUtils.getPrimaryDarkColor(EatRiceActivity.this));

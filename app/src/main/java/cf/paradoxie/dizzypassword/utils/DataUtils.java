@@ -1,14 +1,30 @@
 package cf.paradoxie.dizzypassword.utils;
 
+import android.os.Environment;
+
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.Collator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import cf.paradoxie.dizzypassword.db.AccountBean;
@@ -51,6 +67,7 @@ public class DataUtils {
      * 标签操作
      * 获得所有标签及重复次数
      * 按名称排序
+     * 中英混合排序
      *
      * @param s 传入的tag数组
      * @return map
@@ -66,12 +83,71 @@ public class DataUtils {
         //通过比较器实现比较排序
         Collections.sort(sMappingListName, new Comparator<Map.Entry<String, Integer>>() {
             public int compare(Map.Entry<String, Integer> mapping1, Map.Entry<String, Integer> mapping2) {
-                Comparator<Object> com = Collator.getInstance(java.util.Locale.CHINA);
+                Comparator<Object> com = Collator.getInstance(Locale.ENGLISH);
                 return com.compare(mapping1.getKey(), mapping2.getKey());
             }
         });
+        Map<String, Map.Entry<String, Integer>> maps = new HashMap<>();
+        String names[] = new String[sMappingListName.size()];
+        for (int i = 0; i < sMappingListName.size(); i++) {
+            String name = sMappingListName.get(i).getKey();
+            String alphabet = name.substring(0, 1);
+            /*判断首字符是否为中文，如果是中文便将首字符拼音的首字母和&符号加在字符串前面*/
+            if (alphabet.matches("[\\u4e00-\\u9fa5]+")) {
+                name = getAlphabet(name) + "&" + name;
+                names[i] = name;
+            } else {
+                names[i] = name;
+            }
+            //names[i] = name;
+            maps.put(name, sMappingListName.get(i));
+        }
+        names = sort(names);
+        sMappingListName.clear();
+        for (String name : names) {
+            if (maps.containsKey(name))
+                sMappingListName.add(maps.get(name));
+        }
+
         return (ArrayList<Map.Entry<String, Integer>>) sMappingListName;
     }
+
+    /**
+     * 根据数组里面首字母排序
+     *
+     * @param data
+     * @return
+     */
+    public static String[] sort(String[] data) {
+        if (data == null || data.length == 0) {
+            return null;
+        }
+        Comparator<Object> comparator = Collator.getInstance(java.util.Locale.CHINA);
+        Arrays.sort(data, comparator);
+        return data;
+    }
+
+    /**
+     * 调用汉子首字母转化为拼音的根据类，，需要在项目中导入pinyin4j.jar包
+     *
+     * @param str
+     * @return
+     */
+    public static String getAlphabet(String str) {
+        HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
+        // 输出拼音全部大写
+        defaultFormat.setCaseType(HanyuPinyinCaseType.UPPERCASE);
+        // 不带声调
+        defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        String pinyin = null;
+        try {
+            pinyin = (String) PinyinHelper.toHanyuPinyinStringArray(str.charAt(0), defaultFormat)[0];
+        } catch (BadHanyuPinyinOutputFormatCombination e) {
+            e.printStackTrace();
+        }
+        return pinyin.substring(0, 1);
+    }
+
 
     /**
      * 将条目按照名称排序
@@ -123,6 +199,81 @@ public class DataUtils {
             }
         }
         return mAccountBeans;
+    }
+
+
+    /**
+     * 导出csv
+     *
+     * @return
+     */
+    public static boolean exportCsv() {
+        //名称，帐号，密码，标签，网址，备注
+        List<AccountBean> mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
+        String path = Environment.getExternalStorageDirectory().getPath() + "/去特么的密码" + new Date().toLocaleString() + ".csv";
+        File file = new File(path);
+        boolean isSucess = false;
+        FileOutputStream out = null;
+        OutputStreamWriter osw = null;
+        BufferedWriter bw = null;
+        try {
+            out = new FileOutputStream(file);
+            osw = new OutputStreamWriter(out);
+            bw = new BufferedWriter(osw);
+            bw.append("名称,帐号,密码,标签,网址,备注\r\n");
+            if (mAccountBeans != null && !mAccountBeans.isEmpty()) {
+                String key = SPUtils.getKey();
+                for (AccountBean a : mAccountBeans) {
+                    bw.append(DesUtil.decrypt(a.getName(), key) + "," +
+                            DesUtil.decrypt(a.getAccount(), key) + "," +
+                            DesUtil.decrypt(a.getPassword(), key) + "," +
+                            transTag(a.getTag()) + "," +
+                            DesUtil.decrypt(a.getWebsite(), key) + "," +
+                            DesUtil.decrypt(a.getNote(), key)).append("\r\n");
+                }
+            }
+            isSucess = true;
+        } catch (Exception e) {
+            isSucess = false;
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                    bw = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (osw != null) {
+                try {
+                    osw.close();
+                    osw = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                    out = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return isSucess;
+    }
+
+    private static String transTag(List<String> tags) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < tags.size(); i++) {
+            if (i != tags.size() - 1) {
+                sb.append(tags.get(i) + "-");
+            } else {
+                sb.append(tags.get(i));
+            }
+        }
+        return sb.toString();
     }
 
     /**

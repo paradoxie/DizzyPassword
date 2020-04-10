@@ -46,7 +46,7 @@ import static cf.paradoxie.dizzypassword.MyApplication.launchAppDetail;
 public class SettingActivity extends BaseActivity {
     private String pwd;
     private DialogView mDialogView;
-    private String copyCode="";
+    private String copyCode = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -228,17 +228,18 @@ public class SettingActivity extends BaseActivity {
                     getVersion();
                     break;
                 case "red_package":
-                    ClipboardManager cm = (ClipboardManager) AppManager.getAppManager().currentActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                    if (copyCode.equals("")) {
-                        cm.setText(getString(R.string.red_package_string));
-                    } else {
-                        cm.setText(copyCode);
-                    }
-                    try {
-                        MyApplication.openAppByPackageName(AppManager.getAppManager().currentActivity(), "com.eg.android.AlipayGphone");
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
+//                    ClipboardManager cm = (ClipboardManager) AppManager.getAppManager().currentActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+//                    if (copyCode.equals("")) {
+//                        cm.setText(getString(R.string.red_package_string));
+//                    } else {
+//                        cm.setText(copyCode);
+//                    }
+//                    try {
+//                        MyApplication.openAppByPackageName(AppManager.getAppManager().currentActivity(), "com.eg.android.AlipayGphone");
+//                    } catch (PackageManager.NameNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
+                    MyApplication.showToast("拉倒吧，留着给自己买鸡腿去~~支持一下主页旋转的那碗饭就行啦");
                     break;
 
                 case "back_up":

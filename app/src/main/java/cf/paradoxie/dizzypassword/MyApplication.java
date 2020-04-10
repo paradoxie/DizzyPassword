@@ -11,14 +11,17 @@ import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -107,6 +110,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         mToast.show();
     }
 
+
     /**
      * 显示Snack
      *
@@ -179,7 +183,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
      * @param str 地址
      * @param bar 进度条
      */
-    public static void loadUri(WebView wb, int str, String url, final ProgressBar bar) {
+    public static void loadUri(final WebView wb, int str, String url, final ProgressBar bar) {
         wb.getSettings().setJavaScriptEnabled(true);//支持js
         wb.setWebViewClient(new WebViewClient() {//屏蔽自动浏览器打开
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -188,9 +192,31 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
             }
         });
         wb.getSettings().setUseWideViewPort(true);//自适应屏幕
+        wb.getSettings().setDomStorageEnabled(true);
+        wb.getSettings().setAllowFileAccess(true);
+        wb.getSettings().setAppCacheEnabled(true);
         wb.getSettings().setSupportZoom(true); //支持缩放
         wb.getSettings().setDefaultTextEncodingName("utf-8");//设置编码
         wb.requestFocus();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            wb.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+        //处理webview内部返回事件
+        wb.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                    //按返回键操作并且能回退网页
+                    if (i == KeyEvent.KEYCODE_BACK && wb.canGoBack()) {
+                        //后退
+                        wb.goBack();
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        });
         wb.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {

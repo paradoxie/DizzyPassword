@@ -22,8 +22,6 @@
     <string name="share_note">一个极具个人隐私属性的云端密码记录APP。 这种东西，当然还是安全可靠最重要啦~ 赶紧来【醋安应用市场】搜索下载试试吧(*^__^*) \n https://www.coolapk.com/apk/cf.paradoxie.dizzypassword \n   ---From:【去特么的密码】By Paradoxie</string>
     <string name="web_site">http://www.jianshu.com/p/ab621a5c88fb</string>
     <string name="app_info">本app作为一个密码管理工具，与常规密码管理app最大的不同在于支持个人后台的云端密码储存。\n\n尽管如此，使用默认模式也有极高的安全性，帐号信息在提交云端之前，几乎所有数据都在本地做了加密处理。\n\n数据采用Des加密，对此有疑问的朋友可以查看app的源码。\n\n开源之下，不会瞎搞(*^__^*)</string>
-    <string name="red_package_string">8899593</string>
-    <string name="red_package_string_little">8899593</string>
     <string name="on_item">好像还没有记录什么帐号信息，点击右下角添加吧(*^__^*)</string>
     <string name="offline">网络好像不可以哦~</string>
     <string name="exit_app">再按一次退出程序</string>
@@ -31,7 +29,7 @@
     <string name="succes_delete">搜索记录删除成功</string>
     <string name="no_item_name">好像没有叫这个名字的条目哦~试试Tag看看</string>
     <string name="str_copy">复制成功</string>
-    <string name="test">导出\n点击生成导出后，长按文本框，全选->复制，然后粘贴到目标文档。仅支持json格式导出，若要导入到其他app，请按照相应的导入规则更改数据结构即可。\n\n导入\n冒号前为key,后为value,引号为必需，key值必须，value可以为空\n正确导入格式：\n[{
+    <string name="test">导出，csv格式请点击右上角\n点击生成导出后，长按文本框，全选->复制，然后粘贴到目标文档。当前文本框为json格式导出，若要导入到其他app，请按照相应的导入规则更改数据结构即可。\n\n导入\n冒号前为key,后为value,引号为必需，key值必须，value可以为空\n正确导入格式：\n[{
 	\"account\": \"帐号\",\n
 	\"name\": \"条目名1\",\n
 	\"note\": \"备注信息\",\n

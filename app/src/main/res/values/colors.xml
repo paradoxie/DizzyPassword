@@ -36,6 +36,55 @@
     <color name="color_24">#E4B3B3</color>
     <color name="color_25">#BACBDD</color>
     <color name="color_26">#B3B5E2</color>
+    <color name="color_27">#FBD6E1</color>
+    <color name="color_28">#ACE4CB</color>
+    <color name="color_29">#FAB4CC</color>
+    <color name="color_30">#FFC89A</color>
+    <color name="color_31">#ACE0DD</color>
+    <color name="color_32">#FEC0CF</color>
+    <color name="color_33">#B6DCB6</color>
+    <color name="color_34">#D2E9E1</color>
+    <color name="color_35">#F8DDA9</color>
+    <color name="color_36">#FCB6D0</color>
+    <color name="color_37">#FAFAB8</color>
+    <color name="color_38">#DCE466</color>
+    <color name="color_39">#79E0C3</color>
+    <color name="color_40">#AADFE6</color>
+    <color name="color_41">#E8EAEE</color>
+    <color name="color_42">#C2CB81</color>
+    <color name="color_43">#5F936A</color>
+    <color name="color_44">#8FDBDB</color>
+    <color name="color_45">#B8DEA4</color>
+    <color name="color_46">#10B48E</color>
+    <color name="color_47">#FEAAC2</color>
+    <color name="color_48">#F9EDD1</color>
+    <color name="color_49">#FFD6DA</color>
+    <color name="color_50">#D1EAF5</color>
+    <color name="color_51">#C3D6F2</color>
+    <color name="color_52">#F6D7C3</color>
+    <color name="color_53">#C8D5F6</color>
+    <color name="color_54">#FED7DD</color>
+    <color name="color_55">#FFC5CE</color>
+    <color name="color_56">#FFCDD2</color>
+    <color name="color_57">#F8BBD0</color>
+    <color name="color_58">#E1BEE7</color>
+    <color name="color_59">#D1C4E9</color>
+    <color name="color_60">#BBDEFB</color>
+    <color name="color_61">#81D4FA</color>
+    <color name="color_62">#80DEEA</color>
+    <color name="color_63">#80ACC4</color>
+    <color name="color_64">#40C4FF</color>
+    <color name="color_65">#18FFFF</color>
+    <color name="color_66">#64FFDA</color>
+    <color name="color_67">#C8E6C9</color>
+    <color name="color_68">#DCEDC8</color>
+    <color name="color_69">#F0F4C3</color>
+    <color name="color_70">#FFF59D</color>
+    <color name="color_71">#FFAB91</color>
+    <color name="color_72">#BCAAA4</color>
+    <color name="color_73">#B0BEC5</color>
+
+
     <color name="color_bg">#09090a</color>
 
     <!--以下为theme取色-->
