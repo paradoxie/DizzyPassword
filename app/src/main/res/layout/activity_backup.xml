@@ -11,7 +11,7 @@
     <include layout="@layout/toolbar_layout" />
 
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/json_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -35,10 +35,10 @@
                 android:hint="@string/test"
                 android:padding="13dp"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/sp_12" />
+                android:textSize="12sp" />
         </ScrollView>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <LinearLayout
         android:layout_width="match_parent"

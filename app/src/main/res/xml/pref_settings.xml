@@ -62,6 +62,11 @@
             android:summary="希望也能帮到其他人啦"
             android:title="分享"></PreferenceScreen>
 
+ <PreferenceScreen
+            android:key="dav"
+            android:summary="坚果云同步"
+            android:title="您自己的私有云同步"></PreferenceScreen>
+
         <PreferenceScreen
             android:key="back_up"
             android:summary="导出支持json和csv格式"

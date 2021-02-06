@@ -14,7 +14,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,6 +31,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,9 +45,16 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
 import cf.paradoxie.dizzypassword.activity.CrashLogActivity;
-import cf.paradoxie.dizzypassword.db.AccountBean;
+import cf.paradoxie.dizzypassword.http.OkHttpUtils;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static cn.bmob.v3.BmobRealTimeData.TAG;
 
@@ -69,8 +76,27 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         mInstance = this;
         mContext = getApplicationContext();
 //        Thread.setDefaultUncaughtExceptionHandler(this);//开启抓取错误信息
+        configDavSync();
+
+        Bmob.resetDomain("http://password.usql.club/8/");
+        if ((SPUtils.get("key", "") + "").equals("")) {
+            Bmob.initialize(this, Constans.APPLICATION_ID);
+        } else {
+            Bmob.initialize(this, SPUtils.get("key", "") + "");
+        }
+
         handler = new Handler();
+
         checkStatus();//监听前后台状态
+    }
+    /**
+     * 配置sync
+     * */
+    public void configDavSync(){
+//        SyncConfig config=new SyncConfig(this);
+//        config.setPassWord("https://dav.jianguoyun.com/dav/");
+//        config.setPassWord("ajd9gy2yt65ccazq");
+//        config.setUserAccount("paradoxieix@gmail.com");
     }
 
     @Override
@@ -501,7 +527,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
 
     }
 
-    public static String get(final String url) {
+    public static String get1(final String url) {
         final StringBuilder sb = new StringBuilder();
         FutureTask<String> task = new FutureTask<String>(new Callable<String>() {
             @Override

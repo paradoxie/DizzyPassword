@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidStudioProjects-DizzyPassword.iml" filepath="$PROJECT_DIR$/AndroidStudioProjects-DizzyPassword.iml" group="DizzyPassword" />
-      <module fileurl="file://$PROJECT_DIR$/DizzyPassword.iml" filepath="$PROJECT_DIR$/DizzyPassword.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/DizzyPassword-app.iml" filepath="$PROJECT_DIR$/app/DizzyPassword-app.iml" group="DizzyPassword/app" />
-      <module fileurl="file://$PROJECT_DIR$/lib/DizzyPassword-lib.iml" filepath="$PROJECT_DIR$/lib/DizzyPassword-lib.iml" group="DizzyPassword/lib" />
-      <module fileurl="file://$PROJECT_DIR$/searchview/DizzyPassword-searchview.iml" filepath="$PROJECT_DIR$/searchview/DizzyPassword-searchview.iml" group="DizzyPassword/searchview" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/searchview/searchview.iml" filepath="$PROJECT_DIR$/searchview/searchview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DizzyPassword.iml" filepath="$PROJECT_DIR$/.idea/modules/DizzyPassword.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/DizzyPassword.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/DizzyPassword.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/searchview/DizzyPassword.searchview.iml" filepath="$PROJECT_DIR$/.idea/modules/searchview/DizzyPassword.searchview.iml" />
     </modules>
   </component>
 </project>

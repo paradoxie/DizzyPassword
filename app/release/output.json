@@ -1,1 +1,20 @@
-[{"outputType":{"type":"APK"},"apkData":{"type":"MAIN","splits":[],"versionCode":26,"versionName":"0.0.26","enabled":true,"outputFile":"cf.paradoxie.dizzypassword-v0.0.26.apk","fullName":"release","baseName":"release"},"path":"cf.paradoxie.dizzypassword-v0.0.26.apk","properties":{}}]
+{
+  "version": 1,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "cf.paradoxie.dizzypassword",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "properties": [],
+      "versionCode": 27,
+      "versionName": "27",
+      "enabled": true,
+      "outputFile": "app-release.apk"
+    }
+  ]
+}

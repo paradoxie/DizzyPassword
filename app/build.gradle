@@ -1,17 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "cf.paradoxie.dizzypassword"
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 26
-        versionName "0.0.26"
+        minSdkVersion 23
+        targetSdkVersion 29
+        versionCode 27
+        versionName "0.0.27"
         multiDexEnabled true //引入指纹lib时出现com.android.dex.DexException
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -21,38 +21,46 @@ android {
         }
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
-
-    android.applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            def fileName =defaultConfig.applicationId + "-v" + defaultConfig.versionName+".apk"
-                    outputFileName = fileName
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation project(path: ':searchview')
+    implementation files('libs/smoothcompoundbuttonlibrary.jar')
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-//    compile 'com.github.limuyang2:CardSearchView:1.0.6.9'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.google.android.material:material:1.2.1'
+
+
     implementation 'com.loopeer.library:cardstack:1.0.2'
-    implementation 'com.github.f0ris.sweetalert:library:1.5.1'
+    implementation 'com.github.f0ris.sweetalert:library:1.5.1'//dialog
     implementation 'org.zackratos:ultimatebar:1.0.3'//终极沉浸
     implementation 'com.github.paradoxie:AutoVerticalTextview:0.1'//垂直tv
-    compile ('com.github.bumptech.glide:glide:4.9.0'){ exclude group: 'com.android.support' }
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'cn.bmob.android:bmob-sdk:3.7.7'
+    implementation "io.reactivex.rxjava2:rxjava:2.2.8"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.1'
+    implementation 'com.squareup.okio:okio:2.2.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    implementation ('com.github.bumptech.glide:glide:4.9.0'){ exclude group: 'com.android.support' }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    compile group: 'com.github.open-android', name: 'pinyin4j', version: '2.5.0'
+    implementation group: 'com.github.open-android', name: 'pinyin4j', version: '2.5.0'
 
 
-    compile project(path: ':lib')
-    compile project(':searchview')
+    implementation 'com.xw.repo:bubbleseekbar:3.10-lite'
+    implementation 'com.zwh:RxFingerPrinter:1.2.1'
+
+    //坚果云webDav
+    implementation 'com.paul623.wdsyncer:wdsyncer:0.0.3'
+
+    //网络
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
 }

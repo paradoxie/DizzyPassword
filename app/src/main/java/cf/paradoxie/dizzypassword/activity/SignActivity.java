@@ -1,15 +1,14 @@
 package cf.paradoxie.dizzypassword.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.widget.Toolbar;
 
 import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
@@ -23,7 +22,6 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class SignActivity extends BaseActivity {
-    TextInputLayout nameWrapper, passwordWrapper;
     private EditText et_username, et_password, et_key;
     private Button bt_sign_on, bt_sign_up, bt_sign_key;
     private String username, password, key;
@@ -33,7 +31,7 @@ public class SignActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("登录注册");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
@@ -63,8 +61,6 @@ public class SignActivity extends BaseActivity {
         pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryDarkColor(SignActivity.this));
         pDialog.setTitleText("进行中...");
 
-        nameWrapper = (TextInputLayout) findViewById(R.id.nameWrapper);
-        passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
         et_username = (EditText) findViewById(R.id.et_username);
         et_password = (EditText) findViewById(R.id.et_password);
         bt_sign_on = (Button) findViewById(R.id.bt_sign_on);
@@ -196,24 +192,24 @@ public class SignActivity extends BaseActivity {
 
     private void inputCheck(String name, String password) {
 
-        if (name.isEmpty()) {
-            nameWrapper.setErrorEnabled(true);
-            nameWrapper.setError("请正确填写邮箱信息哦");
-            return;
-        } else if (!DesUtil.isEmail(name)) {
-            nameWrapper.setErrorEnabled(true);
-            nameWrapper.setError("请正确填写邮箱信息哦");
-            return;
-        } else if (password.isEmpty() || password.length() < 8) {
-            passwordWrapper.setErrorEnabled(true);
-            passwordWrapper.setError("密码不能少于8位哟~");
-            return;
-        } else {
-            nameWrapper.setError("");
-            nameWrapper.setErrorEnabled(false);
-            passwordWrapper.setError("");
-            passwordWrapper.setErrorEnabled(false);
-        }
+//        if (name.isEmpty()) {
+//            nameWrapper.setErrorEnabled(true);
+//            nameWrapper.setError("请正确填写邮箱信息哦");
+//            return;
+//        } else if (!DesUtil.isEmail(name)) {
+//            nameWrapper.setErrorEnabled(true);
+//            nameWrapper.setError("请正确填写邮箱信息哦");
+//            return;
+//        } else if (password.isEmpty() || password.length() < 8) {
+//            passwordWrapper.setErrorEnabled(true);
+//            passwordWrapper.setError("密码不能少于8位哟~");
+//            return;
+//        } else {
+//            nameWrapper.setError("");
+//            nameWrapper.setErrorEnabled(false);
+//            passwordWrapper.setError("");
+//            passwordWrapper.setErrorEnabled(false);
+//        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

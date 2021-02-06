@@ -16,7 +16,7 @@
         android:layout_marginTop="46dp"
         android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
+        <androidx.appcompat.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
@@ -188,7 +188,7 @@
 
                 </LinearLayout>
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.appcompat.widget.CardView>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -203,7 +203,7 @@
             android:translationZ="5dp"
             validation:borderWidth="0dp"/>
 
-        <android.support.v7.widget.CardView
+        <androidx.appcompat.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
@@ -269,7 +269,7 @@
                     </cf.paradoxie.dizzypassword.view.FlowLayout>
                 </ScrollView>
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.appcompat.widget.CardView>
 
     </LinearLayout>
 

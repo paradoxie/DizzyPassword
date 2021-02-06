@@ -1,13 +1,11 @@
 package cf.paradoxie.dizzypassword.utils;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 
 import java.util.HashMap;
 import java.util.List;
 
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;

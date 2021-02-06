@@ -17,19 +17,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+
+import android.os.Message;
 import android.text.ClipboardManager;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
@@ -42,6 +42,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.loopeer.cardstack.CardStackView;
 
@@ -53,8 +55,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -75,6 +75,7 @@ import cf.paradoxie.dizzypassword.db.BaseConfig;
 import cf.paradoxie.dizzypassword.db.RxBean;
 import cf.paradoxie.dizzypassword.db.SortBean;
 import cf.paradoxie.dizzypassword.db.WordsBean;
+import cf.paradoxie.dizzypassword.http.Http;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.MyToast;
@@ -97,6 +98,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.functions.Consumer;
 import km.lmy.searchview.SearchView;
 
+@SuppressLint("RestrictedApi")
 public class MainActivity extends BaseActivity implements CardStackView.ItemExpendListener, View.OnClickListener {
     private boolean optionMenuOn = true;  //显示optionmenu
     private Menu aMenu;         //获取optionmenu
@@ -149,6 +151,37 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private ImageView imgView;
     String path = Environment.getExternalStorageDirectory().getPath()
             + "/头像/";
+
+    final Handler handler1 = new Handler() {
+        @SuppressLint("HandlerLeak")
+        public void handleMessage(Message msg) throws IllegalStateException {
+            switch (msg.what) {
+                case 1:
+                    String str = (String) msg.obj;
+                    tv_words_chicken.setText(str);
+                    SPUtils.put("text_chicken", str);
+                    break;
+
+                case 2:
+                    String url = (String) msg.obj;
+                    iv_user_photo = findViewById(R.id.iv_user_photo);
+                    MyApplication.loadImg(iv_user_photo, url, true);
+                    break;
+
+                case 3:
+                    String text = (String) msg.obj;
+                    tv_words.setText(text);
+                    SPUtils.put("text", text);
+                    break;
+
+
+                default:
+                    throw new IllegalStateException("Unexpected value: " + msg.what);
+            }
+        }
+
+        ;
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,8 +257,8 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
         headerView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(MainActivity.this));
 
-        mSearchView = (SearchView) findViewById(R.id.searchView);
-        refresh = (ImageView) findViewById(R.id.refresh);
+        mSearchView = findViewById(R.id.searchView);
+        refresh = findViewById(R.id.refresh);
 //        final String isRotate = SPUtils.get("iconRotate", true) + "";
 
         config = getConfig();
@@ -404,12 +437,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         mStackView = (CardStackView) findViewById(R.id.stackview_main);
         mStackView.setItemExpendListener(this);
 
-        Bmob.resetDomain("http://password.usql.club/8/");
-        if (SPUtils.get("key", "") + "" == "") {
-            Bmob.initialize(this, Constans.APPLICATION_ID);
-        } else {
-            Bmob.initialize(this, SPUtils.get("key", "") + "");
-        }
+
         if (!MyApplication.isSign()) {
             tip.setVisibility(View.VISIBLE);
 //            toolbar.setTitle("未登录");
@@ -482,20 +510,17 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
 
         if (MyApplication.isNetworkAvailable(MainActivity.this)) {
             //有网的时候判断版本信息
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getVersion();
-                    getWords();
-                    getWordsChicken();
+            handler.postDelayed(() -> {
+                getVersion();
+                getWords();
+                getWordsChicken();
 
-                    String isHeadImage = SPUtils.get("isHeadImage", "false") + "";
-                    if (isHeadImage.equals("true")) {
-                        getPic();
-                    }
-                    //吃饭动画
-
+                String isHeadImage = SPUtils.get("isHeadImage", "false") + "";
+                if (isHeadImage.equals("true")) {
+                    getPic();
                 }
+                //吃饭动画
+
             }, 3000);
 
         } else {
@@ -504,39 +529,45 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     }
 
     private void getWordsChicken() {
-        String s = MyApplication.get(Constans.WORDS_ID_CHICKEN + MyApplication.getData());
-        JSONObject obj = null;
-        try {
-            obj = new JSONObject(s);
-            JSONArray jsonArray = new JSONArray(obj.getString("data"));
-            JSONObject words = new JSONObject(jsonArray.get(jsonArray.length() - 1).toString());
-            String text = words.getString("data");
-            tv_words_chicken.setText(text);
-            SPUtils.put("text_chicken", text);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Http.get(Constans.WORDS_ID_CHICKEN + MyApplication.getData(), s -> {
+//            Log.d("----毒鸡汤", s);
+            JSONObject obj = null;
+            try {
+                obj = new JSONObject(s);
+                JSONArray jsonArray = new JSONArray(obj.getString("data"));
+                JSONObject words = new JSONObject(jsonArray.get(jsonArray.length() - 1).toString());
+                String text = words.getString("data");
+                Message msg = new Message();
+                msg.what = 1;
+                msg.obj = text;
+                handler1.sendMessage(msg);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        });
 
 
     }
 
     private void getPic() {
-//        int a = (int) (1 + Math.random() * (10 - 1 + 1));
-//        int b = (int) (1 + Math.random() * (10 - 1 + 1));
-////        int c = (int) (1 + Math.random() * (b - 1 + 1));
-//        int c = new Random().nextInt(b);
-        String s = MyApplication.get(Constans.PIC_ID);
-        try {
-            JSONObject obj = new JSONObject(s);
-//            JSONArray jsonArray = new JSONArray(obj.getString("results"));
-//            JSONObject pic = new JSONObject(jsonArray.get(c).toString());
-            url = obj.getString("pic_url");
-            Log.d("----pic", url);
-            iv_user_photo = (ImageView) findViewById(R.id.iv_user_photo);
-            MyApplication.loadImg(iv_user_photo, url, true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
+        Http.get(Constans.PIC_ID, s -> {
+            try {
+                JSONObject obj = new JSONObject(s);
+                url = obj.getString("pic_url");
+                Log.d("----pic", url);
+                Message msg = new Message();
+                msg.what = 2;
+                msg.obj = url;
+                handler1.sendMessage(msg);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+
 
     }
 
@@ -705,36 +736,47 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     }
 
     private void getWordsByAvatar(String id) {
-        try {
-            String s = MyApplication.get(Constans.WORDS);
+
+        Http.get(Constans.WORDS, s -> {
             Log.e("-----", s);
-            JSONObject obj = new JSONObject(s);
-            final WordsBean wordsBean = new WordsBean();
-            wordsBean.setFamous_name(obj.getJSONObject("result").getString("famous_name"));
-            wordsBean.setFamous_saying(obj.getJSONObject("result").getString("famous_saying"));
-            String text = wordsBean.getFamous_saying() + "      ---" + wordsBean.getFamous_name();
-            tv_words.setText(text);
-            SPUtils.put("text", text);
-            if (id.equals("")) {//上传
-                wordsBean.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String s, BmobException e) {
-                        if (e == null) {
+            try {
+                JSONObject obj = new JSONObject(s);
+                JSONArray jsonArray = obj.getJSONArray("newslist");
+
+                obj = jsonArray.getJSONObject(0);
+
+                final WordsBean wordsBean = new WordsBean();
+                wordsBean.setFamous_name(obj.getString("mrname"));
+                wordsBean.setFamous_saying(obj.getString("content"));
+                String text = wordsBean.getFamous_saying() + "      ---" + wordsBean.getFamous_name();
+                Log.e("---mrname--", wordsBean.getFamous_name());
+                Message msg = new Message();
+                msg.what = 3;
+                msg.obj = text;
+                handler1.sendMessage(msg);
+
+                if (id.equals("")) {//上传
+                    wordsBean.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            if (e == null) {
+
+                            }
+                        }
+                    });
+                } else {//更新
+                    wordsBean.update(id, new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
 
                         }
-                    }
-                });
-            } else {//更新
-                wordsBean.update(id, new UpdateListener() {
-                    @Override
-                    public void done(BmobException e) {
-
-                    }
-                });
+                    });
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        });
+
     }
 
     private void toggleRightSliding() {//该方法控制右侧边栏的显示和隐藏
@@ -961,15 +1003,11 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                         mTestStackAdapter = new TestStackAdapter(MainActivity.this, mAccountBeans);
                         mStackView.setAdapter(mTestStackAdapter);
                         mTestStackAdapter.notifyDataSetChanged();
-                        new Handler().postDelayed(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
-                                        mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
-                                        // hideAnimate();
-                                        stopAnim(animator);
-                                    }
+                        new Handler().postDelayed(() -> {
+                                    //为什么不能把TEST_DATA拿出来单独处理一次，会出现ANR
+                                    mTestStackAdapter.updateData(Arrays.asList(DesUtil.getRandomFromArray(TEST_DATAS, mAccountBeans.size())));
+                                    // hideAnimate();
+                                    stopAnim(animator);
                                 }
                                 , 100
                         );
@@ -1281,6 +1319,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
         });
         //设置软键盘搜索按钮点击事件
         mSearchView.setOnSearchActionListener(new SearchView.OnSearchActionListener() {
+
             @Override
             public void onSearchAction(String searchText) {
                 addHistory(searchText);//历史记录存入sp

@@ -3,7 +3,7 @@ package cf.paradoxie.dizzypassword.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -65,6 +65,7 @@ public class SafeActivity extends BaseActivity {
             } else {
                 tv_message.setText("当前设备版本过低，请使用6位数字码进行安全验证");
             }
+            rl_support_finger.setVisibility(View.GONE);
         } else {//SDK23以上显示指纹
             fingerCheck();
             if (code != 999) {

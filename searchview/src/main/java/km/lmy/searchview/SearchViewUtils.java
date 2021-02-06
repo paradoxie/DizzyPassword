@@ -3,12 +3,13 @@ package km.lmy.searchview;
 import android.animation.Animator;
 import android.content.Context;
 import android.os.Build;
-import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
+import androidx.cardview.widget.CardView;
 
 /**
  * Created by yuepeng on 2017/6/9.

@@ -36,6 +36,10 @@ import cf.paradoxie.dizzypassword.db.AccountBean;
 public class DataUtils {
     private static List<Map.Entry<String, Integer>> sMappingList;
     private static List<Map.Entry<String, Integer>> sMappingListName;
+    //明文
+    public static String backFilePath = Environment.getExternalStorageDirectory().getPath() + "/dizzyPassword.csv";
+    //秘文
+    public static String backFilePath_security = Environment.getExternalStorageDirectory().getPath() + "/dizzyPassword_security.csv";
 
     /**
      * 标签操作
@@ -203,15 +207,14 @@ public class DataUtils {
 
 
     /**
-     * 导出csv
+     * 导出明文csv
      *
      * @return
      */
     public static boolean exportCsv() {
         //名称，帐号，密码，标签，网址，备注
         List<AccountBean> mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
-        String path = Environment.getExternalStorageDirectory().getPath() + "/去特么的密码" + new Date().toLocaleString() + ".csv";
-        File file = new File(path);
+        File file = new File(backFilePath);
         boolean isSucess = false;
         FileOutputStream out = null;
         OutputStreamWriter osw = null;
@@ -230,6 +233,68 @@ public class DataUtils {
                             transTag(a.getTag()) + "," +
                             DesUtil.decrypt(a.getWebsite(), key) + "," +
                             DesUtil.decrypt(a.getNote(), key)).append("\r\n");
+                }
+            }
+            isSucess = true;
+        } catch (Exception e) {
+            isSucess = false;
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                    bw = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (osw != null) {
+                try {
+                    osw.close();
+                    osw = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                    out = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return isSucess;
+    }
+
+
+    /**
+     * 导出秘文csv
+     *
+     * @return
+     */
+    public static boolean exportCsvSecurity() {
+
+        //名称，帐号，密码，标签，网址，备注
+        List<AccountBean> mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
+        File file = new File(backFilePath_security);
+        boolean isSucess = false;
+        FileOutputStream out = null;
+        OutputStreamWriter osw = null;
+        BufferedWriter bw = null;
+        try {
+            out = new FileOutputStream(file);
+            osw = new OutputStreamWriter(out);
+            bw = new BufferedWriter(osw);
+            bw.append("名称,帐号,密码,标签,网址,备注\r\n");
+            if (mAccountBeans != null && !mAccountBeans.isEmpty()) {
+                for (AccountBean a : mAccountBeans) {
+                    bw.append(a.getName() + "," +
+                            a.getAccount() + "," +
+                            a.getPassword() + "," +
+                            transTag(a.getTag()) + "," +
+                            a.getWebsite() + "," +
+                            a.getNote()).append("\r\n");
                 }
             }
             isSucess = true;
