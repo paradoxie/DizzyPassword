@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.db;
+package cf.paradoxie.dizzypassword.bean;
 
 import java.util.List;
 
@@ -17,6 +17,8 @@ public class AccountBean extends BmobObject{
     private String password;//密码
     private String website;//网址
     private String note;//备注
+
+
 
     public String getWebsite() {
         return website;
@@ -85,4 +87,18 @@ public class AccountBean extends BmobObject{
         this.user = user;
     }
 
+
+    @Override
+    public String toString() {
+        return "AccountBean{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", tag=" + tag +
+                ", account='" + account + '\'' +
+                ", password='" + password + '\'' +
+                ", website='" + website + '\'' +
+                ", note='" + note + '\'' +
+                ", user=" + user +
+                '}';
+    }
 }

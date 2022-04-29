@@ -2,14 +2,16 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+//    buildToolsVersion "29.0.3"
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "cf.paradoxie.dizzypassword"
         minSdkVersion 23
+
+
         targetSdkVersion 29
-        versionCode 27
-        versionName "0.0.27"
+        versionCode 29
+        versionName "0.0.29"
         multiDexEnabled true //引入指纹lib时出现com.android.dex.DexException
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
@@ -44,7 +46,7 @@ dependencies {
     implementation 'org.zackratos:ultimatebar:1.0.3'//终极沉浸
     implementation 'com.github.paradoxie:AutoVerticalTextview:0.1'//垂直tv
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'cn.bmob.android:bmob-sdk:3.7.7'
+    implementation 'io.github.bmob:android-sdk:3.8.2'
     implementation "io.reactivex.rxjava2:rxjava:2.2.8"
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'com.squareup.okhttp3:okhttp:3.14.1'

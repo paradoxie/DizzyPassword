@@ -32,16 +32,11 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("设置");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
         pwd = String.valueOf(SPUtils.get("password", ""));
         mDialogView = new DialogView(SettingActivity.this);
 
@@ -49,38 +44,35 @@ public class SettingActivity extends BaseActivity {
         Intent intent = getIntent();
         copyCode = intent.getStringExtra("copyCode");
         Log.d("----piccodee", copyCode);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.action_exit) {
-                    checkActivity();
-                    mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
-                        @Override
-                        public void posClickListener(String value) {
-                            //校验密码
-                            if (value.equals(SPUtils.get("password", "") + "")) {
-                                SPUtils.clear();//清除用户记录
-                                BmobUser.logOut();   //清除缓存用户对象
-                                AppManager.getAppManager().finishAllActivity();
-                                startActivity(new Intent(SettingActivity.this, SignActivity.class));
-                                finish();
-                                hideInputWindow();
-                                mDialogView.dismiss();
-                            } else {
-                                MyApplication.showToast(R.string.error_pwd);
-                            }
+        toolbar.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.action_exit) {
+                checkActivity();
+                mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+                    @Override
+                    public void posClickListener(String value) {
+                        //校验密码
+                        if (value.equals(SPUtils.get("password", "") + "")) {
+                            SPUtils.clear();//清除用户记录
+                            BmobUser.logOut();   //清除缓存用户对象
+                            AppManager.getAppManager().finishAllActivity();
+                            startActivity(new Intent(SettingActivity.this, SignActivity.class));
+                            finish();
+                            hideInputWindow();
+                            mDialogView.dismiss();
+                        } else {
+                            MyApplication.showToast(R.string.error_pwd);
                         }
+                    }
 
-                        @Override
-                        public void negCliclListener(String value) {
-                            //取消查看
-                        }
-                    });
+                    @Override
+                    public void negCliclListener(String value) {
+                        //取消查看
+                    }
+                });
 
-                }
-                return false;
             }
+            return false;
         });
 
         getFragmentManager().beginTransaction().replace(R.id.frame_content, new SettingPreferenceFragment()).commit();
@@ -100,9 +92,6 @@ public class SettingActivity extends BaseActivity {
         ThemeUtils.setWindowStatusBarColor(SettingActivity.this, ThemeUtils.getPrimaryDarkColor(SettingActivity.this));
         getFragmentManager().beginTransaction().replace(R.id.frame_content, new SettingPreferenceFragment()).commit();
     }
-
-
-
 
 
     @Override

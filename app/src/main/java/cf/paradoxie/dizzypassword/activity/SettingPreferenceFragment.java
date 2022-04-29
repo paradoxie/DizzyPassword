@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Looper;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -17,25 +16,17 @@ import androidx.appcompat.app.AlertDialog;
 
 import android.text.Editable;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-
-import com.paul623.wdsyncer.SyncManager;
-import com.paul623.wdsyncer.api.OnListFileListener;
-import com.paul623.wdsyncer.api.OnSyncResultListener;
-import com.paul623.wdsyncer.model.DavData;
-
-import java.util.List;
 
 import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.Constans;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.db.BaseConfig;
+import cf.paradoxie.dizzypassword.bean.BaseConfig;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
+import cf.paradoxie.dizzypassword.utils.Utils;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
@@ -88,7 +79,6 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
             if (newTheme != theme && getActivity() != null) {
                 settingActivity.setTheme(newTheme);
                 settingActivity.setColor();
-                //                    this.onCreate(null);
             }
         } else if (key.equals("id_change")) {
             Preference pref = findPreference(key);
@@ -141,7 +131,7 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
                 DesUtil.share(AppManager.getAppManager().currentActivity(), getString(R.string.share_note));
                 break;
             case "group":
-                MyApplication.joinQQGroup(Constans.QQ_ID);
+                MyApplication.joinQQGroup();
                 break;
             case "update":
                 getVersion();
@@ -169,9 +159,9 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
             case "dav":
 //                checkDir();
 //                upLoad();
-//                Intent intent3 = new Intent(AppManager.getAppManager().currentActivity(), JianGuoActivity.class);
-//                startActivity(intent3);
-                MyApplication.showToast("过年了xdm，年后回来再继续");
+                Intent intent3 = new Intent(AppManager.getAppManager().currentActivity(), JianGuoActivity.class);
+                startActivity(intent3);
+//                MyApplication.showToast("过年了xdm，年后回来再继续");
                 break;
             default:
                 break;
@@ -200,7 +190,7 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
     }
 
     private void getVersion() {
-        final SweetAlertDialog pDialog = new SweetAlertDialog(MyApplication.getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
         pDialog.setTitleText("检查中");
         pDialog.setCancelable(false);
@@ -213,17 +203,14 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
                     int newVersion = Integer.parseInt(baseConfig.getNewVersion());
                     String title = baseConfig.getTitle();
                     String details = baseConfig.getDetails();
-                    if (newVersion > MyApplication.GetVersion()) {//新版本大于本地版本
+                    if (newVersion > Utils.GetVersion()) {//新版本大于本地版本
                         new AlertDialog.Builder(MyApplication.getContext(), R.style.AlertDialogCustom)
                                 .setTitle(title)
                                 .setMessage(details)
                                 .setCancelable(false)
-                                .setPositiveButton("前往", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        //前往酷安
-                                        launchAppDetail(MyApplication.getContext().getPackageName(), "com.coolapk.market");
-                                    }
+                                .setPositiveButton("前往", (dialogInterface, i) -> {
+                                    //前往酷安
+                                    launchAppDetail(MyApplication.getContext().getPackageName(), "com.coolapk.market");
                                 })
                                 .setNeutralButton("我就不.GIF", null)
                                 .show();

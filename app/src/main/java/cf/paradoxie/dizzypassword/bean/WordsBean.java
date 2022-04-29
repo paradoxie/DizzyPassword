@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.db;
+package cf.paradoxie.dizzypassword.bean;
 
 import cn.bmob.v3.BmobObject;
 

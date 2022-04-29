@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.db;
+package cf.paradoxie.dizzypassword.bean;
 
 /**
  * Created by xiehehe on 2017/10/29.

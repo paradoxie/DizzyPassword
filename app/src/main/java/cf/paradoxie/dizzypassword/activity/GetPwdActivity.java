@@ -15,12 +15,11 @@ import com.xw.repo.BubbleSeekBar;
 
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.db.RxBean;
+import cf.paradoxie.dizzypassword.bean.RxBean;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.GetPwdUtils;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
-import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.view.SingleLineTextView;
 
 /**
@@ -69,13 +68,13 @@ public class GetPwdActivity extends BaseActivity {
 
     @SuppressLint("WrongViewCast")
     private void init() {
-        note = (TextView) findViewById(R.id.note);
-        et_pwd = (SingleLineTextView) findViewById(R.id.et_pwd);
-        sb_num = (BubbleSeekBar) findViewById(R.id.sb_num);
-        ss1 = (SmoothSwitch) findViewById(R.id.ss1);
-        ss2 = (SmoothSwitch) findViewById(R.id.ss2);
-        ss3 = (SmoothSwitch) findViewById(R.id.ss3);
-        ss4 = (SmoothSwitch) findViewById(R.id.ss4);
+        note = findViewById(R.id.note);
+        et_pwd = findViewById(R.id.et_pwd);
+        sb_num = findViewById(R.id.sb_num);
+        ss1 = findViewById(R.id.ss1);
+        ss2 = findViewById(R.id.ss2);
+        ss3 = findViewById(R.id.ss3);
+        ss4 = findViewById(R.id.ss4);
 
         mRxBean = new RxBean();
         sb_num.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListenerAdapter() {
@@ -85,98 +84,92 @@ public class GetPwdActivity extends BaseActivity {
             }
         });
 
-        btn_get = (Button) findViewById(R.id.btn_get);
-        btn_get.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (num < 6) {
-                    MyApplication.showToast("请选择密码位数");
-                    return;
-                }
-                if (num == 8) {
-                    MyApplication.showToast("不建议使用默认位数哦~");
-                }
-                if (ss1.isChecked() && !ss2.isChecked() && !ss3.isChecked() && !ss4.isChecked()) {
-                    //1仅数字
-                    pwd = GetPwdUtils.getPwd(num, NUMBER_CHAR);
-                    savePwdWays(true, false, false, false);
-                } else if (!ss1.isChecked() && ss2.isChecked() && !ss3.isChecked() && !ss4.isChecked()) {
-                    //2仅小写
-                    pwd = GetPwdUtils.getPwd(num, LOWER_LETTER_CHAR);
-                    savePwdWays(false, true, false, false);
-                } else if (!ss1.isChecked() && !ss2.isChecked() && ss3.isChecked() && !ss4.isChecked()) {
-                    //3仅大写
-                    pwd = GetPwdUtils.getPwd(num, UPPER_LETTER_CHAR);
-                    savePwdWays(false, false, true, false);
-                } else if (!ss1.isChecked() && !ss2.isChecked() && !ss3.isChecked() && ss4.isChecked()) {
-                    //4仅字符
-                    pwd = GetPwdUtils.getPwd(num, STRING_CHAR);
-                    savePwdWays(false, false, false, true);
-                } else if (ss1.isChecked() && ss2.isChecked() && !ss3.isChecked() && !ss4.isChecked()) {
-                    //5数字+小写
-                    pwd = GetPwdUtils.getPwd(num, LOWER_NUMBER_CHAR);
-                    savePwdWays(true, true, false, false);
-                } else if (ss1.isChecked() && !ss2.isChecked() && ss3.isChecked() && !ss4.isChecked()) {
-                    //6数字+大写
-                    pwd = GetPwdUtils.getPwd(num, UPPER_NUMBER_CHAR);
-                    savePwdWays(true, false, true, false);
-                } else if (ss1.isChecked() && !ss2.isChecked() && !ss3.isChecked() && ss4.isChecked()) {
-                    //7数字+字符
-                    pwd = GetPwdUtils.getPwd(num, STRING_NUMBER_CHAR);
-                    savePwdWays(true, false, false, true);
-                } else if (!ss1.isChecked() && ss2.isChecked() && !ss3.isChecked() && ss4.isChecked()) {
-                    //8字符+小写
-                    pwd = GetPwdUtils.getPwd(num, STRING_LOWER_CHAR);
-                    savePwdWays(false, true, true, true);
-                } else if (!ss1.isChecked() && !ss2.isChecked() && ss3.isChecked() && ss4.isChecked()) {
-                    //9字符+大写
-                    pwd = GetPwdUtils.getPwd(num, STRING_UPPER_CHAR);
-                    savePwdWays(false, false, true, true);
-                } else if (!ss1.isChecked() && ss2.isChecked() && ss3.isChecked() && !ss4.isChecked()) {
-                    //10小写+大写
-                    pwd = GetPwdUtils.getPwd(num, LOWER_UPPER_CHAR);
-                    savePwdWays(false, true, true, false);
-                } else if (ss1.isChecked() && ss2.isChecked() && !ss3.isChecked() && ss4.isChecked()) {
-                    //11数字+小写+字符
-                    pwd = GetPwdUtils.getPwd(num, STRING_LOWER_NUMBER_CHAR);
-                    savePwdWays(true, true, false, true);
-                } else if (ss1.isChecked() && !ss2.isChecked() && ss3.isChecked() && ss4.isChecked()) {
-                    //12数字+大写+字符
-                    pwd = GetPwdUtils.getPwd(num, STRING_UPPER_NUMBER_CHAR);
-                    savePwdWays(true, false, true, true);
-                } else if (!ss1.isChecked() && ss2.isChecked() && ss3.isChecked() && ss4.isChecked()) {
-                    //13小写+大写+字符
-                    pwd = GetPwdUtils.getPwd(num, STRING_UPPER_LOWER_CHAR);
-                    savePwdWays(false, true, true, true);
-                } else if (ss1.isChecked() && ss2.isChecked() && ss3.isChecked() && !ss4.isChecked()) {
-                    //14小写+大写+数字
-                    pwd = GetPwdUtils.getPwd(num, NUMBER_UPPER_LOWER_CHAR);
-                    savePwdWays(true, true, true, false);
-                } else if (ss1.isChecked() && ss2.isChecked() && ss3.isChecked() && ss4.isChecked()) {
-                    //15全部
-                    pwd = GetPwdUtils.getPwd(num, ALL_CHAR);
-                    savePwdWays(true, true, true, true);
-                }
-                et_pwd.setText(pwd);
-                note.setText(DataUtils.GetPwdSecurityLevel(pwd));
+        btn_get = findViewById(R.id.btn_get);
+        btn_get.setOnClickListener(view -> {
+            if (num < 6) {
+                MyApplication.showToast("请选择密码位数");
+                return;
             }
+            if (num == 8) {
+                MyApplication.showToast("不建议使用默认位数哦~");
+            }
+            if (ss1.isChecked() && !ss2.isChecked() && !ss3.isChecked() && !ss4.isChecked()) {
+                //1仅数字
+                pwd = GetPwdUtils.getPwd(num, NUMBER_CHAR);
+                savePwdWays(true, false, false, false);
+            } else if (!ss1.isChecked() && ss2.isChecked() && !ss3.isChecked() && !ss4.isChecked()) {
+                //2仅小写
+                pwd = GetPwdUtils.getPwd(num, LOWER_LETTER_CHAR);
+                savePwdWays(false, true, false, false);
+            } else if (!ss1.isChecked() && !ss2.isChecked() && ss3.isChecked() && !ss4.isChecked()) {
+                //3仅大写
+                pwd = GetPwdUtils.getPwd(num, UPPER_LETTER_CHAR);
+                savePwdWays(false, false, true, false);
+            } else if (!ss1.isChecked() && !ss2.isChecked() && !ss3.isChecked() && ss4.isChecked()) {
+                //4仅字符
+                pwd = GetPwdUtils.getPwd(num, STRING_CHAR);
+                savePwdWays(false, false, false, true);
+            } else if (ss1.isChecked() && ss2.isChecked() && !ss3.isChecked() && !ss4.isChecked()) {
+                //5数字+小写
+                pwd = GetPwdUtils.getPwd(num, LOWER_NUMBER_CHAR);
+                savePwdWays(true, true, false, false);
+            } else if (ss1.isChecked() && !ss2.isChecked() && ss3.isChecked() && !ss4.isChecked()) {
+                //6数字+大写
+                pwd = GetPwdUtils.getPwd(num, UPPER_NUMBER_CHAR);
+                savePwdWays(true, false, true, false);
+            } else if (ss1.isChecked() && !ss2.isChecked() && !ss3.isChecked() && ss4.isChecked()) {
+                //7数字+字符
+                pwd = GetPwdUtils.getPwd(num, STRING_NUMBER_CHAR);
+                savePwdWays(true, false, false, true);
+            } else if (!ss1.isChecked() && ss2.isChecked() && !ss3.isChecked() && ss4.isChecked()) {
+                //8字符+小写
+                pwd = GetPwdUtils.getPwd(num, STRING_LOWER_CHAR);
+                savePwdWays(false, true, true, true);
+            } else if (!ss1.isChecked() && !ss2.isChecked() && ss3.isChecked() && ss4.isChecked()) {
+                //9字符+大写
+                pwd = GetPwdUtils.getPwd(num, STRING_UPPER_CHAR);
+                savePwdWays(false, false, true, true);
+            } else if (!ss1.isChecked() && ss2.isChecked() && ss3.isChecked() && !ss4.isChecked()) {
+                //10小写+大写
+                pwd = GetPwdUtils.getPwd(num, LOWER_UPPER_CHAR);
+                savePwdWays(false, true, true, false);
+            } else if (ss1.isChecked() && ss2.isChecked() && !ss3.isChecked() && ss4.isChecked()) {
+                //11数字+小写+字符
+                pwd = GetPwdUtils.getPwd(num, STRING_LOWER_NUMBER_CHAR);
+                savePwdWays(true, true, false, true);
+            } else if (ss1.isChecked() && !ss2.isChecked() && ss3.isChecked() && ss4.isChecked()) {
+                //12数字+大写+字符
+                pwd = GetPwdUtils.getPwd(num, STRING_UPPER_NUMBER_CHAR);
+                savePwdWays(true, false, true, true);
+            } else if (!ss1.isChecked() && ss2.isChecked() && ss3.isChecked() && ss4.isChecked()) {
+                //13小写+大写+字符
+                pwd = GetPwdUtils.getPwd(num, STRING_UPPER_LOWER_CHAR);
+                savePwdWays(false, true, true, true);
+            } else if (ss1.isChecked() && ss2.isChecked() && ss3.isChecked() && !ss4.isChecked()) {
+                //14小写+大写+数字
+                pwd = GetPwdUtils.getPwd(num, NUMBER_UPPER_LOWER_CHAR);
+                savePwdWays(true, true, true, false);
+            } else if (ss1.isChecked() && ss2.isChecked() && ss3.isChecked() && ss4.isChecked()) {
+                //15全部
+                pwd = GetPwdUtils.getPwd(num, ALL_CHAR);
+                savePwdWays(true, true, true, true);
+            }
+            et_pwd.setText(pwd);
+            note.setText(DataUtils.GetPwdSecurityLevel(pwd));
         });
-        btn_sure = (Button) findViewById(R.id.btn_sure);
-        btn_sure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //返回密码到上一个界面
-                if (et_pwd.getText() == "") {
-                    MyApplication.showToast("啥也没有哦~");
-                    return;
-                }
-                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setText(et_pwd.getText().toString().trim());
-                MyApplication.showToast(R.string.copy_password);
-                mRxBean.setPwd(et_pwd.getText().toString().trim());
-                RxBus.getInstance().post(mRxBean);
-                finish();
+        btn_sure = findViewById(R.id.btn_sure);
+        btn_sure.setOnClickListener(view -> {
+            //返回密码到上一个界面
+            if (et_pwd.getText() == "") {
+                MyApplication.showToast("啥也没有哦~");
+                return;
             }
+            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            cm.setText(et_pwd.getText().toString().trim());
+            MyApplication.showToast(R.string.copy_password);
+            mRxBean.setPwd(et_pwd.getText().toString().trim());
+            RxBus.getInstance().post(mRxBean);
+            finish();
         });
         String[] strings = getPwdways().trim().split(" ");
         ss1.setChecked(Boolean.parseBoolean(strings[0]));
@@ -196,8 +189,8 @@ public class GetPwdActivity extends BaseActivity {
 
     private String getPwdways() {
         String string;
-        string = SPUtils.get("pwdWaysBNmu", false) + " " +
-                SPUtils.get("pwdWaysLowCase", false) + " " +
+        string = SPUtils.get("pwdWaysBNmu", true) + " " +
+                SPUtils.get("pwdWaysLowCase", true) + " " +
                 SPUtils.get("pwdWaysUpcase", false) + " " +
                 SPUtils.get("pwdWaysChars", false);
 

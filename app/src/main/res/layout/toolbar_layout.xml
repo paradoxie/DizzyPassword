@@ -37,7 +37,7 @@
                 android:src="@drawable/search_selector"/>
 
             <ImageView
-                android:id="@+id/join_qq"
+                android:id="@+id/sort"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

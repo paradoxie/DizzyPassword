@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -20,8 +22,8 @@ import java.util.List;
 import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.db.AccountBean;
-import cf.paradoxie.dizzypassword.db.RxBean;
+import cf.paradoxie.dizzypassword.bean.AccountBean;
+import cf.paradoxie.dizzypassword.bean.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
@@ -55,25 +57,15 @@ public class AddActivity extends BaseActivity {
         setContentView(R.layout.activity_add);
         init();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("添加帐号");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionDone();
-            }
-        });
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> actionDone());
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -202,16 +194,16 @@ public class AddActivity extends BaseActivity {
 
     private void initFlowView() {
         mInflater = LayoutInflater.from(this);
-        mFlowLayout = (FlowLayout) findViewById(R.id.flowlayout);
+        mFlowLayout = findViewById(R.id.flowlayout);
         initData();
     }
 
     private void init() {
-        nameWrapper = (TextInputLayout) findViewById(R.id.nameWrapper);
-        accountWrapper = (TextInputLayout) findViewById(R.id.accountWrapper);
-        passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
-        noteWrapper = (TextInputLayout) findViewById(R.id.noteWrapper);
-        tagWrapper = (TextInputLayout) findViewById(R.id.tagWrapper);
+        nameWrapper = findViewById(R.id.nameWrapper);
+        accountWrapper = findViewById(R.id.accountWrapper);
+        passwordWrapper = findViewById(R.id.passwordWrapper);
+        noteWrapper = findViewById(R.id.noteWrapper);
+        tagWrapper = findViewById(R.id.tagWrapper);
         nameWrapper.setHint("名称,比如酷安、酷安小号、酷安女号等");
         accountWrapper.setHint("帐户,邮箱、电话、用户名");
         passwordWrapper.setHint("密码,点击左侧图标可自动生成哦");
@@ -219,20 +211,17 @@ public class AddActivity extends BaseActivity {
         tagWrapper.setHint("标记,点击选择,输入请用空格隔开,注:可用于归类检索");
 
 
-        et_name = (EditText) findViewById(R.id.et_name);
-        et_account = (EditText) findViewById(R.id.et_account);
-        et_password = (EditText) findViewById(R.id.et_password);
-        et_web = (EditText) findViewById(R.id.et_website);
-        et_note = (EditText) findViewById(R.id.et_web);
-        et_tag = (EditText) findViewById(R.id.et_tag);
-        btn_get_pwd = (ImageView) findViewById(R.id.btn_get_pwd);
-        btn_get_pwd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //返回密码
-                Intent intent = new Intent(AddActivity.this, GetPwdActivity.class);
-                startActivity(intent);
-            }
+        et_name = findViewById(R.id.et_name);
+        et_account = findViewById(R.id.et_account);
+        et_password = findViewById(R.id.et_password);
+        et_web = findViewById(R.id.et_website);
+        et_note = findViewById(R.id.et_web);
+        et_tag = findViewById(R.id.et_tag);
+        btn_get_pwd = findViewById(R.id.btn_get_pwd);
+        btn_get_pwd.setOnClickListener(view -> {
+            //返回密码
+            Intent intent = new Intent(AddActivity.this, GetPwdActivity.class);
+            startActivity(intent);
         });
 
 
@@ -249,27 +238,24 @@ public class AddActivity extends BaseActivity {
             final String str = tv.getText().toString();
 
             //点击事件
-            tv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //判断tag数量
-                    String string = et_tag.getText().toString().trim();
-                    int space = 0;
-                    char[] ch = string.toCharArray();
-                    for (int j = 0; j < ch.length; j++) {
-                        if (ch[j] == ' ') {
-                            space++;
-                        }
+            tv.setOnClickListener(v -> {
+                //判断tag数量
+                String string = et_tag.getText().toString().trim();
+                int space = 0;
+                char[] ch = string.toCharArray();
+                for (int j = 0; j < ch.length; j++) {
+                    if (ch[j] == ' ') {
+                        space++;
                     }
-                    if (space > 3) {
-                        MyApplication.showToast("最多支持添加5个tag哟~");
-                        return;
-                    }
-                    et_tag.setText(string + " " + str);
-                    tv.setTextSize(10);
-                    tv.setTextColor(getResources().getColor(R.color.pressed_color));
-                    tv.setBackgroundResource(R.drawable.search_label);
                 }
+                if (space > 3) {
+                    MyApplication.showToast("最多支持添加5个tag哟~");
+                    return;
+                }
+                et_tag.setText(string + " " + str);
+                tv.setTextSize(10);
+                tv.setTextColor(getResources().getColor(R.color.pressed_color));
+                tv.setBackgroundResource(R.drawable.search_label);
             });
             mFlowLayout.addView(tv);
         }
@@ -280,24 +266,18 @@ public class AddActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        RxBus.getInstance().register(RxBean.class,new Consumer<RxBean>() {
-                    @Override
-                    public void accept(RxBean rxBean) throws Exception {
-                        if (rxBean.getPwd() == "") {
-                            return;
-                        } else {
-                            et_password.setText(rxBean.getPwd());
-                        }
-                    }
-
-                });
+        RxBus.getInstance().register(RxBean.class, rxBean -> {
+            if (rxBean.getPwd() == "") {
+                return;
+            } else {
+                et_password.setText(rxBean.getPwd());
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //        Intent intent = new Intent(AddActivity.this, MainActivity.class);
-        //        startActivity(intent);
         finish();
     }
 }

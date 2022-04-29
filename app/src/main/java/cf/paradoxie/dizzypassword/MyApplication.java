@@ -32,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.snackbar.Snackbar;
+import com.paul623.wdsyncer.SyncConfig;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,6 +48,7 @@ import java.util.concurrent.FutureTask;
 import cf.paradoxie.dizzypassword.activity.CrashLogActivity;
 import cf.paradoxie.dizzypassword.http.OkHttpUtils;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cf.paradoxie.dizzypassword.utils.Utils;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 import okhttp3.Call;
@@ -75,10 +77,11 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         super.onCreate();
         mInstance = this;
         mContext = getApplicationContext();
-//        Thread.setDefaultUncaughtExceptionHandler(this);//开启抓取错误信息
+        //开启抓取错误信息
+//        Thread.setDefaultUncaughtExceptionHandler(this);
         configDavSync();
 
-        Bmob.resetDomain("http://password.usql.club/8/");
+        Bmob.resetDomain("http://xiepwd.ofcoder.com/8/");
         if ((SPUtils.get("key", "") + "").equals("")) {
             Bmob.initialize(this, Constans.APPLICATION_ID);
         } else {
@@ -89,10 +92,11 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
 
         checkStatus();//监听前后台状态
     }
+
     /**
-     * 配置sync
-     * */
-    public void configDavSync(){
+     * 配置坚果云sync
+     */
+    public void configDavSync() {
 //        SyncConfig config=new SyncConfig(this);
 //        config.setPassWord("https://dav.jianguoyun.com/dav/");
 //        config.setPassWord("ajd9gy2yt65ccazq");
@@ -119,54 +123,6 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         return SPUtils.get("key", "") + "";
     }
 
-
-    /**
-     * 显示Toast
-     *
-     * @param message
-     */
-    public static void showToast(CharSequence message) {
-
-        if (isShow && message != null && !MyApplication.isStrNull(message + ""))
-            if (mToast == null) {
-                mToast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText(message);
-            }
-        mToast.show();
-    }
-
-
-    /**
-     * 显示Snack
-     *
-     * @param view
-     * @param s
-     */
-    public static void showSnack(View view, int s, int color) {
-        Snackbar snackbar = Snackbar.make(view, s, Snackbar.LENGTH_SHORT);
-        View mView = snackbar.getView();
-        mView.setBackgroundColor(color);
-        snackbar.show();
-    }
-
-    /**
-     * 判断为空,可以empty替换??
-     *
-     * @param str
-     * @return
-     */
-    public static boolean isStrNull(String str) {
-        if (null == str) {
-            return true;
-        } else if ("".equals(str.trim())) {
-            return true;
-        } else if ("null".equals(str.trim())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     //检验是否存在本地用户，返回true/false
     public static boolean isSign() {
@@ -202,98 +158,6 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         return true;
     }
 
-    /**
-     * webview载入网页
-     *
-     * @param wb  控件
-     * @param str 地址
-     * @param bar 进度条
-     */
-    public static void loadUri(final WebView wb, int str, String url, final ProgressBar bar) {
-        wb.getSettings().setJavaScriptEnabled(true);//支持js
-        wb.setWebViewClient(new WebViewClient() {//屏蔽自动浏览器打开
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });
-        wb.getSettings().setUseWideViewPort(true);//自适应屏幕
-        wb.getSettings().setDomStorageEnabled(true);
-        wb.getSettings().setAllowFileAccess(true);
-        wb.getSettings().setAppCacheEnabled(true);
-        wb.getSettings().setSupportZoom(true); //支持缩放
-        wb.getSettings().setDefaultTextEncodingName("utf-8");//设置编码
-        wb.requestFocus();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            wb.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        }
-        //处理webview内部返回事件
-        wb.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                    //按返回键操作并且能回退网页
-                    if (i == KeyEvent.KEYCODE_BACK && wb.canGoBack()) {
-                        //后退
-                        wb.goBack();
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        });
-        wb.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress == 100) {
-                    bar.setVisibility(View.INVISIBLE);
-                } else {
-                    if (View.INVISIBLE == bar.getVisibility()) {
-                        bar.setVisibility(View.VISIBLE);
-                    }
-                    bar.setProgress(newProgress);
-                }
-                super.onProgressChanged(view, newProgress);
-            }
-        });
-        if (url == null) {
-            wb.loadUrl(getContext().getString(str));
-        } else {
-            wb.loadUrl(url);
-        }
-    }
-
-
-    /**
-     * 根据包名打开第三方应用
-     *
-     * @param context
-     * @param packageName
-     * @throws PackageManager.NameNotFoundException
-     */
-    public static void openAppByPackageName(Context context, String packageName) throws PackageManager.NameNotFoundException {
-        PackageInfo pi;
-        try {
-            pi = MyApplication.getContext().getPackageManager().getPackageInfo(packageName, 0);
-            Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
-            resolveIntent.setPackage(pi.packageName);
-            PackageManager pManager = MyApplication.getContext().getPackageManager();
-            List<ResolveInfo> apps = pManager.queryIntentActivities(resolveIntent, 0);
-            ResolveInfo ri = apps.iterator().next();
-            if (ri != null) {
-                packageName = ri.activityInfo.packageName;
-                String className = ri.activityInfo.name;
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);//重点是加这个
-                ComponentName cn = new ComponentName(packageName, className);
-                intent.setComponent(cn);
-                context.startActivity(intent);
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static String GetNetworkType() {
         String strNetworkType = "";
@@ -349,44 +213,15 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         return strNetworkType;
     }
 
+
     /**
-     * 获取版本号名称
+     * 加入QQ群
      *
      * @return
      */
-    public static String GetVersionName() {
-        PackageInfo pi = null;
-        try {
-            pi = MyApplication.getContext().getPackageManager().getPackageInfo(MyApplication.getContext().getPackageName(), 0);
-            String versionName = pi.versionName;
-            return versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    /**
-     * 获取版本号
-     *
-     * @return
-     */
-    public static int GetVersion() {
-        int localVersion = 0;
-        try {
-            PackageInfo packageInfo = MyApplication.getContext()
-                    .getPackageManager()
-                    .getPackageInfo(MyApplication.getContext().getPackageName(), 0);
-            localVersion = packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return localVersion;
-    }
-
-    public static boolean joinQQGroup(String key) {
+    public static boolean joinQQGroup() {
         Intent intent = new Intent();
-        intent.setData(Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D" + key));
+        intent.setData(Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D" + Constans.QQ_ID));
         // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         try {
             getContext().startActivity(intent);
@@ -397,6 +232,12 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         }
     }
 
+    /**
+     * 跳转酷安
+     *
+     * @param appPkg
+     * @param marketPkg
+     */
     public static void launchAppDetail(String appPkg, String marketPkg) {
         try {
             if (TextUtils.isEmpty(appPkg))
@@ -418,13 +259,6 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            //自杀-->自动关闭验证
-            //            AppManager.getAppManager().finishAllActivity();
-            //            //杀掉，这个应用程序的进程，释放 内存
-            //            int id = android.os.Process.myPid();
-            //            if (id != 0) {
-            //                android.os.Process.killProcess(id);
-            //            }
             first_check = 2;
             handler.postDelayed(this, 1000);
         }
@@ -489,8 +323,12 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         });
     }
 
+    /**
+     * 显示Toast
+     * @param error_pwd
+     */
     public static void showToast(int error_pwd) {
-        if (isShow && !MyApplication.isStrNull(error_pwd + ""))
+        if (isShow && !Utils.isStrNull(error_pwd + ""))
             if (mToast == null) {
                 mToast = Toast.makeText(getContext(), error_pwd, Toast.LENGTH_SHORT);
             } else {
@@ -499,87 +337,35 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         mToast.show();
     }
 
-    public static void loadImg(ImageView imageView, String imgUrl, boolean a) {
+    /**
+     * 显示Toast
+     *
+     * @param message
+     */
+    public static void showToast(CharSequence message) {
 
-        if (null == imageView || TextUtils.isEmpty(imgUrl)) {
-            return;
-        }
-
-        //设置图片圆角角度
-        RoundedCorners roundedCorners = new RoundedCorners(30);
-        //通过RequestOptions扩展功能
-        RequestOptions options = RequestOptions.bitmapTransform(roundedCorners).override(300, 300).circleCrop();
-        if (a) {
-            Glide.with(getContext())
-                    .load(imgUrl)
-                    .apply(options)
-                    .error(R.mipmap.ic_logo)
-                    .placeholder(R.mipmap.ic_logo)
-                    .into(imageView);
-        } else {
-            Glide.with(getContext())
-                    .load(imgUrl)
-//                .apply(options)
-                    .error(R.mipmap.ic_logo)
-                    .placeholder(R.mipmap.ic_logo)
-                    .into(imageView);
-        }
-
-    }
-
-    public static String get1(final String url) {
-        final StringBuilder sb = new StringBuilder();
-        FutureTask<String> task = new FutureTask<String>(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                BufferedReader br = null;
-                InputStreamReader isr = null;
-                URLConnection conn;
-                try {
-                    URL geturl = new URL(url);
-                    conn = geturl.openConnection();//创建连接
-                    conn.connect();//get连接
-                    isr = new InputStreamReader(conn.getInputStream());//输入流
-                    br = new BufferedReader(isr);
-                    String line = null;
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line);//获取输入流数据
-                    }
-                    System.out.println(sb.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {//执行流的关闭
-                    if (br != null) {
-                        try {
-                            if (br != null) {
-                                br.close();
-                            }
-                            if (isr != null) {
-                                isr.close();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                return sb.toString();
+        if (isShow && message != null && !Utils.isStrNull(message + ""))
+            if (mToast == null) {
+                mToast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
+            } else {
+                mToast.setText(message);
             }
-        });
-        new Thread(task).start();
-        String s = null;
-        try {
-            s = task.get();//异步获取返回值
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return s;
+        mToast.show();
     }
 
-    public static String getData() {
-        Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String dateNowStr = sdf.format(d);
 
-        return dateNowStr;
+    /**
+     * 显示Snack
+     *
+     * @param view
+     * @param s
+     */
+    public static void showSnack(View view, int s, int color) {
+        Snackbar snackbar = Snackbar.make(view, s, Snackbar.LENGTH_SHORT);
+        View mView = snackbar.getView();
+        mView.setBackgroundColor(color);
+        snackbar.show();
     }
+
+
 }

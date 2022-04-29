@@ -9,8 +9,10 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
+
 import android.text.ClipboardManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +29,8 @@ import cf.paradoxie.dizzypassword.AppManager;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.AddActivity;
-import cf.paradoxie.dizzypassword.db.AccountBean;
-import cf.paradoxie.dizzypassword.db.RxBean;
+import cf.paradoxie.dizzypassword.bean.AccountBean;
+import cf.paradoxie.dizzypassword.bean.RxBean;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.MyToast;
@@ -80,73 +82,56 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         ImageView iv_copy;
         LinearLayout ll_notice;
         private SweetAlertDialog pDialog = null;
-        //        List<AccountBean> ;
 
         public ColorItemViewHolder(View view) {
             super(view);
 
-
             mLayout = view.findViewById(R.id.frame_list_card_item);
             mContainerContent = view.findViewById(R.id.container_list_content);
-            ll_notice = (LinearLayout) view.findViewById(R.id.ll_notice);
-            mTextTitle = (TextView) view.findViewById(R.id.text_list_card_title);
-            mNum = (TextView) view.findViewById(R.id.text_list_card_num);
-            mTime = (TextView) view.findViewById(R.id.text_list_card_time);
-            mTime_up = (TextView) view.findViewById(R.id.text_list_card_up);
-            mAccount = (SingleLineTextView) view.findViewById(R.id.tv_account);
-            mPassword = (SingleLineTextView) view.findViewById(R.id.tv_password);
-            mPwdvisible = (TextView) view.findViewById(R.id.tv_password_visible);
-            mNote = (TextView) view.findViewById(R.id.tv_note);
-            mWeb = (TextView) view.findViewById(R.id.tv_web);
-            mChange = (ImageView) view.findViewById(R.id.iv_change);
-            mDelete = (ImageView) view.findViewById(R.id.iv_delete);
-            iv_copy = (ImageView) view.findViewById(R.id.iv_copy);
+            ll_notice = view.findViewById(R.id.ll_notice);
+            mTextTitle = view.findViewById(R.id.text_list_card_title);
+            mNum = view.findViewById(R.id.text_list_card_num);
+            mTime = view.findViewById(R.id.text_list_card_time);
+            mTime_up = view.findViewById(R.id.text_list_card_up);
+            mAccount = view.findViewById(R.id.tv_account);
+            mPassword = view.findViewById(R.id.tv_password);
+            mPwdvisible = view.findViewById(R.id.tv_password_visible);
+            mNote = view.findViewById(R.id.tv_note);
+            mWeb = view.findViewById(R.id.tv_web);
+            mChange = view.findViewById(R.id.iv_change);
+            mDelete = view.findViewById(R.id.iv_delete);
+            iv_copy = view.findViewById(R.id.iv_copy);
 
 
-            mTag1 = (TextView) view.findViewById(R.id.text_list_card_tag1);
-            mTag2 = (TextView) view.findViewById(R.id.text_list_card_tag2);
-            mTag3 = (TextView) view.findViewById(R.id.text_list_card_tag3);
-            mTag4 = (TextView) view.findViewById(R.id.text_list_card_tag4);
-            mTag5 = (TextView) view.findViewById(R.id.text_list_card_tag5);
+            mTag1 = view.findViewById(R.id.text_list_card_tag1);
+            mTag2 = view.findViewById(R.id.text_list_card_tag2);
+            mTag3 = view.findViewById(R.id.text_list_card_tag3);
+            mTag4 = view.findViewById(R.id.text_list_card_tag4);
+            mTag5 = view.findViewById(R.id.text_list_card_tag5);
             rxEvent = new RxBean();
             rxEvent_1 = new RxBean();
             rxEvent_2 = new RxBean();
 
 
-            mTag1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    rxEvent.setMessage(mTag1.getText().toString().trim());
-                    RxBus.getInstance().post(rxEvent);
-                }
+            mTag1.setOnClickListener(view1 -> {
+                rxEvent.setMessage(mTag1.getText().toString().trim());
+                RxBus.getInstance().post(rxEvent);
             });
-            mTag2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    rxEvent.setMessage(mTag2.getText().toString().trim());
-                    RxBus.getInstance().post(rxEvent);
-                }
+            mTag2.setOnClickListener(view12 -> {
+                rxEvent.setMessage(mTag2.getText().toString().trim());
+                RxBus.getInstance().post(rxEvent);
             });
-            mTag3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    rxEvent.setMessage(mTag3.getText().toString().trim());
-                    RxBus.getInstance().post(rxEvent);
-                }
+            mTag3.setOnClickListener(view13 -> {
+                rxEvent.setMessage(mTag3.getText().toString().trim());
+                RxBus.getInstance().post(rxEvent);
             });
-            mTag4.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    rxEvent.setMessage(mTag4.getText().toString().trim());
-                    RxBus.getInstance().post(rxEvent);
-                }
+            mTag4.setOnClickListener(view14 -> {
+                rxEvent.setMessage(mTag4.getText().toString().trim());
+                RxBus.getInstance().post(rxEvent);
             });
-            mTag5.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    rxEvent.setMessage(mTag5.getText().toString().trim());
-                    RxBus.getInstance().post(rxEvent);
-                }
+            mTag5.setOnClickListener(view15 -> {
+                rxEvent.setMessage(mTag5.getText().toString().trim());
+                RxBus.getInstance().post(rxEvent);
             });
 
         }
@@ -162,12 +147,12 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             final String id = mBeanList.get(position).getObjectId();
             final String time = mBeanList.get(position).getCreatedAt();
             final String time_up = mBeanList.get(position).getUpdatedAt();
-            final String name = DesUtil.decrypt(mBeanList.get(position).getName().toString(), SPUtils.getKey());
-            final String account = DesUtil.decrypt(mBeanList.get(position).getAccount().toString(), SPUtils.getKey());
-            final String password = DesUtil.decrypt(mBeanList.get(position).getPassword().toString(), SPUtils.getKey());
-            String note = mBeanList.get(position).getNote().toString();
+            final String name = DesUtil.decrypt(mBeanList.get(position).getName(), SPUtils.getKey());
+            final String account = DesUtil.decrypt(mBeanList.get(position).getAccount(), SPUtils.getKey());
+            final String password = DesUtil.decrypt(mBeanList.get(position).getPassword(), SPUtils.getKey());
+            String note = mBeanList.get(position).getNote();
             if (note != null) {
-                note = DesUtil.decrypt(mBeanList.get(position).getNote().toString(), SPUtils.getKey());
+                note = DesUtil.decrypt(mBeanList.get(position).getNote(), SPUtils.getKey());
             }
             final List<String> tag = mBeanList.get(position).getTag();
 
@@ -192,18 +177,15 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             if (mBeanList.get(position).getWebsite() == null) {
                 mWeb.setText("");
             } else {
-                website = DesUtil.decrypt(mBeanList.get(position).getWebsite().toString(), SPUtils.getKey());
+                website = DesUtil.decrypt(mBeanList.get(position).getWebsite(), SPUtils.getKey());
                 mWeb.setText(website);
-                mWeb.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent();
-                        intent.setAction("android.intent.action.VIEW");
-                        Uri content_url = Uri.parse("http://" + mWeb.getText().toString());
-                        intent.setData(content_url);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
-                        MyApplication.getContext().startActivity(intent);
-                    }
+                mWeb.setOnClickListener(view -> {
+                    Intent intent = new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri content_url = Uri.parse("http://" + mWeb.getText().toString());
+                    intent.setData(content_url);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
+                    MyApplication.getContext().startActivity(intent);
                 });
             }
 
@@ -226,85 +208,62 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 }
             });
 
-            mAccount.setOnLongClickListener(new View.OnLongClickListener() {
-                @SuppressLint("ResourceAsColor")
-                @Override
-                public boolean onLongClick(View view) {
-                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                    cm.setText(mAccount.getText());
-                    MyApplication.showSnack(view, R.string.copy_account, ThemeUtils.getPrimaryColor(mContext));
-                    return false;
-                }
+            mAccount.setOnLongClickListener(view -> {
+                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(mAccount.getText());
+                MyApplication.showSnack(view, R.string.copy_account, ThemeUtils.getPrimaryColor(mContext));
+                return false;
             });
-            mPassword.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                    cm.setText(mPassword.getText());
-                    MyApplication.showSnack(view, R.string.copy_password, ThemeUtils.getPrimaryColor(mContext));
-                    return false;
-                }
+            mPassword.setOnLongClickListener(view -> {
+                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(mPassword.getText());
+                MyApplication.showSnack(view, R.string.copy_password, ThemeUtils.getPrimaryColor(mContext));
+                return false;
             });
 
 
-            mNote.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                    cm.setText(mNote.getText());
-                    MyApplication.showSnack(view, R.string.copy_note, ThemeUtils.getPrimaryColor(mContext));
-                    return false;
-                }
+            mNote.setOnLongClickListener(view -> {
+                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(mNote.getText());
+                MyApplication.showSnack(view, R.string.copy_note, ThemeUtils.getPrimaryColor(mContext));
+                return false;
             });
 
-            mWeb.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                    cm.setText(mWeb.getText());
-                    MyApplication.showSnack(view, R.string.copy_web, ThemeUtils.getPrimaryColor(mContext));
-                    return false;
-                }
+            mWeb.setOnLongClickListener(view -> {
+                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(mWeb.getText());
+                MyApplication.showSnack(view, R.string.copy_web, ThemeUtils.getPrimaryColor(mContext));
+                return false;
             });
 
             final String finalNote = note;
             final String finalWeb = mWeb.getText().toString();
 
-            mChange.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (MyApplication.first_check == 0) {
-                        MyToast.show(mContext, "请先点击右下角解锁操作权限", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
-                    } else {
-                        changeDate(name, account, password, finalWeb, finalNote, tag, id);
-                    }
+            mChange.setOnClickListener(view -> {
+                if (MyApplication.first_check == 0) {
+                    MyToast.show(mContext, "请先点击右下角解锁操作权限", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                } else {
+                    changeDate(name, account, password, finalWeb, finalNote, tag, id);
                 }
             });
 
-            mDelete.setOnClickListener(new View.OnClickListener() {
-                @RequiresApi(api = Build.VERSION_CODES.M)
-                @Override
-                public void onClick(View view) {
-                    if (MyApplication.first_check == 0) {
-                        MyToast.show(mContext, "请先点击右下角解锁操作权限"
-                                , ThemeUtils.getPrimaryColor(mContext));
+            mDelete.setOnClickListener(view -> {
+                if (MyApplication.first_check == 0) {
+                    MyToast.show(mContext, "请先点击右下角解锁操作权限"
+                            , ThemeUtils.getPrimaryColor(mContext));
 
-                    } else {
-                        showDelete(id, account, password);
-                    }
+                } else {
+                    showDelete(id, account, password);
                 }
             });
 
-            iv_copy.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mAccount.getText().length() > 0 || mPassword.getText().length() > 0) {
-                        ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                        cm.setText(mAccount.getText() + "\n" + mPassword.getText());
-                        MyApplication.showSnack(view, R.string.copy, ThemeUtils.getPrimaryColor(mContext));
-                    } else {
-                        MyApplication.showSnack(view, R.string.nothing_copy, ThemeUtils.getPrimaryColor(mContext));
-                    }
+            iv_copy.setOnClickListener(view -> {
+                if (mAccount.getText().length() > 0 || mPassword.getText().length() > 0) {
+                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm.setText(mAccount.getText() + "\n" + mPassword.getText());
+                    MyApplication.showSnack(view, R.string.copy, ThemeUtils.getPrimaryColor(mContext));
+                } else {
+                    MyApplication.showSnack(view, R.string.nothing_copy, ThemeUtils.getPrimaryColor(mContext));
                 }
             });
 
@@ -365,7 +324,6 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
             MyApplication.getContext().startActivity(intent.setClass(MyApplication.getContext(), AddActivity.class));
-            //            AppManager.getAppManager().currentActivity().finish();
         }
 
         private void showDelete(final String id, String account, String password) {
@@ -379,20 +337,12 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                             "帐号:" + account + "\n密码:" + password +
                                     "\n\n您确定要删除么😟")
                     .setConfirmText("确定")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            deleteDate(id);
-                            sDialog.cancel();
-                        }
+                    .setConfirmClickListener(sDialog -> {
+                        deleteDate(id);
+                        sDialog.cancel();
                     })
                     .setCancelText("不删了")
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            sDialog.cancel();
-                        }
-                    })
+                    .setCancelClickListener(sDialog -> sDialog.cancel())
                     .show();
 
         }

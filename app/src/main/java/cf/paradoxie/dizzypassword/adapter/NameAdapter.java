@@ -5,14 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import java.util.List;
 
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.db.SortBean;
+import cf.paradoxie.dizzypassword.bean.SortBean;
 
 public class NameAdapter extends BaseAdapter implements SectionIndexer {
     private Context context;
@@ -84,7 +83,7 @@ public class NameAdapter extends BaseAdapter implements SectionIndexer {
 
 
         public ViewHolder(View view) {
-            tv_name = (TextView) view.findViewById(R.id.tv_name);
+            tv_name = view.findViewById(R.id.tv_name);
 
         }
 

@@ -23,6 +23,7 @@ import cf.paradoxie.dizzypassword.Constans;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
+import cf.paradoxie.dizzypassword.utils.Utils;
 
 public class CrashLogActivity extends BaseActivity {
     private static final String EXTRA_E = "e";
@@ -44,18 +45,15 @@ public class CrashLogActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crash_log);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar =  findViewById(R.id.toolbar);
         toolbar.setTitle("崩溃日志");
         setSupportActionBar(toolbar);
-        tvInfo = (TextView) findViewById(R.id.tv_info);
-        tvQQ = (TextView) findViewById(R.id.QQ);
+        tvInfo =   findViewById(R.id.tv_info);
+        tvQQ =   findViewById(R.id.QQ);
 
-        tvQQ.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                MyApplication.joinQQGroup(Constans.QQ_ID);
-                return false;
-            }
+        tvQQ.setOnLongClickListener(view -> {
+            MyApplication.joinQQGroup();
+            return false;
         });
 
         Throwable e = (Throwable) getIntent().getSerializableExtra(EXTRA_E);
@@ -70,7 +68,7 @@ public class CrashLogActivity extends BaseActivity {
         sb.append("网络环境：");
         sb.append(MyApplication.GetNetworkType()).append("\n");
         sb.append("软件版本：");
-        sb.append(MyApplication.GetVersionName()).append("\n");
+        sb.append(Utils.GetVersionName()).append("\n");
         sb.append("异常时间：");
         sb.append(dateFormat.format(new Date())).append("\n");
         sb.append("异常类型：");

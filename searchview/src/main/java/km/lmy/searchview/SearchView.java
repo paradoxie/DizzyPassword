@@ -3,6 +3,7 @@ package km.lmy.searchview;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IntDef;
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -498,7 +500,6 @@ public class SearchView extends LinearLayout {
      * @param list 历史纪录列表
      */
     public void setNewHistoryList(List<String> list) {
-        //        historyList = list;
         adapter.setNewData(list);
         switchCleanHistoryDisplay();
     }

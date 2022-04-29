@@ -13,6 +13,7 @@ import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
+import cf.paradoxie.dizzypassword.utils.Utils;
 
 /**
  * Created by xiehehe on 2017/10/28.
@@ -28,16 +29,11 @@ public class EatRiceActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eatrice);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("新鲜玩意");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
 
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
@@ -48,10 +44,10 @@ public class EatRiceActivity extends BaseActivity {
     }
 
     private void init() {
-        final ProgressBar bar = (ProgressBar) findViewById(R.id.myProgressBar);
-        wb = (WebView) findViewById(R.id.web);
+        final ProgressBar bar =  findViewById(R.id.myProgressBar);
+        wb = findViewById(R.id.web);
         if (!url.equals("")) {
-            MyApplication.loadUri(wb, 0, url, bar);
+            Utils.loadUri(wb, 0, url, bar);
         } else {
             MyToast.show(EatRiceActivity.this, "链接载入发生了一点问题", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
 

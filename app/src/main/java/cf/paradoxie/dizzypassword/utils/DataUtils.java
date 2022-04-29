@@ -21,13 +21,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import cf.paradoxie.dizzypassword.db.AccountBean;
+import cf.paradoxie.dizzypassword.bean.AccountBean;
 
 /**
  * Created by xiehehe on 2017/12/13.
@@ -48,9 +47,7 @@ public class DataUtils {
      * @param s 传入的tag数组
      * @return map
      */
-    public static ArrayList<Map.Entry<String, Integer>> getTagList(List<Map.Entry<String, Integer>> mappingList, List s) {
-        sMappingList = mappingList;
-        //        Map<String, Integer> tagMap = new HashMap<>();
+    public static ArrayList<Map.Entry<String, Integer>> getTagList( List s) {
         Map map = new HashMap();
         for (Object temp : s) {
             Integer count = (Integer) map.get(temp);
@@ -59,11 +56,7 @@ public class DataUtils {
 
         sMappingList = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
         //通过比较器实现比较排序
-        Collections.sort(sMappingList, new Comparator<Map.Entry<String, Integer>>() {
-            public int compare(Map.Entry<String, Integer> mapping1, Map.Entry<String, Integer> mapping2) {
-                return mapping2.getValue().compareTo(mapping1.getValue());
-            }
-        });
+        Collections.sort(sMappingList, (mapping1, mapping2) -> mapping2.getValue().compareTo(mapping1.getValue()));
         return (ArrayList<Map.Entry<String, Integer>>) sMappingList;
     }
 
@@ -76,8 +69,7 @@ public class DataUtils {
      * @param s 传入的tag数组
      * @return map
      */
-    public static ArrayList<Map.Entry<String, Integer>> getTagListByName(List<Map.Entry<String, Integer>> mappingList, List s) {
-        sMappingListName = mappingList;
+    public static ArrayList<Map.Entry<String, Integer>> getTagListByName( List s) {
         Map map = new HashMap();
         for (Object temp : s) {
             Integer count = (Integer) map.get(temp);
@@ -215,7 +207,7 @@ public class DataUtils {
         //名称，帐号，密码，标签，网址，备注
         List<AccountBean> mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
         File file = new File(backFilePath);
-        boolean isSucess = false;
+        boolean isSuccess = false;
         FileOutputStream out = null;
         OutputStreamWriter osw = null;
         BufferedWriter bw = null;
@@ -235,9 +227,9 @@ public class DataUtils {
                             DesUtil.decrypt(a.getNote(), key)).append("\r\n");
                 }
             }
-            isSucess = true;
+            isSuccess = true;
         } catch (Exception e) {
-            isSucess = false;
+            isSuccess = false;
         } finally {
             if (bw != null) {
                 try {
@@ -264,7 +256,7 @@ public class DataUtils {
                 }
             }
         }
-        return isSucess;
+        return isSuccess;
     }
 
 

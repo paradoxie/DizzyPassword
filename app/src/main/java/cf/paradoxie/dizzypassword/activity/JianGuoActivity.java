@@ -1,15 +1,13 @@
 package cf.paradoxie.dizzypassword.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,10 +15,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.paul623.wdsyncer.SyncConfig;
 import com.paul623.wdsyncer.SyncManager;
 import com.paul623.wdsyncer.api.OnListFileListener;
@@ -28,103 +22,113 @@ import com.paul623.wdsyncer.api.OnSyncResultListener;
 import com.paul623.wdsyncer.model.DavData;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.db.AccountBean;
-import cf.paradoxie.dizzypassword.db.BackupBean;
+import cf.paradoxie.dizzypassword.bean.AccountBean;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
-import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.view.DialogView;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
+@SuppressLint("HandlerLeak")
 public class JianGuoActivity extends BaseActivity {
-    private TextView tv_local_to_cloud, tv_cloud_to_local;
+    private TextView tv_local, tv_local_to_cloud, tv_cloud, tv_cloud_to_local, tv_time;
     private DialogView mDialogView;
-    private TextView tv_path;
+    private TextView tv_cloud_path;
+    private SyncManager syncManager;
+    private final Handler uiHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    tv_cloud_path.setText("云端读取成功：\n" + sb.toString());
+                    break;
+
+                case 2:
+                    String time = (String) msg.obj;
+                    SPUtils.put("asyncTime", time);
+                    tv_time.setText("上次同步时间：\n" + time);
+                    break;
+            }
+        }
+    };
+    private StringBuffer sb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jianguo);
         configDavSync();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("坚果云同步");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());
-
-        toolbar.setOnMenuItemClickListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.action_csv) {
-                checkActivity();
-                mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
-                    @Override
-                    public void posClickListener(String value) {
-                        //校验密码
-                        requestAllPower();
-                        if (value.equals(SPUtils.get("password", "") + "")) {
-
-                            if (DataUtils.exportCsv()) {
-                                MyApplication.showToast("成功导出至根目录");
-                            } else {
-                                MyApplication.showToast("导出失败,请检查应用是否具体权限读写手机储存");
-                            }
-                            mDialogView.dismiss();
-                        } else {
-                            MyApplication.showToast(R.string.error_pwd);
-                        }
-                    }
-
-                    @Override
-                    public void negCliclListener(String value) {
-                        //取消查看
-                    }
-                });
-            }
-            return false;
-        });
+        syncManager = new SyncManager(this);
 
         ThemeUtils.initStatusBarColor(JianGuoActivity.this, ThemeUtils.getPrimaryDarkColor(JianGuoActivity.this));
 
-        tv_local_to_cloud = (TextView) findViewById(R.id.tv_local_to_cloud);
-        tv_cloud_to_local = (TextView) findViewById(R.id.tv_cloud_to_local);
+        tv_local_to_cloud = findViewById(R.id.tv_local_to_cloud);
         tv_local_to_cloud.setOnClickListener(v -> {
             upLoad();
-//                checkActivity();
-//                mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
-//                    @Override
-//                    public void posClickListener(String value) {
-//                        //校验密码
-//                        if (value.equals(SPUtils.get("password", "") + "")) {
-//                            //生成明文
-//
-//                            mDialogView.dismiss();
-//                        } else {
-//                            MyApplication.showToast(R.string.error_pwd);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void negCliclListener(String value) {
-//                        //取消查看
-//                    }
-//                });
+        });
+        tv_local = findViewById(R.id.tv_local);
+        tv_local.setOnClickListener(v -> {
+            outputFile();
         });
 
-        tv_cloud_to_local.setOnClickListener(view -> checkDir());
+        tv_time = findViewById(R.id.tv_time);
+        tv_time.setText("上次同步时间：\n" + SPUtils.get("asyncTime", " "));
+        tv_cloud = findViewById(R.id.tv_cloud);
+        tv_cloud.setOnClickListener(view -> checkDir());
+        tv_cloud_to_local = findViewById(R.id.tv_cloud_to_local);
+        tv_cloud_to_local.setOnClickListener(v -> {
+            if (tv_cloud_path.getText().toString().contains("dizzyPassword_security")) {
+                downloadFile(syncManager);
+            }
+        });
 
+        tv_cloud_path = findViewById(R.id.tv_cloud_path);
 
-        tv_path = findViewById(R.id.tv_path);
-        tv_path.setText(fileIsExists(DataUtils.backFilePath_security) ? "加密文件存在" : "加密文件不存在");
+    }
+
+    private void outputFile() {
+        checkActivity();
+        mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+            @Override
+            public void posClickListener(String value) {
+                //校验密码
+                requestAllPower();
+                if (value.equals(SPUtils.get("password", "") + "")) {
+                    if (DataUtils.exportCsvSecurity()) {
+                        MyApplication.showToast("成功导出至根目录");
+                    } else {
+                        MyApplication.showToast("导出失败,请检查应用是否具体权限读写手机储存");
+                    }
+                    mDialogView.dismiss();
+                } else {
+                    MyApplication.showToast(R.string.error_pwd);
+                }
+            }
+
+            @Override
+            public void negCliclListener(String value) {
+                //取消查看
+            }
+        });
     }
 
     /**
@@ -149,16 +153,23 @@ public class JianGuoActivity extends BaseActivity {
                 public void onSuccess(String result) {
                     Looper.prepare();
                     Looper.loop();
+                    MyApplication.showToast("同步成功");
+                    String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                    Message msg = new Message();
+                    msg.what = 2;
+                    msg.obj = time;
+                    uiHandler.sendMessage(msg);
                 }
 
                 @Override
                 public void onError(String errorMsg) {
                     Looper.prepare();
                     Looper.loop();
+                    MyApplication.showToast("好像没有任何更改...");
                 }
             });
         } else {
-            MyApplication.showToast("导出失败,请检查应用是否具体权限读写手机储存");
+            MyApplication.showToast("上传失败,请检查应用是否具体权限读写手机储存");
         }
 
 
@@ -166,19 +177,19 @@ public class JianGuoActivity extends BaseActivity {
 
     public void checkDir() {
         Toast.makeText(this, "读取中,请稍后", Toast.LENGTH_SHORT).show();
-        SyncManager syncManager = new SyncManager(this);
 
         syncManager.listAllFile("去特么的密码", new OnListFileListener() {
             @Override
             public void listAll(List<DavData> davResourceList) {
-                StringBuffer sb = new StringBuffer();
+                sb = new StringBuffer();
                 for (DavData i : davResourceList) {
                     sb.append(i.getDisplayName() + "\n");
                 }
                 Log.e("getActivity", sb.toString());
-                if (sb.toString().contains("dizzyPassword_security")) {
-                    downloadFile(syncManager);
-                }
+//                tv_path.setText(sb.toString());
+                Message msg = new Message();
+                msg.what = 1;
+                uiHandler.sendMessage(msg);
             }
 
             @Override
@@ -200,7 +211,11 @@ public class JianGuoActivity extends BaseActivity {
             public void onSuccess(String result) {
                 Log.e("这是下载", result);
                 //result为文件路径，解析csv,存入sp，然后重置主界面内容
-
+                List<AccountBean> accountBeans = readCSV(result);
+                for (AccountBean bean : accountBeans) {
+                    Log.e("这是读取出来的", bean.toString());
+                }
+                MyApplication.showToast("恢复完成");
             }
 
             @Override
@@ -255,13 +270,52 @@ public class JianGuoActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-
         finish();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_backup, menu);
-        return true;
+    private List<AccountBean> readCSV(String path) {
+        List<AccountBean> accountBeans = new ArrayList<>();
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        FileInputStream fiStream;
+        Scanner scanner;
+        try {
+            fiStream = new FileInputStream(file);
+            scanner = new Scanner(fiStream, "UTF-8");
+            scanner.nextLine();//读下一行,把表头越过。不注释的话第一行数据就越过去了
+            int a = 0;
+            while (scanner.hasNextLine()) {
+                String sourceString = scanner.nextLine();
+//                Log.e("source-->", sourceString);
+                Pattern pattern = Pattern.compile("[^,]*,");
+                Matcher matcher = pattern.matcher(sourceString);
+                String[] lines = new String[8];
+                int i = 0;
+                while (matcher.find()) {
+                    String find = matcher.group().replace(",", "");
+                    lines[i] = find.trim();
+//                    Log.e("TAG", "find=" + find + ",i=" + i + ",lines=" + lines[i]);
+                    i++;
+                }
+                AccountBean bean = new AccountBean();
+                bean.setName(lines[0]);
+                bean.setAccount(lines[1]);
+                bean.setPassword(lines[2]);
+                bean.setTag(Arrays.asList(lines[3].split("-")));
+                bean.setWebsite(lines[4]);
+                bean.setNote(lines[5]);
+                accountBeans.add(bean);
+                a++;
+            }
+        } catch (NumberFormatException e) {
+            Log.e("TAG", "NumberFormatException");
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            Log.e("TAG", "文件不存在");
+            e.printStackTrace();
+        }
+        return accountBeans;
     }
 }

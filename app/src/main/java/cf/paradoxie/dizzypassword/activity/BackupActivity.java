@@ -24,8 +24,8 @@ import java.util.List;
 
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.db.AccountBean;
-import cf.paradoxie.dizzypassword.db.BackupBean;
+import cf.paradoxie.dizzypassword.bean.AccountBean;
+import cf.paradoxie.dizzypassword.bean.BackupBean;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
@@ -47,69 +47,29 @@ public class BackupActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_backup);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar =  findViewById(R.id.toolbar);
         toolbar.setTitle("导出");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.action_csv) {
-                    checkActivity();
-                    mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
-                        @Override
-                        public void posClickListener(String value) {
-                            //校验密码
-                            requestAllPower();
-                            if (value.equals(SPUtils.get("password", "") + "")) {
-
-                                if (DataUtils.exportCsv()) {
-                                    MyApplication.showToast("成功导出至根目录");
-                                } else {
-                                    MyApplication.showToast("导出失败,请检查应用是否具体权限读写手机储存");
-                                }
-                                mDialogView.dismiss();
-                            } else {
-                                MyApplication.showToast(R.string.error_pwd);
-                            }
-                        }
-
-                        @Override
-                        public void negCliclListener(String value) {
-                            //取消查看
-                        }
-                    });
-                }
-                return false;
-            }
-        });
-
-        ThemeUtils.initStatusBarColor(BackupActivity.this, ThemeUtils.getPrimaryDarkColor(BackupActivity.this));
-
-        tv_backup = (TextView) findViewById(R.id.tv_backup);
-        tv_back = (TextView) findViewById(R.id.tv_back);
-        tv_backup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        toolbar.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.action_csv) {
                 checkActivity();
                 mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
                     @Override
                     public void posClickListener(String value) {
                         //校验密码
+                        requestAllPower();
                         if (value.equals(SPUtils.get("password", "") + "")) {
-                            //生成明文
-                            String str = getAllData();
-                            editText.setText(str);
-                            hideInputWindow();
+
+                            if (DataUtils.exportCsv()) {
+                                MyApplication.showToast("成功导出至根目录");
+                            } else {
+                                MyApplication.showToast("导出失败,请检查应用是否具体权限读写手机储存");
+                            }
                             mDialogView.dismiss();
                         } else {
                             MyApplication.showToast(R.string.error_pwd);
@@ -122,43 +82,69 @@ public class BackupActivity extends BaseActivity {
                     }
                 });
             }
+            return false;
         });
-        editText = (EditText) findViewById(R.id.et_info);
 
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        ThemeUtils.initStatusBarColor(BackupActivity.this, ThemeUtils.getPrimaryDarkColor(BackupActivity.this));
 
-                if (!MyApplication.isSign()) {
-                    MyApplication.showToast("没有登录喔");
-                    return;
+        tv_backup =   findViewById(R.id.tv_backup);
+        tv_back =   findViewById(R.id.tv_back);
+        tv_backup.setOnClickListener(v -> {
+            checkActivity();
+            mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+                @Override
+                public void posClickListener(String value) {
+                    //校验密码
+                    if (value.equals(SPUtils.get("password", "") + "")) {
+                        //生成明文
+                        String str = getAllData();
+                        editText.setText(str);
+                        hideInputWindow();
+                        mDialogView.dismiss();
+                    } else {
+                        MyApplication.showToast(R.string.error_pwd);
+                    }
                 }
 
-                if (MyApplication.isNetworkAvailable(BackupActivity.this)) {
-                    MyApplication.showToast("网络状态好像不太行喔");
-                    return;
+                @Override
+                public void negCliclListener(String value) {
+                    //取消查看
                 }
+            });
+        });
+        editText =   findViewById(R.id.et_info);
 
-                final String str = editText.getText().toString().trim();
-                if (str.equals("")) {
-                    MyApplication.showToast("文本框内没有内容喔");
-                    return;
-                }
-                new SweetAlertDialog(BackupActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("导入数据")
-                        .setContentText("在此之前请仔细查验数据格式")
-                        .setConfirmText("导入")
-                        .setCancelText("返回")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                editText.setText("\n");
-                                addAccount(getList(str));
-                                sDialog.cancel();
-                            }
-                        })
-                        .show();
+        tv_back.setOnClickListener(view -> {
+
+            if (!MyApplication.isSign()) {
+                MyApplication.showToast("没有登录喔");
+                return;
             }
+
+            if (MyApplication.isNetworkAvailable(BackupActivity.this)) {
+                MyApplication.showToast("网络状态好像不太行喔");
+                return;
+            }
+
+            final String str = editText.getText().toString().trim();
+            if (str.equals("")) {
+                MyApplication.showToast("文本框内没有内容喔");
+                return;
+            }
+            new SweetAlertDialog(BackupActivity.this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("导入数据")
+                    .setContentText("在此之前请仔细查验数据格式")
+                    .setConfirmText("导入")
+                    .setCancelText("返回")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            editText.setText("\n");
+                            addAccount(getList(str));
+                            sDialog.cancel();
+                        }
+                    })
+                    .show();
         });
 
     }

@@ -105,6 +105,7 @@
                 android:id="@+id/ss2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:tint="?colorAccent"/>
 
             <TextView
@@ -126,6 +127,7 @@
                 android:id="@+id/ss3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:tint="?colorAccent"/>
 
             <TextView
