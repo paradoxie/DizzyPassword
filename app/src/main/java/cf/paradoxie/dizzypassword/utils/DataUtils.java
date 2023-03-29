@@ -1,6 +1,10 @@
 package cf.paradoxie.dizzypassword.utils;
 
+import android.app.Activity;
 import android.os.Environment;
+import android.os.Handler;
+import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
@@ -26,7 +30,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import cf.paradoxie.dizzypassword.activity.MainActivity;
+import cf.paradoxie.dizzypassword.adapter.NameAdapter;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
+import cf.paradoxie.dizzypassword.data.DataDeal;
+import km.lmy.searchview.SearchView;
 
 /**
  * Created by xiehehe on 2017/12/13.
@@ -47,7 +55,7 @@ public class DataUtils {
      * @param s 传入的tag数组
      * @return map
      */
-    public static ArrayList<Map.Entry<String, Integer>> getTagList( List s) {
+    public static ArrayList<Map.Entry<String, Integer>> getTagList(List s) {
         Map map = new HashMap();
         for (Object temp : s) {
             Integer count = (Integer) map.get(temp);
@@ -69,7 +77,7 @@ public class DataUtils {
      * @param s 传入的tag数组
      * @return map
      */
-    public static ArrayList<Map.Entry<String, Integer>> getTagListByName( List s) {
+    public static ArrayList<Map.Entry<String, Integer>> getTagListByName(List s) {
         Map map = new HashMap();
         for (Object temp : s) {
             Integer count = (Integer) map.get(temp);
@@ -107,6 +115,7 @@ public class DataUtils {
 
         return (ArrayList<Map.Entry<String, Integer>>) sMappingListName;
     }
+
 
     /**
      * 根据数组里面首字母排序
@@ -215,7 +224,7 @@ public class DataUtils {
             out = new FileOutputStream(file);
             osw = new OutputStreamWriter(out);
             bw = new BufferedWriter(osw);
-            bw.append("名称,帐号,密码,标签,网址,备注\r\n");
+            bw.append("名称,帐号,密码,标签,网址,备注,创建日期,修改日期\r\n");
             if (mAccountBeans != null && !mAccountBeans.isEmpty()) {
                 String key = SPUtils.getKey();
                 for (AccountBean a : mAccountBeans) {
@@ -224,7 +233,9 @@ public class DataUtils {
                             DesUtil.decrypt(a.getPassword(), key) + "," +
                             transTag(a.getTag()) + "," +
                             DesUtil.decrypt(a.getWebsite(), key) + "," +
-                            DesUtil.decrypt(a.getNote(), key)).append("\r\n");
+                            DesUtil.decrypt(a.getNote(), key) + "," +
+                            a.getUpdatedAt() + "," +
+                            a.getUpdatedAt()).append("\r\n");
                 }
             }
             isSuccess = true;
@@ -278,15 +289,24 @@ public class DataUtils {
             out = new FileOutputStream(file);
             osw = new OutputStreamWriter(out);
             bw = new BufferedWriter(osw);
-            bw.append("名称,帐号,密码,标签,网址,备注\r\n");
+            bw.append("id,名称,帐号,密码,标签,网址,备注,创建日期,修改日期\r\n");
             if (mAccountBeans != null && !mAccountBeans.isEmpty()) {
                 for (AccountBean a : mAccountBeans) {
-                    bw.append(a.getName() + "," +
+                    String id;
+                    if (a.getObjectId() == null) {
+                        id = a.getId();
+                    } else {
+                        id = a.getObjectId();
+                    }
+                    bw.append(id + "," +
+                            a.getName() + "," +
                             a.getAccount() + "," +
                             a.getPassword() + "," +
                             transTag(a.getTag()) + "," +
                             a.getWebsite() + "," +
-                            a.getNote()).append("\r\n");
+                            a.getNote() + "," +
+                            a.getCreatedAt() + "," +
+                            a.getUpdatedAt()).append("\r\n");
                 }
             }
             isSucess = true;
@@ -340,6 +360,9 @@ public class DataUtils {
      * @return
      */
     public static boolean shouldChange(String updated) {
+        if (updated == null) {
+            return false;
+        }
         long currentTime = Calendar.getInstance().getTimeInMillis();
         long updateTime = 0;
         try {

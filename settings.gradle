@@ -1,1 +1,8 @@
+
 include ':app', ':searchview'
+include ':FingerPrinter'
+include ':cardstack'
+include ':wdsyncer'
+
+
+include ':bubbleseekbar'

@@ -1,7 +1,6 @@
 package cf.paradoxie.dizzypassword.activity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,11 +16,15 @@ import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.util.Log;
 
-import cf.paradoxie.dizzypassword.AppManager;
-import cf.paradoxie.dizzypassword.Constans;
-import cf.paradoxie.dizzypassword.MyApplication;
+import cf.paradoxie.dizzypassword.base.AppManager;
+import cf.paradoxie.dizzypassword.base.Constans;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.bean.AppConfig;
 import cf.paradoxie.dizzypassword.bean.BaseConfig;
+import cf.paradoxie.dizzypassword.data.DataDeal;
+import cf.paradoxie.dizzypassword.http.HttpListener;
+import cf.paradoxie.dizzypassword.http.HttpUtils;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
@@ -32,7 +35,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static cf.paradoxie.dizzypassword.MyApplication.launchAppDetail;
+import static cf.paradoxie.dizzypassword.base.MyApplication.launchAppDetail;
 
 @SuppressLint("ValidFragment")
 public class SettingPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
@@ -137,18 +140,7 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
                 getVersion();
                 break;
             case "red_package":
-//                    ClipboardManager cm = (ClipboardManager) AppManager.getAppManager().currentActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-//                    if (copyCode.equals("")) {
-//                        cm.setText(getString(R.string.red_package_string));
-//                    } else {
-//                        cm.setText(copyCode);
-//                    }
-//                    try {
-//                        MyApplication.openAppByPackageName(AppManager.getAppManager().currentActivity(), "com.eg.android.AlipayGphone");
-//                    } catch (PackageManager.NameNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-                MyApplication.showToast("拉倒吧，留着给自己买鸡腿去~~支持一下主页旋转的那碗饭就行啦");
+                MyApplication.showToast("拉倒吧，留着给自己买鸡腿去~~支持一下主页右下角那碗饭就行啦");
                 break;
 
             case "back_up":
@@ -195,32 +187,34 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
         pDialog.setTitleText("检查中");
         pDialog.setCancelable(false);
         pDialog.show();
-        BmobQuery<BaseConfig> bmobQuery = new BmobQuery<>();
-        bmobQuery.getObject(Constans.CONFIG_ID, new QueryListener<BaseConfig>() {
+        HttpUtils.getInstance().getAppConfigUrl(new HttpListener<AppConfig>() {
             @Override
-            public void done(BaseConfig baseConfig, BmobException e) {
-                if (e == null) {
-                    int newVersion = Integer.parseInt(baseConfig.getNewVersion());
-                    String title = baseConfig.getTitle();
-                    String details = baseConfig.getDetails();
-                    if (newVersion > Utils.GetVersion()) {//新版本大于本地版本
-                        new AlertDialog.Builder(MyApplication.getContext(), R.style.AlertDialogCustom)
-                                .setTitle(title)
-                                .setMessage(details)
+            public void success(AppConfig appConfig) {
+                Log.e("TAG", appConfig.toString());
+                int locatedVersionCode = Utils.GetVersion();
+                DataDeal.getInstance(getActivity()).setAppConfig(appConfig);
+                int tencentVersionCode = appConfig.getVersion_code();
+                if (tencentVersionCode > locatedVersionCode) {
+                    getActivity().runOnUiThread(() -> {
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("有重大更新")
+                                .setMessage("赶快前往酷安更新吧")
                                 .setCancelable(false)
                                 .setPositiveButton("前往", (dialogInterface, i) -> {
                                     //前往酷安
-                                    launchAppDetail(MyApplication.getContext().getPackageName(), "com.coolapk.market");
+                                    MyApplication.launchAppDetail(MyApplication.getContext().getPackageName(), "com.coolapk.market");
                                 })
-                                .setNeutralButton("我就不.GIF", null)
-                                .show();
-                    } else {
-                        MyToast.show(MyApplication.getContext(), "没有新版本哦~", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
-
-                    }
-                } else {
-                    Log.e("-----", e.getMessage());
+                                .setNeutralButton("我就不.GIF", (d, i) -> {
+                                    MyApplication.showToast("你等着！");
+                                }).show();
+                    });
                 }
+                pDialog.dismiss();
+
+            }
+
+            @Override
+            public void failed() {
                 pDialog.dismiss();
             }
         });

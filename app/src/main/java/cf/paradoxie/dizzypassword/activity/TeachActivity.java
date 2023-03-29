@@ -9,14 +9,14 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import cf.paradoxie.dizzypassword.AppManager;
-import cf.paradoxie.dizzypassword.MyApplication;
+import cf.paradoxie.dizzypassword.base.AppManager;
+import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;

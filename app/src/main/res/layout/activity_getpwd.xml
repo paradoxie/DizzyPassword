@@ -41,7 +41,7 @@
         android:background="@color/colorBlack">
     </View>
 
-    <com.xw.repo.BubbleSeekBar
+    <cf.paradoxie.dizzypassword.view.bubbleseekbar.BubbleSeekBar
         android:id="@+id/sb_num"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -2,11 +2,11 @@ package cf.paradoxie.dizzypassword.activity;
 
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
-import android.view.View;
+
 import android.widget.TextView;
 
-import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.base.BaseActivity;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.utils.Utils;

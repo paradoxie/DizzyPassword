@@ -2,16 +2,14 @@ package cf.paradoxie.dizzypassword.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.widget.Toolbar;
 
-import cf.paradoxie.dizzypassword.AppManager;
-import cf.paradoxie.dizzypassword.MyApplication;
+import cf.paradoxie.dizzypassword.base.AppManager;
+import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
@@ -32,7 +30,7 @@ public class SignActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("登录注册");
+        toolbar.setTitle("登录");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
         toolbar.setNavigationOnClickListener(view -> {
@@ -60,55 +58,9 @@ public class SignActivity extends BaseActivity {
         bt_sign_on =  findViewById(R.id.bt_sign_on);
 
         bt_sign_on.setOnClickListener(view -> {
-            username = et_username.getText().toString().trim();
-            password = et_password.getText().toString().trim();
-            if (!DesUtil.isEmail(username)) {
-                MyApplication.showToast("邮箱格式不正确哦~");
-                return;
-            }
-            if (password.isEmpty() || password.length() < 8) {
-                MyApplication.showToast("密码位数不够哟~");
-                return;
-            }
-            new SweetAlertDialog(SignActivity.this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("注册信息确认")
-                    .setContentText("请牢记您的注册信息\n帐号:" + username + "\n密码:" + password)
-                    .setCancelText("哦填错了")
-                    .setConfirmText("确定")
-                    .setConfirmClickListener(sDialog -> {
-
-                        //注册
-                        BmobUser user = new BmobUser();
-                        final String username1 = DesUtil.encrypt(username, password);
-                        user.setUsername(username1);
-                        user.setPassword(password);
-                        pDialog.show();
-                        user.signUp(new SaveListener<BmobUser>() {
-                            @Override
-                            public void done(BmobUser objectId, BmobException e) {
-                                if (e == null) {
-                                    SPUtils.put("password", password);
-                                    SPUtils.put("name", username);
-                                    MyApplication.showToast("注册成功，已直接登录");
-                                    Intent intent = new Intent(SignActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    if (e.getErrorCode() == 202) {
-                                        MyApplication.showToast("注册失败:该邮箱已注册...");
-                                    } else {
-                                        MyApplication.showToast("注册失败:" + e.getMessage() + e.getErrorCode());
-                                    }
-                                }
-                                pDialog.dismiss();
-                                sDialog.cancel();
-                            }
-                        });
-                    })
-                    .showCancelButton(true)
-                    .setCancelClickListener(sDialog -> sDialog.cancel())
-                    .show();
-
+//            Intent intent = new Intent(SignActivity.this, JianGuoSignActivity.class);
+//            startActivity(intent);
+            MyApplication.showToast("仅限老用户登录使用，以完成私有坚果云数据备份~");
         });
         bt_sign_up =  findViewById(R.id.bt_sign_up);
         bt_sign_up.setOnClickListener(view -> {
@@ -152,17 +104,4 @@ public class SignActivity extends BaseActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_sign, menu);
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(SignActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
 }

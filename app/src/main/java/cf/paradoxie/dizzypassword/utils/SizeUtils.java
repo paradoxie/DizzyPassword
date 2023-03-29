@@ -1,6 +1,6 @@
 package cf.paradoxie.dizzypassword.utils;
 
-import cf.paradoxie.dizzypassword.MyApplication;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 
 
 public class SizeUtils {

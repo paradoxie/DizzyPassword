@@ -3,12 +3,21 @@ package cf.paradoxie.dizzypassword.bean;
 import java.util.List;
 
 public class BackupBean {
+    private String id;//名字
     private String name;//名字
     private String account;//帐号
     private String password;//密码
     private String website;//网址
     private String note;//备注
     private List<String> tag;//标记
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

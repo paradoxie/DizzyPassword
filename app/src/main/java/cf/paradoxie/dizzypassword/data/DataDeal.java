@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -16,23 +15,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.AppManager;
-import cf.paradoxie.dizzypassword.Constans;
-import cf.paradoxie.dizzypassword.MyApplication;
+import cf.paradoxie.dizzypassword.base.AppManager;
+import cf.paradoxie.dizzypassword.base.Constans;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.activity.MainActivity;
-import cf.paradoxie.dizzypassword.adapter.TestStackAdapter;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
+import cf.paradoxie.dizzypassword.bean.AppConfig;
 import cf.paradoxie.dizzypassword.bean.BaseConfig;
 import cf.paradoxie.dizzypassword.bean.SortBean;
 import cf.paradoxie.dizzypassword.bean.WordsBean;
 import cf.paradoxie.dizzypassword.http.Http;
 import cf.paradoxie.dizzypassword.utils.AnimationUtil;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
-import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
@@ -59,6 +55,16 @@ public class DataDeal {
     private static Context context;
     private static List<AccountBean> mBmobBeans;
     List<String> historys = new ArrayList<>();
+
+    private AppConfig appConfig;
+
+    public AppConfig getAppConfig() {
+        return appConfig;
+    }
+
+    public void setAppConfig(AppConfig appConfig) {
+        this.appConfig = appConfig;
+    }
 
     private DataDeal() {
     }
@@ -201,81 +207,6 @@ public class DataDeal {
         });
     }
 
-    /***************获取名人名言*****************/
-    public void getWords(Handler handler1) {
-        BmobQuery<WordsBean> bmobQuery = new BmobQuery<>();
-        bmobQuery.getObject(Constans.WORDS_ID, new QueryListener<WordsBean>() {
-            @Override
-            public void done(WordsBean wordsBean, BmobException e) {
-                Message msg = new Message();
-                msg.what = 3;
-                if (e == null) {
-                    if (!wordsBean.getFamous_saying().equals("")) {
-                        String time = wordsBean.getUpdatedAt().substring(0, 11).trim();
-                        String id = wordsBean.getObjectId();
-                        String dateNowStr = Utils.getData();
-
-                        msg.obj = wordsBean.getFamous_saying() + "      ---" + wordsBean.getFamous_name();
-
-                        if (time.equals(dateNowStr)) {//如果更新日期为当前日期，就直接取bmob数据
-                            handler1.sendMessage(msg);
-                        } else {//如果更新日期不是当前日期，就请求接口并更新到bmob
-                            getWordsByAvatar(id, handler1);
-                        }
-                    } else {//如果值为空，就请求接口并添加到bmob
-                        getWordsByAvatar("", handler1);
-                    }
-                } else {
-                    Log.e("-----", e.getMessage());
-                    msg.obj = SPUtils.get("text", "世上无难事，只要肯放弃") + "";
-                    handler1.sendMessage(msg);
-                }
-            }
-        });
-
-    }
-
-    private void getWordsByAvatar(String id, Handler handler1) {
-
-        Http.get(Constans.WORDS, s -> {
-            Log.e("-----", s);
-            try {
-                JSONObject obj = new JSONObject(s);
-                JSONArray jsonArray = obj.getJSONArray("newslist");
-
-                obj = jsonArray.getJSONObject(0);
-
-                final WordsBean wordsBean = new WordsBean();
-                wordsBean.setFamous_name(obj.getString("mrname"));
-                wordsBean.setFamous_saying(obj.getString("content"));
-                String text = wordsBean.getFamous_saying() + "      ---" + wordsBean.getFamous_name();
-                Log.e("---mrname--", wordsBean.getFamous_name());
-                Message msg = new Message();
-                msg.what = 3;
-                msg.obj = text;
-                handler1.sendMessage(msg);
-
-                if (id.equals("")) {//上传
-                    wordsBean.save(new SaveListener<String>() {
-                        @Override
-                        public void done(String s, BmobException e) {
-                            if (e == null) { }
-                        }
-                    });
-                } else {//更新
-                    wordsBean.update(id, new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-
-                        }
-                    });
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-
-    }
 
 
     /***************搜索历史记录*****************/

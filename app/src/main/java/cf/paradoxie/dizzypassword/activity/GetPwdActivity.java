@@ -4,16 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.ClipboardManager;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.mixiaoxiao.smoothcompoundbutton.SmoothSwitch;
-import com.xw.repo.BubbleSeekBar;
 
-import cf.paradoxie.dizzypassword.MyApplication;
+import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.bean.RxBean;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
@@ -21,6 +20,7 @@ import cf.paradoxie.dizzypassword.utils.GetPwdUtils;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.view.SingleLineTextView;
+import cf.paradoxie.dizzypassword.view.bubbleseekbar.BubbleSeekBar;
 
 /**
  * Created by xiehehe on 2017/12/5.
@@ -77,9 +77,16 @@ public class GetPwdActivity extends BaseActivity {
         ss4 = findViewById(R.id.ss4);
 
         mRxBean = new RxBean();
+//        sb_num.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListenerAdapter() {
+//            @Override
+//            public void onProgressChanged(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat) {
+//                num = progress;
+//            }
+//        });
         sb_num.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListenerAdapter() {
             @Override
-            public void onProgressChanged(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat) {
+            public void onProgressChanged(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat, boolean fromUser) {
+                super.onProgressChanged(bubbleSeekBar, progress, progressFloat, fromUser);
                 num = progress;
             }
         });

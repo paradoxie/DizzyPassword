@@ -23,7 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import cf.paradoxie.dizzypassword.MyApplication;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 
 /**

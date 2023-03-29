@@ -3,8 +3,27 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/DizzyPassword.iml" filepath="$PROJECT_DIR$/.idea/modules/DizzyPassword.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FingerPrinter/DizzyPassword.FingerPrinter.iml" filepath="$PROJECT_DIR$/.idea/modules/FingerPrinter/DizzyPassword.FingerPrinter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FingerPrinter/DizzyPassword.FingerPrinter.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/FingerPrinter/DizzyPassword.FingerPrinter.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FingerPrinter/DizzyPassword.FingerPrinter.main.iml" filepath="$PROJECT_DIR$/.idea/modules/FingerPrinter/DizzyPassword.FingerPrinter.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FingerPrinter/DizzyPassword.FingerPrinter.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/FingerPrinter/DizzyPassword.FingerPrinter.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/DizzyPassword.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/DizzyPassword.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/DizzyPassword.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/DizzyPassword.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/DizzyPassword.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/DizzyPassword.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/DizzyPassword.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/DizzyPassword.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bubbleseekbar/DizzyPassword.bubbleseekbar.iml" filepath="$PROJECT_DIR$/.idea/modules/bubbleseekbar/DizzyPassword.bubbleseekbar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bubbleseekbar/DizzyPassword.bubbleseekbar.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/bubbleseekbar/DizzyPassword.bubbleseekbar.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bubbleseekbar/DizzyPassword.bubbleseekbar.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bubbleseekbar/DizzyPassword.bubbleseekbar.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bubbleseekbar/DizzyPassword.bubbleseekbar.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/bubbleseekbar/DizzyPassword.bubbleseekbar.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cardstack/DizzyPassword.cardstack.iml" filepath="$PROJECT_DIR$/.idea/modules/cardstack/DizzyPassword.cardstack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cardstack/DizzyPassword.cardstack.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/cardstack/DizzyPassword.cardstack.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cardstack/DizzyPassword.cardstack.main.iml" filepath="$PROJECT_DIR$/.idea/modules/cardstack/DizzyPassword.cardstack.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cardstack/DizzyPassword.cardstack.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/cardstack/DizzyPassword.cardstack.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/searchview/DizzyPassword.searchview.iml" filepath="$PROJECT_DIR$/.idea/modules/searchview/DizzyPassword.searchview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/searchview/DizzyPassword.searchview.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/searchview/DizzyPassword.searchview.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/searchview/DizzyPassword.searchview.main.iml" filepath="$PROJECT_DIR$/.idea/modules/searchview/DizzyPassword.searchview.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/searchview/DizzyPassword.searchview.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/searchview/DizzyPassword.searchview.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wdsyncer/DizzyPassword.wdsyncer.iml" filepath="$PROJECT_DIR$/.idea/modules/wdsyncer/DizzyPassword.wdsyncer.iml" />
     </modules>
   </component>
 </project>

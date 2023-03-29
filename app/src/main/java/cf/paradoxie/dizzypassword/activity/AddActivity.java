@@ -8,7 +8,6 @@ import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,11 +15,17 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
-import cf.paradoxie.dizzypassword.AppManager;
-import cf.paradoxie.dizzypassword.MyApplication;
+import cf.paradoxie.dizzypassword.base.AppManager;
+import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
 import cf.paradoxie.dizzypassword.bean.RxBean;
@@ -28,11 +33,7 @@ import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.view.FlowLayout;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UpdateListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import io.reactivex.functions.Consumer;
 
 
 public class AddActivity extends BaseActivity {
@@ -145,51 +146,71 @@ public class AddActivity extends BaseActivity {
         accountBean.setPassword(password1);
         accountBean.setTag(tag1);
         accountBean.setUser(MyApplication.getUser());
+        accountBean.setObjectId(getObjectId());
         if (id == null) {
+            //0d52d42744
             saveDate(accountBean);
         } else {
             upDate(accountBean, id);
         }
-
-
     }
 
     private void upDate(AccountBean accountBean, String id) {
-        accountBean.update(id, new UpdateListener() {
-            @Override
-            public void done(BmobException e) {
-                if (e == null) {
-                    MyApplication.showToast("更新成功");
-                    AppManager.getAppManager().finishActivity(MainActivity.class);
-                    Intent intent = new Intent(AddActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    SPUtils.removeDataList("beans");
-                    finish();
-                } else {
-                    MyApplication.showToast("更新失败：" + e.getMessage() + "," + e.getErrorCode());
-                }
-                pDialog.dismiss();
+
+        //获取所有list
+        List<AccountBean> beans = SPUtils.getDataList("beans", AccountBean.class);
+        //删除这个id的条目
+        Iterator<AccountBean> iterator = beans.iterator();
+        while (iterator.hasNext()) {
+            AccountBean next = iterator.next();
+            if (id.equals(next.getObjectId())) {
+                accountBean.setCreateAtTime(next.getCreatedAt());
+                accountBean.setUpdatedAt(getCurrentDate());
+                iterator.remove();
             }
-        });
+        }
+
+        //新条目添加到list
+        beans.add(accountBean);
+        //储存新的list
+        SPUtils.setDataList("beans", beans);
+
+        pDialog.dismiss();
+        MyApplication.showToast("更新成功");
+        AppManager.getAppManager().finishActivity(JianGuoMainActivity.class);
+        Intent intent = new Intent(AddActivity.this, JianGuoMainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void saveDate(AccountBean accountBean) {
-        accountBean.save(new SaveListener<String>() {
-            @Override
-            public void done(String objectId, BmobException e) {
-                if (e == null) {
-                    MyApplication.showToast("保存成功");
-                    SPUtils.removeDataList("beans");
-                    AppManager.getAppManager().finishActivity(MainActivity.class);
-                    Intent intent = new Intent(AddActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    MyApplication.showToast("保存失败" + e.getMessage());
-                }
-                pDialog.dismiss();
-            }
-        });
+
+        //获取所有list
+        List<AccountBean> beans = SPUtils.getDataList("beans", AccountBean.class);
+        //新条目添加到list
+        accountBean.setCreateAtTime(getCurrentDate());
+        accountBean.setUpdatedAt(getCurrentDate());
+        beans.add(accountBean);
+        //储存新的list
+        SPUtils.setDataList("beans", beans);
+
+        pDialog.dismiss();
+        MyApplication.showToast("保存成功");
+        AppManager.getAppManager().finishActivity(JianGuoMainActivity.class);
+        Intent intent = new Intent(AddActivity.this, JianGuoMainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    /**
+     * 获取当前日期时间
+     *
+     * @return
+     */
+    private String getCurrentDate() {
+        Date calendar = Calendar.getInstance().getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return simpleDateFormat.format(calendar);
     }
 
     private void initFlowView() {
@@ -260,6 +281,22 @@ public class AddActivity extends BaseActivity {
             mFlowLayout.addView(tv);
         }
 
+    }
+
+    /**
+     * 生成随机id
+     *
+     * @return objectId
+     */
+    private String getObjectId() {
+        String str = "abcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < 10; i++) {
+            int number = random.nextInt(36);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
     }
 
     @Override

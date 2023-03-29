@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
+        android:key="pref_cate_other"
+        android:title="私有云备份">
+
+        <PreferenceScreen
+            android:key="dav"
+            android:summary="坚果云同步"
+            android:title="您自己的私有云同步"></PreferenceScreen>
+
+    </PreferenceCategory>
+    <PreferenceCategory
         android:key="pref_cate_base"
         android:title="通用">
         <cf.paradoxie.dizzypassword.view.ThemeChoice android:key="theme_change" />
@@ -16,7 +26,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="is_head_image"
-            android:summary="绅士专用，重启生效，长按大图即可保存"
+            android:summary="重启生效，长按大图即可保存"
             android:title="启用随机头像" />
 
         <EditTextPreference
@@ -61,11 +71,6 @@
             android:key="share"
             android:summary="希望也能帮到其他人啦"
             android:title="分享"></PreferenceScreen>
-
- <PreferenceScreen
-            android:key="dav"
-            android:summary="坚果云同步"
-            android:title="您自己的私有云同步"></PreferenceScreen>
 
         <PreferenceScreen
             android:key="back_up"

@@ -2,7 +2,6 @@
 
 buildscript {
     repositories {
-        jcenter()
         mavenCentral()
         google()
 //        maven {
@@ -23,7 +22,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
         maven { url "https://jitpack.io" }
 //        maven { url "https://maven.google.com" }
 //        maven { url 'https://dl.bintray.com/chaozhouzhang/maven' }
@@ -32,4 +30,31 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    MINSDK_VERSION = 23//最小支持SDK
+    TARGETSDK_VERSION = 29//目标支持SDK
+    VERSION_CODE = gitVersionCode()//版本号
+    VERSION_NAME = "v" + gitVersionInfo()//版本名称
+
+
+}
+
+//通过git记录自动增加版本code
+static def gitVersionCode() {
+    def cmd = 'git rev-list HEAD --first-parent --count'
+    cmd.execute().text.trim().toInteger()
+}
+
+//通过版本code,生成版本信息
+static def gitVersionInfo() {
+    def code = gitVersionCode()
+    code = code + 100;
+    String s = code + ""
+    StringBuffer sb = new StringBuffer(s)
+    sb.insert(sb.length() - 1, ".")
+    sb.insert(sb.length() - 3, ".")
+
+    return sb.toString()
 }

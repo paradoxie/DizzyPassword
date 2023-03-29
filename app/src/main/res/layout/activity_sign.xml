@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:background="@drawable/search_label_sure"
-            android:text="首次使用，注册" />
+            android:text="仅限登录" />
 
     </LinearLayout>
 
@@ -82,7 +82,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="20dp"
                 android:text="@string/action_note"
-                android:textColor="?colorAccent"
+                android:textColor="@color/red400"
                 android:textSize="14sp" />
 
             <TextView
@@ -119,7 +119,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:text="@string/action_note_4"
-                android:textColor="?colorPrimaryDark" />
+                android:textColor="@color/red400" />
 
             <TextView
                 android:layout_width="wrap_content"

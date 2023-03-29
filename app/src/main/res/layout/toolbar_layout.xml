@@ -53,7 +53,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="30dp"
                 android:scaleType="center"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:src="@drawable/refresh"/>
 
 <!--            <ImageView-->

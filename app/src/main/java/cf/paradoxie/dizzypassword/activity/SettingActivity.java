@@ -4,16 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import cf.paradoxie.dizzypassword.AppManager;
-import cf.paradoxie.dizzypassword.MyApplication;
+import cf.paradoxie.dizzypassword.base.AppManager;
+import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
@@ -56,7 +55,7 @@ public class SettingActivity extends BaseActivity {
                             SPUtils.clear();//清除用户记录
                             BmobUser.logOut();   //清除缓存用户对象
                             AppManager.getAppManager().finishAllActivity();
-                            startActivity(new Intent(SettingActivity.this, SignActivity.class));
+                            startActivity(new Intent(SettingActivity.this, WelcomeActivity.class));
                             finish();
                             hideInputWindow();
                             mDialogView.dismiss();

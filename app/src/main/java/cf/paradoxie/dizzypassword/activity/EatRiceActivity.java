@@ -1,58 +1,94 @@
 package cf.paradoxie.dizzypassword.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import android.view.View;
-import android.webkit.WebView;
-import android.widget.ProgressBar;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import cf.paradoxie.dizzypassword.AppManager;
-import cf.paradoxie.dizzypassword.MyApplication;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.utils.MyToast;
+import cf.paradoxie.dizzypassword.adapter.GridMineAdapter;
+import cf.paradoxie.dizzypassword.adapter.RecyclerItemClickListener;
+import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.bean.MineNavBean;
+import cf.paradoxie.dizzypassword.databinding.ActivityEatriceBinding;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
-import cf.paradoxie.dizzypassword.utils.Utils;
 
 /**
  * Created by xiehehe on 2017/10/28.
  */
 
 public class EatRiceActivity extends BaseActivity {
-
-    private WebView wb;
-    private String url = "";
+    private ActivityEatriceBinding binding;
+    private GridMineAdapter gridAdapter;
+    private List<MineNavBean> mineNavBeans = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_eatrice);
+        binding = getBinding(R.layout.activity_eatrice);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("新鲜玩意");
+        toolbar.setTitle("好东西😏");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
         toolbar.setNavigationOnClickListener(view -> finish());
-
-        Intent intent = getIntent();
-        url = intent.getStringExtra("url");
-
         init();
         ThemeUtils.initStatusBarColor(EatRiceActivity.this, ThemeUtils.getPrimaryDarkColor(EatRiceActivity.this));
-
     }
 
     private void init() {
-        final ProgressBar bar =  findViewById(R.id.myProgressBar);
-        wb = findViewById(R.id.web);
-        if (!url.equals("")) {
-            Utils.loadUri(wb, 0, url, bar);
-        } else {
-            MyToast.show(EatRiceActivity.this, "链接载入发生了一点问题", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL) {
+            //每排3个，禁止竖向滑动 RecyclerView 为垂直状态（VERTICAL）
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
 
-        }
+        mineNavBeans.add(new MineNavBean(R.mipmap.ic_ele, "饿了么红包"));
+        mineNavBeans.add(new MineNavBean(R.mipmap.ic_mei, "美团红包"));
+        mineNavBeans.add(new MineNavBean(R.mipmap.ic_tool, "全能工具箱"));
+//        mineNavBeans.add(new MineNavBean(R.mipmap.ic_welcome, "开屏配置"));
 
+        binding.rvMine.setLayoutManager(manager);
+        gridAdapter = new GridMineAdapter(this);
+        binding.rvMine.setAdapter(gridAdapter);
+        gridAdapter.setLists(mineNavBeans);
+        binding.rvMine.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                switch (position) {
+                    case 0:
+//                        CommonUtil.INSTANCE.startActivityWithAnimate(getActivity(), ManageBannerActivity.class);
+                        break;
+                    case 1:
+//                        CommonUtil.INSTANCE.startActivityWithAnimate(getActivity(), ManageNavActivity.class);
+                        break;
+                    case 2:
+//                        CommonUtil.INSTANCE.startActivityWithAnimate(getActivity(), ManagePicActivity.class);
+                        break;
+                    case 3:
+//                        CommonUtil.INSTANCE.startActivityWithAnimate(getActivity(), WelfareAddActivity.class);
+                        break;
+                    case 4:
+//                        CommonUtil.INSTANCE.startActivityWithAnimate(getActivity(), ManageWelcomeActivity.class);
+                        break;
+
+                }
+
+            }
+
+            @Override
+            public void onLongClick(View view, int posotion) {
+
+            }
+        }));
     }
 
 }

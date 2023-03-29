@@ -1,19 +1,17 @@
 package cf.paradoxie.dizzypassword.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
 import android.text.ClipboardManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,10 +21,11 @@ import android.widget.TextView;
 import com.loopeer.cardstack.CardStackView;
 import com.loopeer.cardstack.StackAdapter;
 
+import java.util.Iterator;
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.AppManager;
-import cf.paradoxie.dizzypassword.MyApplication;
+import cf.paradoxie.dizzypassword.base.AppManager;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.AddActivity;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
@@ -143,24 +142,26 @@ public class TestStackAdapter extends StackAdapter<Integer> {
 
         public void onBind(Integer data, final int position) {
 
+            AccountBean accountBean = mBeanList.get(position);
+            Log.i("这是账户" + position, accountBean.toString());
 
-            final String id = mBeanList.get(position).getObjectId();
-            final String time = mBeanList.get(position).getCreatedAt();
-            final String time_up = mBeanList.get(position).getUpdatedAt();
-            final String name = DesUtil.decrypt(mBeanList.get(position).getName(), SPUtils.getKey());
-            final String account = DesUtil.decrypt(mBeanList.get(position).getAccount(), SPUtils.getKey());
-            final String password = DesUtil.decrypt(mBeanList.get(position).getPassword(), SPUtils.getKey());
-            String note = mBeanList.get(position).getNote();
+            final String id = accountBean.getObjectId();
+            final String time = accountBean.getCreatedAt();
+            final String time_up = accountBean.getUpdatedAt();
+            final String name = DesUtil.decrypt(accountBean.getName(), SPUtils.getKey());
+            final String account = DesUtil.decrypt(accountBean.getAccount(), SPUtils.getKey());
+            final String password = DesUtil.decrypt(accountBean.getPassword(), SPUtils.getKey());
+            String note = accountBean.getNote();
             if (note != null) {
-                note = DesUtil.decrypt(mBeanList.get(position).getNote(), SPUtils.getKey());
+                note = DesUtil.decrypt(accountBean.getNote(), SPUtils.getKey());
             }
-            final List<String> tag = mBeanList.get(position).getTag();
+            final List<String> tag = accountBean.getTag();
 
 
             boolean shouldChange = DataUtils.shouldChange(time_up);
             mLayout.getBackground().setColorFilter(ContextCompat.getColor(getContext(), data), PorterDuff.Mode.SRC_IN);
             mTextTitle.setText(name);
-            mNum.setText(String.valueOf(position + 1) + "-" + mBeanList.size());
+            mNum.setText((position + 1) + "-" + mBeanList.size());
             if (shouldChange) {
                 mNum.setTextColor(mContext.getResources().getColor(R.color.red600));
                 ll_notice.setVisibility(View.VISIBLE);
@@ -349,35 +350,62 @@ public class TestStackAdapter extends StackAdapter<Integer> {
 
         private void deleteDate(String id) {
             pDialog.show();
-            //删除当前数据
-            AccountBean accountBean = new AccountBean();
-            accountBean.setObjectId(id);
-            accountBean.delete(new UpdateListener() {
-                @Override
-                public void done(BmobException e) {
-                    if (e == null) {
-                        mTextTitle.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
-                        mAccount.setText("已删除");
-                        mPassword.setText("已删除");
-                        showTag(false);
-                        mTime_up.setVisibility(View.GONE);
-                        mTime.setVisibility(View.GONE);
-                        mNote.setText("已删除");
-                        mDelete.setClickable(false);
-                        mChange.setClickable(false);
-                        mPwdvisible.setClickable(false);
-                        setDrawableLeft(R.drawable.password);
-                        iv_copy.setVisibility(View.GONE);
-                    } else {
-                        if (e.getErrorCode() == 101) {
-                            MyApplication.showToast("已经删掉了哦~");
+            if (MyApplication.getUser() != null) {
+                //删除当前数据
+                AccountBean accountBean = new AccountBean();
+                accountBean.setObjectId(id);
+                accountBean.delete(new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            mTextTitle.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
+                            mAccount.setText("已删除");
+                            mPassword.setText("已删除");
+                            showTag(false);
+                            mTime_up.setVisibility(View.GONE);
+                            mTime.setVisibility(View.GONE);
+                            mNote.setText("已删除");
+                            mDelete.setClickable(false);
+                            mChange.setClickable(false);
+                            mPwdvisible.setClickable(false);
+                            setDrawableLeft(R.drawable.password);
+                            iv_copy.setVisibility(View.GONE);
                         } else {
-                            MyApplication.showToast("删除失败：" + e.getMessage() + "," + e.getErrorCode());
+                            if (e.getErrorCode() == 101) {
+                                MyApplication.showToast("已经删掉了哦~");
+                            } else {
+                                MyApplication.showToast("删除失败：" + e.getMessage() + "," + e.getErrorCode());
+                            }
                         }
+                        pDialog.dismiss();
                     }
-                    pDialog.dismiss();
+                });
+            } else {
+                Iterator<AccountBean> iterator = mBeanList.iterator();
+                while (iterator.hasNext()) {
+                    AccountBean next = iterator.next();
+                    if (id.equals(next.getObjectId())) {
+                        iterator.remove();
+                    }
                 }
-            });
+
+                mTextTitle.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
+                mAccount.setText("已删除");
+                mPassword.setText("已删除");
+                showTag(false);
+                mTime_up.setVisibility(View.GONE);
+                mTime.setVisibility(View.GONE);
+                mNote.setText("已删除");
+                mDelete.setClickable(false);
+                mChange.setClickable(false);
+                mPwdvisible.setClickable(false);
+                setDrawableLeft(R.drawable.password);
+                iv_copy.setVisibility(View.GONE);
+
+                SPUtils.setDataList("beans", mBeanList);
+                pDialog.dismiss();
+            }
+
         }
 
 

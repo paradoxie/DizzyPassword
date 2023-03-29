@@ -18,7 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
 
-import cf.paradoxie.dizzypassword.AppManager;
+import cf.paradoxie.dizzypassword.base.AppManager;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 

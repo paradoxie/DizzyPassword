@@ -3,14 +3,18 @@ package cf.paradoxie.dizzypassword.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-import cf.paradoxie.dizzypassword.AppManager;
-import cf.paradoxie.dizzypassword.MyApplication;
+import cf.paradoxie.dizzypassword.base.AppManager;
+import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
@@ -49,11 +53,11 @@ public class SafeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_safe);
 
-        rl_support_finger =   findViewById(R.id.rl_support_finger);
-        rl_unsupport_finger =   findViewById(R.id.rl_unsupport_finger);
-        tv_open =   findViewById(R.id.tv_open);
-        tv_open_unsupport_finger =   findViewById(R.id.tv_open_unsupport_finger);
-        Toolbar toolbar =  findViewById(R.id.toolbar);
+        rl_support_finger = findViewById(R.id.rl_support_finger);
+        rl_unsupport_finger = findViewById(R.id.rl_unsupport_finger);
+        tv_open = findViewById(R.id.tv_open);
+        tv_open_unsupport_finger = findViewById(R.id.tv_open_unsupport_finger);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("安全验证");
         setSupportActionBar(toolbar);
         String isFinger = SPUtils.get("isFinger", "true") + "";
@@ -116,8 +120,7 @@ public class SafeActivity extends BaseActivity {
                     rl_support_finger.setVisibility(View.GONE);
                 } else {
                     tv_open.setText("指纹验证成功，正在进入app...");
-                    startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
-                    finish();
+                    safeToIn();
                 }
 
             }
@@ -128,13 +131,25 @@ public class SafeActivity extends BaseActivity {
         rxfingerPrinter.begin().subscribe(observer);
     }
 
+    private void safeToIn() {
+        String jianguo = SPUtils.get("jianguo_pwd", "") + "";
+        if (TextUtils.isEmpty(jianguo)) {
+            startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
+            finish();
+        } else {
+            startActivity(new Intent(MyApplication.getContext(), JianGuoMainActivity.class));
+            finish();
+        }
+
+    }
+
     /*
     数字码验证
      */
     private void codeCheck() {
         final String str = SPUtils.get("pwd", "") + "";
         rl_unsupport_finger.setVisibility(View.VISIBLE);
-        tv_message =   findViewById(R.id.tv_message);
+        tv_message = findViewById(R.id.tv_message);
         view = findViewById(R.id.psw_input);
         view.setInputCallBack(result -> {
             checkCode(str, result);
@@ -159,8 +174,7 @@ public class SafeActivity extends BaseActivity {
                     .setConfirmClickListener(sDialog -> {
                         SPUtils.put("pwd", pwd);
                         sDialog.dismissWithAnimation();
-                        startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
-                        finish();
+                        safeToIn();
                     })
                     .showCancelButton(true)
                     .setCancelClickListener(sDialog -> sDialog.cancel())
@@ -168,8 +182,7 @@ public class SafeActivity extends BaseActivity {
         } else {//设置了安全码，开始比对
             if (pwd.equals(str)) {
                 tv_message.setText("验证成功,正在进入app...");
-                startActivity(new Intent(MyApplication.getContext(), MainActivity.class));
-                finish();
+                safeToIn();
             } else {
                 view.clearResult();
                 tv_message.setText("安全码验证错误，请重新尝试");

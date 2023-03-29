@@ -51,6 +51,7 @@
             style="@style/dialog_blue_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/search_label_sure"
             android:paddingStart="30dp"
@@ -60,19 +61,6 @@
             android:text="生成导出"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_back"
-            style="@style/dialog_blue_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/search_label_sure"
-            android:paddingStart="30dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="30dp"
-            android:paddingBottom="10dp"
-            android:text="导入"
-            android:textSize="16sp" />
 
     </LinearLayout>
 

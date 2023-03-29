@@ -19,6 +19,9 @@ public class AccountBean extends BmobObject{
     private String note;//备注
 
 
+    public void setCreateAtTime(String time){
+        super.setCreatedAt(time);
+    }
 
     public String getWebsite() {
         return website;
@@ -99,6 +102,8 @@ public class AccountBean extends BmobObject{
                 ", website='" + website + '\'' +
                 ", note='" + note + '\'' +
                 ", user=" + user +
+                ", createTime=" + getCreatedAt() +
+                ", updateTime=" + getUpdatedAt() +
                 '}';
     }
 }
