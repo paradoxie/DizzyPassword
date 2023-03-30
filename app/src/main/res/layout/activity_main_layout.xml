@@ -1,4 +1,4 @@
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
@@ -13,53 +13,95 @@
 
     </FrameLayout>
 
-    <android.support.design.widget.NavigationView
+    <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/view_nav">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="180dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_marginTop="180dp">
 
-            <ListView
-                android:id="@+id/list_names"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:dividerHeight="0.5dp"
-                android:scrollbars="none">
 
-            </ListView>
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="#1e545252" />
-
-            <ListView
-                android:id="@+id/list_times"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:dividerHeight="0.5dp"
-                android:scrollbars="none">
-
-            </ListView>
-
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
 
-    </android.support.design.widget.NavigationView>
+                    <ListView
+                        android:id="@+id/list_times"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:dividerHeight="0.5dp"
+                        android:padding="5dp"
+                        android:scrollbars="none">
+
+                    </ListView>
+
+                    <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="#1e545252" />
+
+                    <ListView
+                        android:id="@+id/list_names"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:dividerHeight="0.5dp"
+                        android:padding="5dp"
+                        android:scrollbars="none">
+
+                    </ListView>
+
+                    <cf.paradoxie.dizzypassword.view.MyLetterSortView
+                        android:id="@+id/left_letter"
+                        android:layout_width="15dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/all_translucent" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_words_chicken"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text=" "
+                    android:textColor="#fff"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_dialog"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="100dp"
+                android:background="@drawable/bg_dialog_sidebar"
+                android:gravity="center"
+                android:text="A"
+                android:textColor="@android:color/white"
+                android:textSize="30sp"
+                android:visibility="invisible" />
+
+        </FrameLayout>
+
+    </com.google.android.material.navigation.NavigationView>
 
 
-</android.support.v4.widget.DrawerLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

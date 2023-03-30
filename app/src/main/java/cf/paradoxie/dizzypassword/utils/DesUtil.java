@@ -14,6 +14,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
+import cf.paradoxie.dizzypassword.R;
+
 /**
  * Created by xiehehe on 2017/10/29.
  */
@@ -23,6 +25,16 @@ public class DesUtil {
     // 密钥，是加密解密的凭据
     private static String PASSWORD_CRYPT_KEY = "";//长度为8的倍数
     private final static String DES = "DES";
+    public static Integer[] TEST_DATAS = new Integer[]{
+            R.color.color_1, R.color.color_2, R.color.color_3, R.color.color_4, R.color.color_5, R.color.color_6, R.color.color_7, R.color.color_8, R.color.color_9, R.color.color_10,
+            R.color.color_11, R.color.color_12, R.color.color_13, R.color.color_14, R.color.color_15, R.color.color_16, R.color.color_17, R.color.color_18, R.color.color_19, R.color.color_20,
+            R.color.color_21, R.color.color_22, R.color.color_23, R.color.color_24, R.color.color_25, R.color.color_26, R.color.color_27, R.color.color_28, R.color.color_29, R.color.color_30,
+            R.color.color_31, R.color.color_32, R.color.color_33, R.color.color_34, R.color.color_35, R.color.color_36, R.color.color_37, R.color.color_38, R.color.color_39, R.color.color_40,
+            R.color.color_41, R.color.color_42, R.color.color_43, R.color.color_44, R.color.color_45, R.color.color_46, R.color.color_47, R.color.color_48, R.color.color_49, R.color.color_50,
+            R.color.color_51, R.color.color_52, R.color.color_53, R.color.color_54, R.color.color_55, R.color.color_56, R.color.color_57, R.color.color_58, R.color.color_59, R.color.color_60,
+            R.color.color_61, R.color.color_62, R.color.color_63, R.color.color_64, R.color.color_65, R.color.color_66, R.color.color_67, R.color.color_68, R.color.color_69, R.color.color_70,
+            R.color.color_71, R.color.color_72, R.color.color_73
+    };
 
     /**
      * 加密
@@ -171,13 +183,12 @@ public class DesUtil {
     /**
      * 从数组总随机取出一定数量的值，组成新的数组
      *
-     * @param array 原始数组
      * @param count 需要的数量
      * @return
      */
-    public static Integer[] getRandomFromArray(Integer[] array, int count) {
+    public static Integer[] getRandomFromArray(int count) {
         // ArrayList<Integer>arrayList =null;
-        Integer[] a = array;
+        Integer[] a = TEST_DATAS;
         Integer[] result = new Integer[count];
         Random random = new Random();
         int m = count; // 要随机取的元素个数
@@ -267,9 +278,9 @@ public class DesUtil {
         return sb.toString();
     }
 
-        //         测试用例，不需要传递任何参数，直接执行即可。
-        public static void main(String[] args) {
-            String username1 = DesUtil.decrypt("50466F4621C478C9CE6F1B588FE079BE", "1312308948");
-            System.out.println(username1);
-        }
+    //         测试用例，不需要传递任何参数，直接执行即可。
+    public static void main(String[] args) {
+        String username1 = DesUtil.decrypt("50466F4621C478C9CE6F1B588FE079BE", "1312308948");
+        System.out.println(username1);
+    }
 }

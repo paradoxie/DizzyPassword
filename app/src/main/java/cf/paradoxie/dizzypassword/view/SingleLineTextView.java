@@ -11,7 +11,7 @@ import android.util.TypedValue;
  * Created by xiehehe on 2017/11/21.
  */
 
-public class SingleLineTextView extends android.support.v7.widget.AppCompatTextView {
+public class SingleLineTextView extends androidx.appcompat.widget.AppCompatTextView {
     private Paint mPaint;
     private float mTextSize;
 

@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="cf.paradoxie.dizzypassword.activity.MainActivity">
+    <item
+        android:id="@+id/action_jian"
+        android:icon="@drawable/jian_selector"
+        android:orderInCategory="80"
+        android:title="坚果云配置"
+        app:showAsAction="ifRoom"/>
+
+</menu>

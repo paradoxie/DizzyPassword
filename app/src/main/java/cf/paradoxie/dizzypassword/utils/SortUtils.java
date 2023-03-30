@@ -2,7 +2,7 @@ package cf.paradoxie.dizzypassword.utils;
 
 import java.util.Comparator;
 
-import cf.paradoxie.dizzypassword.db.AccountBean;
+import cf.paradoxie.dizzypassword.bean.AccountBean;
 
 /**
  * Created by xiehehe on 2017/11/4.

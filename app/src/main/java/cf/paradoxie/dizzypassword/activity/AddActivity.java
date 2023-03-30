@@ -4,45 +4,48 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Arrays;
-import java.util.List;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 
-import cf.paradoxie.dizzypassword.AppManager;
-import cf.paradoxie.dizzypassword.MyApplication;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+
+import cf.paradoxie.dizzypassword.base.AppManager;
+import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.db.AccountBean;
-import cf.paradoxie.dizzypassword.db.RxBean;
+import cf.paradoxie.dizzypassword.bean.AccountBean;
+import cf.paradoxie.dizzypassword.bean.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.view.FlowLayout;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UpdateListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+
 
 public class AddActivity extends BaseActivity {
     private TextInputLayout nameWrapper, accountWrapper, passwordWrapper, tagWrapper, noteWrapper;
-    private EditText et_name, et_note, et_account, et_password, et_tag,et_web;
-    private String name, note, acount, password, tag, id,web;
+    private EditText et_name, et_note, et_account, et_password, et_tag, et_web;
+    private String name, note, acount, password, tag, id, web;
     private ImageView btn_get_pwd;
     private FlowLayout mFlowLayout;
     private LayoutInflater mInflater;
     private SweetAlertDialog pDialog = null;
     private String[] mVals = new String[]{//常用tag
-            "重要", "个人", "公司", "工作", "娱乐", "家庭", "小号", "区块链", "虚拟币"
+            "重要", "个人", "公司", "工作", "娱乐", "家庭", "小号"
             , "邮箱", "论坛", "游戏", "社交", "视频", "新闻", "阅读", "技术", "看图", "社区"
             , "购物", "玩机", "学术", "福利", "音乐", "摄影", "漫画", "学习", "开车", "公众号", "WIFI"
             , "云盘", "QQ", "浏览器", "羊毛", "支付", "VPN", "贴吧", "二次元"
@@ -55,27 +58,15 @@ public class AddActivity extends BaseActivity {
         setContentView(R.layout.activity_add);
         init();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("添加帐号");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //                Intent intent = new Intent(AddActivity.this, MainActivity.class);
-                //                startActivity(intent);
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionDone();
-            }
-        });
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> actionDone());
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -124,9 +115,9 @@ public class AddActivity extends BaseActivity {
             passwordWrapper.setErrorEnabled(true);
             passwordWrapper.setError("密码不能为空哦~");
             return;
-        } else if (tag.isEmpty()) {
+        } else if (tag.split("\\s+").length < 2) {
             tagWrapper.setErrorEnabled(true);
-            tagWrapper.setError("请至少选择一个Tag");
+            tagWrapper.setError("请至少选择2-3个Tag");
             return;
         } else {
             nameWrapper.setError("");// 必须加上这个，否则会导致内容删除后，error信息显示为空白
@@ -155,65 +146,85 @@ public class AddActivity extends BaseActivity {
         accountBean.setPassword(password1);
         accountBean.setTag(tag1);
         accountBean.setUser(MyApplication.getUser());
+        accountBean.setObjectId(getObjectId());
         if (id == null) {
+            //0d52d42744
             saveDate(accountBean);
         } else {
             upDate(accountBean, id);
         }
-
-
     }
 
     private void upDate(AccountBean accountBean, String id) {
-        accountBean.update(id, new UpdateListener() {
-            @Override
-            public void done(BmobException e) {
-                if (e == null) {
-                    MyApplication.showToast("更新成功");
-                    AppManager.getAppManager().finishActivity(MainActivity.class);
-                    Intent intent = new Intent(AddActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    SPUtils.removeDataList("beans");
-                    finish();
-                } else {
-                    MyApplication.showToast("更新失败：" + e.getMessage() + "," + e.getErrorCode());
-                }
-                pDialog.dismiss();
+
+        //获取所有list
+        List<AccountBean> beans = SPUtils.getDataList("beans", AccountBean.class);
+        //删除这个id的条目
+        Iterator<AccountBean> iterator = beans.iterator();
+        while (iterator.hasNext()) {
+            AccountBean next = iterator.next();
+            if (id.equals(next.getObjectId())) {
+                accountBean.setCreateAtTime(next.getCreatedAt());
+                accountBean.setUpdatedAt(getCurrentDate());
+                iterator.remove();
             }
-        });
+        }
+
+        //新条目添加到list
+        beans.add(accountBean);
+        //储存新的list
+        SPUtils.setDataList("beans", beans);
+
+        pDialog.dismiss();
+        MyApplication.showToast("更新成功");
+        AppManager.getAppManager().finishActivity(JianGuoMainActivity.class);
+        Intent intent = new Intent(AddActivity.this, JianGuoMainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void saveDate(AccountBean accountBean) {
-        accountBean.save(new SaveListener<String>() {
-            @Override
-            public void done(String objectId, BmobException e) {
-                if (e == null) {
-                    MyApplication.showToast("保存成功");
-                    SPUtils.removeDataList("beans");
-                    AppManager.getAppManager().finishActivity(MainActivity.class);
-                    Intent intent = new Intent(AddActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    MyApplication.showToast("保存失败" + e.getMessage());
-                }
-                pDialog.dismiss();
-            }
-        });
+
+        //获取所有list
+        List<AccountBean> beans = SPUtils.getDataList("beans", AccountBean.class);
+        //新条目添加到list
+        accountBean.setCreateAtTime(getCurrentDate());
+        accountBean.setUpdatedAt(getCurrentDate());
+        beans.add(accountBean);
+        //储存新的list
+        SPUtils.setDataList("beans", beans);
+
+        pDialog.dismiss();
+        MyApplication.showToast("保存成功");
+        AppManager.getAppManager().finishActivity(JianGuoMainActivity.class);
+        Intent intent = new Intent(AddActivity.this, JianGuoMainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    /**
+     * 获取当前日期时间
+     *
+     * @return
+     */
+    private String getCurrentDate() {
+        Date calendar = Calendar.getInstance().getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return simpleDateFormat.format(calendar);
     }
 
     private void initFlowView() {
         mInflater = LayoutInflater.from(this);
-        mFlowLayout = (FlowLayout) findViewById(R.id.flowlayout);
+        mFlowLayout = findViewById(R.id.flowlayout);
         initData();
     }
 
     private void init() {
-        nameWrapper = (TextInputLayout) findViewById(R.id.nameWrapper);
-        accountWrapper = (TextInputLayout) findViewById(R.id.accountWrapper);
-        passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
-        noteWrapper = (TextInputLayout) findViewById(R.id.noteWrapper);
-        tagWrapper = (TextInputLayout) findViewById(R.id.tagWrapper);
+        nameWrapper = findViewById(R.id.nameWrapper);
+        accountWrapper = findViewById(R.id.accountWrapper);
+        passwordWrapper = findViewById(R.id.passwordWrapper);
+        noteWrapper = findViewById(R.id.noteWrapper);
+        tagWrapper = findViewById(R.id.tagWrapper);
         nameWrapper.setHint("名称,比如酷安、酷安小号、酷安女号等");
         accountWrapper.setHint("帐户,邮箱、电话、用户名");
         passwordWrapper.setHint("密码,点击左侧图标可自动生成哦");
@@ -221,20 +232,17 @@ public class AddActivity extends BaseActivity {
         tagWrapper.setHint("标记,点击选择,输入请用空格隔开,注:可用于归类检索");
 
 
-        et_name = (EditText) findViewById(R.id.et_name);
-        et_account = (EditText) findViewById(R.id.et_account);
-        et_password = (EditText) findViewById(R.id.et_password);
-        et_web = (EditText) findViewById(R.id.et_website);
-        et_note = (EditText) findViewById(R.id.et_web);
-        et_tag = (EditText) findViewById(R.id.et_tag);
-        btn_get_pwd = (ImageView) findViewById(R.id.btn_get_pwd);
-        btn_get_pwd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //返回密码
-                Intent intent = new Intent(AddActivity.this, GetPwdActivity.class);
-                startActivity(intent);
-            }
+        et_name = findViewById(R.id.et_name);
+        et_account = findViewById(R.id.et_account);
+        et_password = findViewById(R.id.et_password);
+        et_web = findViewById(R.id.et_website);
+        et_note = findViewById(R.id.et_web);
+        et_tag = findViewById(R.id.et_tag);
+        btn_get_pwd = findViewById(R.id.btn_get_pwd);
+        btn_get_pwd.setOnClickListener(view -> {
+            //返回密码
+            Intent intent = new Intent(AddActivity.this, GetPwdActivity.class);
+            startActivity(intent);
         });
 
 
@@ -246,62 +254,67 @@ public class AddActivity extends BaseActivity {
             final TextView tv = (TextView) mInflater.inflate(
                     R.layout.search_label_tv, mFlowLayout, false);
             tv.setTextColor(getResources().getColor(R.color.color_bg));
+            tv.setTextSize(14);
             tv.setText(mVals[i]);
-
             final String str = tv.getText().toString();
 
             //点击事件
-            tv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //判断tag数量
-                    String string = et_tag.getText().toString().trim();
-                    int space = 0;
-                    char[] ch = string.toCharArray();
-                    for (int j = 0; j < ch.length; j++) {
-                        if (ch[j] == ' ') {
-                            space++;
-                        }
+            tv.setOnClickListener(v -> {
+                //判断tag数量
+                String string = et_tag.getText().toString().trim();
+                int space = 0;
+                char[] ch = string.toCharArray();
+                for (int j = 0; j < ch.length; j++) {
+                    if (ch[j] == ' ') {
+                        space++;
                     }
-                    if (space > 3) {
-                        MyApplication.showToast("最多支持添加5个tag哟~");
-                        return;
-                    }
-                    et_tag.setText(string + " " + str);
-                    tv.setTextSize(10);
-                    tv.setTextColor(getResources().getColor(R.color.pressed_color));
-                    tv.setBackgroundResource(R.drawable.search_label);
                 }
+                if (space > 3) {
+                    MyApplication.showToast("最多支持添加5个tag哟~");
+                    return;
+                }
+                et_tag.setText(string + " " + str);
+                tv.setTextSize(10);
+                tv.setTextColor(getResources().getColor(R.color.pressed_color));
+                tv.setBackgroundResource(R.drawable.search_label);
             });
             mFlowLayout.addView(tv);
         }
 
     }
 
+    /**
+     * 生成随机id
+     *
+     * @return objectId
+     */
+    private String getObjectId() {
+        String str = "abcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < 10; i++) {
+            int number = random.nextInt(36);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
-        RxBus.getInstance().toObserverable(RxBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<RxBean>() {
-                    @Override
-                    public void call(RxBean rxBean) {
-                        if (rxBean.getPwd() == "") {
-                            return;
-                        } else {
-                            et_password.setText(rxBean.getPwd());
-                        }
-                    }
-                });
+        RxBus.getInstance().register(RxBean.class, rxBean -> {
+            if (rxBean.getPwd() == "") {
+                return;
+            } else {
+                et_password.setText(rxBean.getPwd());
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //        Intent intent = new Intent(AddActivity.this, MainActivity.class);
-        //        startActivity(intent);
         finish();
     }
 }

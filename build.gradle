@@ -2,14 +2,15 @@
 
 buildscript {
     repositories {
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
+        mavenCentral()
+        google()
+//        maven {
+//            url 'https://maven.google.com/'
+//            name 'Google'
+//        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:4.2.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -19,16 +20,41 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+        google()
+        mavenCentral()
         maven { url "https://jitpack.io" }
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-            }
-        maven { url 'https://raw.github.com/bmob/bmob-android-sdk/master' }
+//        maven { url "https://maven.google.com" }
+//        maven { url 'https://dl.bintray.com/chaozhouzhang/maven' }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    MINSDK_VERSION = 23//最小支持SDK
+    TARGETSDK_VERSION = 29//目标支持SDK
+    VERSION_CODE = gitVersionCode()//版本号
+    VERSION_NAME = "v" + gitVersionInfo()//版本名称
+
+
+}
+
+//通过git记录自动增加版本code
+static def gitVersionCode() {
+    def cmd = 'git rev-list HEAD --first-parent --count'
+    cmd.execute().text.trim().toInteger()
+}
+
+//通过版本code,生成版本信息
+static def gitVersionInfo() {
+    def code = gitVersionCode()
+    code = code + 100;
+    String s = code + ""
+    StringBuffer sb = new StringBuffer(s)
+    sb.insert(sb.length() - 1, ".")
+    sb.insert(sb.length() - 3, ".")
+
+    return sb.toString()
 }

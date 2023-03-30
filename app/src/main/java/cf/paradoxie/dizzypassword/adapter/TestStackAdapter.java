@@ -1,33 +1,36 @@
 package cf.paradoxie.dizzypassword.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
+
+import androidx.core.content.ContextCompat;
+
 import android.text.ClipboardManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loopeer.cardstack.CardStackView;
 import com.loopeer.cardstack.StackAdapter;
 
+import java.util.Iterator;
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.AppManager;
-import cf.paradoxie.dizzypassword.MyApplication;
+import cf.paradoxie.dizzypassword.base.AppManager;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.AddActivity;
-import cf.paradoxie.dizzypassword.db.AccountBean;
-import cf.paradoxie.dizzypassword.db.RxBean;
+import cf.paradoxie.dizzypassword.bean.AccountBean;
+import cf.paradoxie.dizzypassword.bean.RxBean;
+import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.RxBus;
@@ -76,96 +79,58 @@ public class TestStackAdapter extends StackAdapter<Integer> {
         ImageView mChange, mDelete;
         RxBean rxEvent, rxEvent_1, rxEvent_2;
         ImageView iv_copy;
+        LinearLayout ll_notice;
         private SweetAlertDialog pDialog = null;
-        //        List<AccountBean> ;
 
         public ColorItemViewHolder(View view) {
             super(view);
 
-
             mLayout = view.findViewById(R.id.frame_list_card_item);
             mContainerContent = view.findViewById(R.id.container_list_content);
-            mTextTitle = (TextView) view.findViewById(R.id.text_list_card_title);
-            mNum = (TextView) view.findViewById(R.id.text_list_card_num);
-            mTime = (TextView) view.findViewById(R.id.text_list_card_time);
-            mTime_up = (TextView) view.findViewById(R.id.text_list_card_up);
-            mAccount = (SingleLineTextView) view.findViewById(R.id.tv_account);
-            mPassword = (SingleLineTextView) view.findViewById(R.id.tv_password);
-            mPwdvisible = (TextView) view.findViewById(R.id.tv_password_visible);
-            mNote = (TextView) view.findViewById(R.id.tv_note);
-            mWeb = (TextView) view.findViewById(R.id.tv_web);
-            mChange = (ImageView) view.findViewById(R.id.iv_change);
-            mDelete = (ImageView) view.findViewById(R.id.iv_delete);
-            iv_copy = (ImageView) view.findViewById(R.id.iv_copy);
+            ll_notice = view.findViewById(R.id.ll_notice);
+            mTextTitle = view.findViewById(R.id.text_list_card_title);
+            mNum = view.findViewById(R.id.text_list_card_num);
+            mTime = view.findViewById(R.id.text_list_card_time);
+            mTime_up = view.findViewById(R.id.text_list_card_up);
+            mAccount = view.findViewById(R.id.tv_account);
+            mPassword = view.findViewById(R.id.tv_password);
+            mPwdvisible = view.findViewById(R.id.tv_password_visible);
+            mNote = view.findViewById(R.id.tv_note);
+            mWeb = view.findViewById(R.id.tv_web);
+            mChange = view.findViewById(R.id.iv_change);
+            mDelete = view.findViewById(R.id.iv_delete);
+            iv_copy = view.findViewById(R.id.iv_copy);
 
 
-            mTag1 = (TextView) view.findViewById(R.id.text_list_card_tag1);
-            mTag2 = (TextView) view.findViewById(R.id.text_list_card_tag2);
-            mTag3 = (TextView) view.findViewById(R.id.text_list_card_tag3);
-            mTag4 = (TextView) view.findViewById(R.id.text_list_card_tag4);
-            mTag5 = (TextView) view.findViewById(R.id.text_list_card_tag5);
+            mTag1 = view.findViewById(R.id.text_list_card_tag1);
+            mTag2 = view.findViewById(R.id.text_list_card_tag2);
+            mTag3 = view.findViewById(R.id.text_list_card_tag3);
+            mTag4 = view.findViewById(R.id.text_list_card_tag4);
+            mTag5 = view.findViewById(R.id.text_list_card_tag5);
             rxEvent = new RxBean();
             rxEvent_1 = new RxBean();
             rxEvent_2 = new RxBean();
 
-            mTextTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    rxEvent_2.setAction("name");
-//                    RxBus.getInstance().post(rxEvent_2);
 
-                }
+            mTag1.setOnClickListener(view1 -> {
+                rxEvent.setMessage(mTag1.getText().toString().trim());
+                RxBus.getInstance().post(rxEvent);
             });
-
-            mTime.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    rxEvent_1.setAction("done");
-//                    RxBus.getInstance().post(rxEvent_1);
-                }
+            mTag2.setOnClickListener(view12 -> {
+                rxEvent.setMessage(mTag2.getText().toString().trim());
+                RxBus.getInstance().post(rxEvent);
             });
-            mTime_up.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    rxEvent_1.setAction("done");
-//                    RxBus.getInstance().post(rxEvent_1);
-                }
+            mTag3.setOnClickListener(view13 -> {
+                rxEvent.setMessage(mTag3.getText().toString().trim());
+                RxBus.getInstance().post(rxEvent);
             });
-
-            mTag1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    rxEvent.setMessage(mTag1.getText().toString().trim());
-                    RxBus.getInstance().post(rxEvent);
-                }
+            mTag4.setOnClickListener(view14 -> {
+                rxEvent.setMessage(mTag4.getText().toString().trim());
+                RxBus.getInstance().post(rxEvent);
             });
-            mTag2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    rxEvent.setMessage(mTag2.getText().toString().trim());
-                    RxBus.getInstance().post(rxEvent);
-                }
-            });
-            mTag3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    rxEvent.setMessage(mTag3.getText().toString().trim());
-                    RxBus.getInstance().post(rxEvent);
-                }
-            });
-            mTag4.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    rxEvent.setMessage(mTag4.getText().toString().trim());
-                    RxBus.getInstance().post(rxEvent);
-                }
-            });
-            mTag5.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    rxEvent.setMessage(mTag5.getText().toString().trim());
-                    RxBus.getInstance().post(rxEvent);
-                }
+            mTag5.setOnClickListener(view15 -> {
+                rxEvent.setMessage(mTag5.getText().toString().trim());
+                RxBus.getInstance().post(rxEvent);
             });
 
         }
@@ -177,22 +142,32 @@ public class TestStackAdapter extends StackAdapter<Integer> {
 
         public void onBind(Integer data, final int position) {
 
+            AccountBean accountBean = mBeanList.get(position);
+            Log.i("这是账户" + position, accountBean.toString());
 
-            final String id = mBeanList.get(position).getObjectId();
-            final String time = mBeanList.get(position).getCreatedAt();
-            final String time_up = mBeanList.get(position).getUpdatedAt();
-            final String name = DesUtil.decrypt(mBeanList.get(position).getName().toString(), SPUtils.getKey());
-            final String account = DesUtil.decrypt(mBeanList.get(position).getAccount().toString(), SPUtils.getKey());
-            final String password = DesUtil.decrypt(mBeanList.get(position).getPassword().toString(), SPUtils.getKey());
-            String note = mBeanList.get(position).getNote().toString();
+            final String id = accountBean.getObjectId();
+            final String time = accountBean.getCreatedAt();
+            final String time_up = accountBean.getUpdatedAt();
+            final String name = DesUtil.decrypt(accountBean.getName(), SPUtils.getKey());
+            final String account = DesUtil.decrypt(accountBean.getAccount(), SPUtils.getKey());
+            final String password = DesUtil.decrypt(accountBean.getPassword(), SPUtils.getKey());
+            String note = accountBean.getNote();
             if (note != null) {
-                note = DesUtil.decrypt(mBeanList.get(position).getNote().toString(), SPUtils.getKey());
+                note = DesUtil.decrypt(accountBean.getNote(), SPUtils.getKey());
             }
-            final List<String> tag = mBeanList.get(position).getTag();
+            final List<String> tag = accountBean.getTag();
 
+
+            boolean shouldChange = DataUtils.shouldChange(time_up);
             mLayout.getBackground().setColorFilter(ContextCompat.getColor(getContext(), data), PorterDuff.Mode.SRC_IN);
             mTextTitle.setText(name);
-            mNum.setText(String.valueOf(position + 1) + "-" + mBeanList.size());
+            mNum.setText((position + 1) + "-" + mBeanList.size());
+            if (shouldChange) {
+                mNum.setTextColor(mContext.getResources().getColor(R.color.red600));
+                ll_notice.setVisibility(View.VISIBLE);
+            } else {
+                ll_notice.setVisibility(View.GONE);
+            }
             mTime.setText(time + "  创建");
             mTime_up.setText(time_up + "  更新");
             mAccount.setText(account);
@@ -203,15 +178,23 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             if (mBeanList.get(position).getWebsite() == null) {
                 mWeb.setText("");
             } else {
-                website = DesUtil.decrypt(mBeanList.get(position).getWebsite().toString(), SPUtils.getKey());
+                website = DesUtil.decrypt(mBeanList.get(position).getWebsite(), SPUtils.getKey());
                 mWeb.setText(website);
+                mWeb.setOnClickListener(view -> {
+                    Intent intent = new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri content_url = Uri.parse("http://" + mWeb.getText().toString());
+                    intent.setData(content_url);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
+                    MyApplication.getContext().startActivity(intent);
+                });
             }
 
             mPwdvisible.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (MyApplication.first_check == 0) {
-                        MyToast.show(mContext, "请先点击左上角解锁操作权限", ThemeUtils.getPrimaryColor(mContext));
+                        MyToast.show(mContext, "请先点击右下角解锁操作权限", ThemeUtils.getPrimaryColor(mContext));
                     } else {
                         if (mPassword.getText().equals("**********")) {
                             mPassword.setText(password);
@@ -226,98 +209,62 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 }
             });
 
-            mAccount.setOnLongClickListener(new View.OnLongClickListener() {
-                @SuppressLint("ResourceAsColor")
-                @Override
-                public boolean onLongClick(View view) {
-                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                    cm.setText(mAccount.getText());
-                    MyApplication.showSnack(view, R.string.copy_account, ThemeUtils.getPrimaryColor(mContext));
-                    return false;
-                }
+            mAccount.setOnLongClickListener(view -> {
+                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(mAccount.getText());
+                MyApplication.showSnack(view, R.string.copy_account, ThemeUtils.getPrimaryColor(mContext));
+                return false;
             });
-            mPassword.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                    cm.setText(mPassword.getText());
-                    MyApplication.showSnack(view, R.string.copy_password, ThemeUtils.getPrimaryColor(mContext));
-                    return false;
-                }
+            mPassword.setOnLongClickListener(view -> {
+                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(mPassword.getText());
+                MyApplication.showSnack(view, R.string.copy_password, ThemeUtils.getPrimaryColor(mContext));
+                return false;
             });
 
 
-            mNote.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                    cm.setText(mNote.getText());
-                    MyApplication.showSnack(view, R.string.copy_note, ThemeUtils.getPrimaryColor(mContext));
-                    return false;
-                }
+            mNote.setOnLongClickListener(view -> {
+                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(mNote.getText());
+                MyApplication.showSnack(view, R.string.copy_note, ThemeUtils.getPrimaryColor(mContext));
+                return false;
             });
-            mWeb.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent();
-                    intent.setAction("android.intent.action.VIEW");
-                    Uri content_url = Uri.parse("http://"+mWeb.getText().toString());
-                    intent.setData(content_url);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
-                    MyApplication.getContext().startActivity(intent);
-                }
-            });
-            mWeb.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                    cm.setText(mWeb.getText());
-                    MyApplication.showSnack(view, R.string.copy_web, ThemeUtils.getPrimaryColor(mContext));
-                    return false;
-                }
+
+            mWeb.setOnLongClickListener(view -> {
+                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(mWeb.getText());
+                MyApplication.showSnack(view, R.string.copy_web, ThemeUtils.getPrimaryColor(mContext));
+                return false;
             });
 
             final String finalNote = note;
             final String finalWeb = mWeb.getText().toString();
 
-
-            mChange.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (MyApplication.first_check == 0) {
-                        //                        MyApplication.showToast("请先点击左上角解锁操作权限");
-                        MyToast.show(mContext, "请先点击左上角解锁操作权限", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
-                    } else {
-                        changeDate(name, account, password, finalWeb, finalNote, tag, id);
-                    }
+            mChange.setOnClickListener(view -> {
+                if (MyApplication.first_check == 0) {
+                    MyToast.show(mContext, "请先点击右下角解锁操作权限", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+                } else {
+                    changeDate(name, account, password, finalWeb, finalNote, tag, id);
                 }
             });
 
+            mDelete.setOnClickListener(view -> {
+                if (MyApplication.first_check == 0) {
+                    MyToast.show(mContext, "请先点击右下角解锁操作权限"
+                            , ThemeUtils.getPrimaryColor(mContext));
 
-            mDelete.setOnClickListener(new View.OnClickListener() {
-                @RequiresApi(api = Build.VERSION_CODES.M)
-                @Override
-                public void onClick(View view) {
-                    if (MyApplication.first_check == 0) {
-                        MyToast.show(mContext, "请先点击左上角解锁操作权限"
-                                , ThemeUtils.getPrimaryColor(mContext));
-
-                    } else {
-                        showDelete(id, account, password);
-                    }
+                } else {
+                    showDelete(id, account, password);
                 }
             });
 
-            iv_copy.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mAccount.getText().length() > 0 || mPassword.getText().length() > 0) {
-                        ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                        cm.setText(mAccount.getText() + "\n" + mPassword.getText());
-                        MyApplication.showSnack(view, R.string.copy, ThemeUtils.getPrimaryColor(mContext));
-                    } else {
-                        MyApplication.showSnack(view, R.string.nothing_copy, ThemeUtils.getPrimaryColor(mContext));
-                    }
+            iv_copy.setOnClickListener(view -> {
+                if (mAccount.getText().length() > 0 || mPassword.getText().length() > 0) {
+                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm.setText(mAccount.getText() + "\n" + mPassword.getText());
+                    MyApplication.showSnack(view, R.string.copy, ThemeUtils.getPrimaryColor(mContext));
+                } else {
+                    MyApplication.showSnack(view, R.string.nothing_copy, ThemeUtils.getPrimaryColor(mContext));
                 }
             });
 
@@ -378,7 +325,6 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//在非activity中调用intent必须设置，不然部分手机崩溃
             MyApplication.getContext().startActivity(intent.setClass(MyApplication.getContext(), AddActivity.class));
-            //            AppManager.getAppManager().currentActivity().finish();
         }
 
         private void showDelete(final String id, String account, String password) {
@@ -392,55 +338,74 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                             "帐号:" + account + "\n密码:" + password +
                                     "\n\n您确定要删除么😟")
                     .setConfirmText("确定")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            deleteDate(id);
-                            sDialog.cancel();
-                        }
+                    .setConfirmClickListener(sDialog -> {
+                        deleteDate(id);
+                        sDialog.cancel();
                     })
                     .setCancelText("不删了")
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            sDialog.cancel();
-                        }
-                    })
+                    .setCancelClickListener(sDialog -> sDialog.cancel())
                     .show();
 
         }
 
         private void deleteDate(String id) {
             pDialog.show();
-            //删除当前数据
-            AccountBean accountBean = new AccountBean();
-            accountBean.setObjectId(id);
-            accountBean.delete(new UpdateListener() {
-                @Override
-                public void done(BmobException e) {
-                    if (e == null) {
-                        mTextTitle.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
-                        mAccount.setText("已删除");
-                        mPassword.setText("已删除");
-                        showTag(false);
-                        mTime_up.setVisibility(View.GONE);
-                        mTime.setVisibility(View.GONE);
-                        mNote.setText("已删除");
-                        mDelete.setClickable(false);
-                        mChange.setClickable(false);
-                        mPwdvisible.setClickable(false);
-                        setDrawableLeft(R.drawable.password);
-                        iv_copy.setVisibility(View.GONE);
-                    } else {
-                        if (e.getErrorCode() == 101) {
-                            MyApplication.showToast("已经删掉了哦~");
+            if (MyApplication.getUser() != null) {
+                //删除当前数据
+                AccountBean accountBean = new AccountBean();
+                accountBean.setObjectId(id);
+                accountBean.delete(new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            mTextTitle.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
+                            mAccount.setText("已删除");
+                            mPassword.setText("已删除");
+                            showTag(false);
+                            mTime_up.setVisibility(View.GONE);
+                            mTime.setVisibility(View.GONE);
+                            mNote.setText("已删除");
+                            mDelete.setClickable(false);
+                            mChange.setClickable(false);
+                            mPwdvisible.setClickable(false);
+                            setDrawableLeft(R.drawable.password);
+                            iv_copy.setVisibility(View.GONE);
                         } else {
-                            MyApplication.showToast("删除失败：" + e.getMessage() + "," + e.getErrorCode());
+                            if (e.getErrorCode() == 101) {
+                                MyApplication.showToast("已经删掉了哦~");
+                            } else {
+                                MyApplication.showToast("删除失败：" + e.getMessage() + "," + e.getErrorCode());
+                            }
                         }
+                        pDialog.dismiss();
                     }
-                    pDialog.dismiss();
+                });
+            } else {
+                Iterator<AccountBean> iterator = mBeanList.iterator();
+                while (iterator.hasNext()) {
+                    AccountBean next = iterator.next();
+                    if (id.equals(next.getObjectId())) {
+                        iterator.remove();
+                    }
                 }
-            });
+
+                mTextTitle.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
+                mAccount.setText("已删除");
+                mPassword.setText("已删除");
+                showTag(false);
+                mTime_up.setVisibility(View.GONE);
+                mTime.setVisibility(View.GONE);
+                mNote.setText("已删除");
+                mDelete.setClickable(false);
+                mChange.setClickable(false);
+                mPwdvisible.setClickable(false);
+                setDrawableLeft(R.drawable.password);
+                iv_copy.setVisibility(View.GONE);
+
+                SPUtils.setDataList("beans", mBeanList);
+                pDialog.dismiss();
+            }
+
         }
 
 

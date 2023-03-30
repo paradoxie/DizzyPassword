@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/dialog_ed_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="输入坚果云账户，坚果云后台获取" />
+
+    <EditText
+        android:layout_marginTop="10dp"
+        android:id="@+id/dialog_ed_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="输入应用密码，坚果云后台获取" />
+
+</LinearLayout>

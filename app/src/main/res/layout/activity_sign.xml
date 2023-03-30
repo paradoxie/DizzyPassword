@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +8,7 @@
     android:orientation="vertical"
     tools:context="cf.paradoxie.dizzypassword.activity.SignActivity">
 
-    <include layout="@layout/toolbar_layout"/>
+    <include layout="@layout/toolbar_layout" />
 
     <LinearLayout
         android:id="@+id/edit"
@@ -18,36 +17,22 @@
         android:layout_margin="20dp"
         android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/nameWrapper"
+
+        <cf.paradoxie.dizzypassword.view.ClearableEditText
+            android:id="@+id/et_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:hint="帐号:请输入您的常用邮箱地址"
+            android:inputType="textEmailAddress" />
 
-            <cf.paradoxie.dizzypassword.view.ClearableEditText
-                android:id="@+id/et_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="帐号:请输入您的常用邮箱地址"
-                android:inputType="textEmailAddress"/>
-        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/passwordWrapper"
+        <cf.paradoxie.dizzypassword.view.ClearableEditText
+            android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp">
+            android:hint="密码:请输入您设置的密码,至少8位哟"
+            android:inputType="textPassword" />
 
-            <cf.paradoxie.dizzypassword.view.ClearableEditText
-                android:id="@+id/et_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="密码:请输入您设置的密码,至少8位哟"
-                android:inputType="textPassword"/>
-        </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
 
@@ -55,7 +40,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/edit"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -66,7 +52,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/search_label_sure"
             android:text="登录"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/bt_sign_on"
@@ -75,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:background="@drawable/search_label_sure"
-            android:text="首次使用，注册"/>
+            android:text="仅限登录" />
 
     </LinearLayout>
 
@@ -93,74 +79,74 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
                 android:text="@string/action_note"
-                android:textColor="?colorAccent"
-                android:textSize="14sp"/>
+                android:textColor="@color/red400"
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="60dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
                 android:text="@string/action_note_1"
-                android:textColor="@color/gray_btn_bg_pressed_color"/>
+                android:textColor="@color/gray_btn_bg_pressed_color" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="60dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
                 android:text="@string/action_note_2"
-                android:textColor="@color/gray_btn_bg_pressed_color"/>
+                android:textColor="@color/gray_btn_bg_pressed_color" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="60dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
                 android:text="@string/action_note_3"
-                android:textColor="@color/gray_btn_bg_pressed_color"/>
+                android:textColor="@color/gray_btn_bg_pressed_color" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="60dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
                 android:text="@string/action_note_4"
-                android:textColor="?colorPrimaryDark"/>
+                android:textColor="@color/red400" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="60dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
                 android:text="@string/action_note_6"
-                android:textColor="?colorPrimaryDark"/>
+                android:textColor="?colorPrimaryDark" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="60dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
                 android:text="@string/action_note_7"
-                android:textColor="?colorPrimaryDark"/>
+                android:textColor="?colorPrimaryDark" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="60dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
                 android:text="@string/action_note_5"
-                android:textColor="@color/gray_btn_bg_pressed_color"/>
+                android:textColor="@color/gray_btn_bg_pressed_color" />
         </LinearLayout>
 
     </ScrollView>

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -18,6 +18,12 @@
 
         <item name="android:background">#ffffff</item>
     </style>
+
+    <style name="DialogOutAndInStyle">
+        <item name="android:windowEnterAnimation">@anim/dialog_in_anim</item>
+        <item name="android:windowExitAnimation">@anim/dialog_out_anim</item>
+    </style>
+
 
     <style name="AppTheme_Dialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="windowActionBar">false</item>
