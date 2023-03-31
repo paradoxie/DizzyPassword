@@ -3,10 +3,12 @@ package cf.paradoxie.dizzypassword.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.appcompat.widget.Toolbar;
 
+import cf.paradoxie.dizzypassword.base.AppManager;
 import cf.paradoxie.dizzypassword.base.BaseActivity;
 import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
@@ -18,6 +20,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class JianGuoSignActivity extends BaseActivity {
     private EditText et_username, et_password;
     private Button bt_sign_up;
+    private CheckBox cb;
     private String username, password;
     private SweetAlertDialog pDialog = null;
 
@@ -41,9 +44,14 @@ public class JianGuoSignActivity extends BaseActivity {
 
         et_username = findViewById(R.id.et_username);
         et_password = findViewById(R.id.et_password);
+        cb = findViewById(R.id.cb);
 
         bt_sign_up = findViewById(R.id.bt_sign_up);
         bt_sign_up.setOnClickListener(view -> {
+            if (!cb.isChecked()) {
+                MyApplication.showToast("请仔细阅读注意事项，勾选后登录~");
+                return;
+            }
             username = et_username.getText().toString().trim();
             password = et_password.getText().toString().trim();
             if (!DesUtil.isEmail(username)) {
@@ -61,6 +69,7 @@ public class JianGuoSignActivity extends BaseActivity {
             hideInputWindow();
             Intent intent = new Intent(JianGuoSignActivity.this, JianGuoMainActivity.class);
             startActivity(intent);
+            AppManager.getAppManager().finishAllActivity();
             finish();
 
         });

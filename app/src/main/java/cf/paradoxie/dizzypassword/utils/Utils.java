@@ -2,8 +2,10 @@ package cf.paradoxie.dizzypassword.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
@@ -190,5 +192,17 @@ public class Utils {
 
         return dateNowStr;
     }
-
+    /**
+     * 跳转默认浏览器打开
+     *
+     * @param context
+     * @param url
+     */
+    public static void jumpToDefaultBrowser(Activity context, String url) {
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        Uri content_url = Uri.parse(url);
+        intent.setData(content_url);
+        context.startActivity(intent);
+    }
 }

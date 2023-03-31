@@ -26,6 +26,7 @@ import cf.paradoxie.dizzypassword.utils.Utils;
 import cf.paradoxie.dizzypassword.wdsyncer.SyncConfig;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
+import co.infinum.goldfinger.Goldfinger;
 
 
 import static cn.bmob.v3.BmobRealTimeData.TAG;
@@ -47,6 +48,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         super.onCreate();
         mInstance = this;
         mContext = getApplicationContext();
+
         //开启抓取错误信息
         Thread.setDefaultUncaughtExceptionHandler(this);
         configDavSync();

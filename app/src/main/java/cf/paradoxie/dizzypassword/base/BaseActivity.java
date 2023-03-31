@@ -36,10 +36,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Activity SELF = null;
     private SharedPreferences sp;
     protected Handler mHandler = new Handler(Looper.getMainLooper());
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         SELF = this;
         onPreCreate();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -105,6 +106,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
+
     protected <T extends ViewDataBinding> T getBinding(@LayoutRes int layoutId) {
         return DataBindingUtil.setContentView(this, layoutId);
     }

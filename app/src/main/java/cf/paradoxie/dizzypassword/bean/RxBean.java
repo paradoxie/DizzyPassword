@@ -10,6 +10,13 @@ public class RxBean {
     private String message;
     private String action;
 
+    public RxBean(String action) {
+        this.action = action;
+    }
+
+    public RxBean() {
+    }
+
     public String getPwd() {
         return pwd;
     }

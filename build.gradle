@@ -36,7 +36,7 @@ ext {
     MINSDK_VERSION = 23//最小支持SDK
     TARGETSDK_VERSION = 29//目标支持SDK
     VERSION_CODE = gitVersionCode()//版本号
-    VERSION_NAME = "v" + gitVersionInfo()//版本名称
+    VERSION_NAME = gitVersionInfo()//版本名称
 
 
 }
@@ -50,7 +50,7 @@ static def gitVersionCode() {
 //通过版本code,生成版本信息
 static def gitVersionInfo() {
     def code = gitVersionCode()
-    code = code + 100;
+    code = code + 127;
     String s = code + ""
     StringBuffer sb = new StringBuffer(s)
     sb.insert(sb.length() - 1, ".")

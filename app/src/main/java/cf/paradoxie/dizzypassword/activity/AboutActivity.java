@@ -25,7 +25,7 @@ public class AboutActivity extends BaseActivity {
         setContentView(R.layout.activity_about);
 
         Toolbar toolbar =findViewById(R.id.toolbar);
-        toolbar.setTitle("关于");
+        toolbar.setTitle("免责及隐私协议");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -38,7 +38,7 @@ public class AboutActivity extends BaseActivity {
         note.setOnClickListener(view -> showNote());
         version_info =   findViewById(R.id.version_info);
 
-        version_info.setText("V" + Utils.GetVersionName());
+        version_info.setText(Utils.GetVersionName());
         ThemeUtils.initStatusBarColor(AboutActivity.this, ThemeUtils.getPrimaryDarkColor(AboutActivity.this));
     }
 

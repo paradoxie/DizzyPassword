@@ -40,7 +40,9 @@ import cf.paradoxie.dizzypassword.base.BaseActivity;
 import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
+import cf.paradoxie.dizzypassword.bean.RxBean;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
+import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.view.DialogView;
@@ -69,7 +71,7 @@ public class JianGuoActivity extends BaseActivity {
                 case 2:
                     String time = (String) msg.obj;
                     SPUtils.put("asyncTime", time);
-                    tv_time.setText("上次同步时间：\n" + time);
+                    tv_time.setText("上次同步时间：\n" + time+"\n 请检查坚果云后台是否存在数据");
                     break;
             }
         }
@@ -143,6 +145,7 @@ public class JianGuoActivity extends BaseActivity {
             if (tv_cloud_path.getText().toString().contains("dizzyPassword_security")) {
                 downloadFile(syncManager);
                 MyApplication.showToast("恢复完成，请回到列表界面点击右上角刷新按钮");
+                RxBus.getInstance().post(new RxBean("refresh"));
             } else {
                 MyApplication.showToast("请先点击【检查云端文件】");
             }

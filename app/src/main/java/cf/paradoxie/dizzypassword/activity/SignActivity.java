@@ -34,8 +34,6 @@ public class SignActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
         toolbar.setNavigationOnClickListener(view -> {
-            Intent intent = new Intent(SignActivity.this, MainActivity.class);
-            startActivity(intent);
             finish();
         });
         toolbar.setOnMenuItemClickListener(item -> {
@@ -89,6 +87,7 @@ public class SignActivity extends BaseActivity {
                         SPUtils.put("name", username);
                         Intent intent = new Intent(SignActivity.this, MainActivity.class);
                         startActivity(intent);
+                        AppManager.getAppManager().finishAllActivity();
                         finish();
                     } else {
                         if (e.getErrorCode() == 101) {

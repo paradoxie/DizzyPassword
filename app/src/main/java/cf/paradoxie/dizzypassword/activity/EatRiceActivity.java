@@ -16,8 +16,10 @@ import cf.paradoxie.dizzypassword.adapter.GridMineAdapter;
 import cf.paradoxie.dizzypassword.adapter.RecyclerItemClickListener;
 import cf.paradoxie.dizzypassword.base.BaseActivity;
 import cf.paradoxie.dizzypassword.bean.MineNavBean;
+import cf.paradoxie.dizzypassword.data.DataDeal;
 import cf.paradoxie.dizzypassword.databinding.ActivityEatriceBinding;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
+import cf.paradoxie.dizzypassword.utils.Utils;
 
 /**
  * Created by xiehehe on 2017/10/28.
@@ -53,7 +55,7 @@ public class EatRiceActivity extends BaseActivity {
 
         mineNavBeans.add(new MineNavBean(R.mipmap.ic_ele, "饿了么红包"));
         mineNavBeans.add(new MineNavBean(R.mipmap.ic_mei, "美团红包"));
-        mineNavBeans.add(new MineNavBean(R.mipmap.ic_tool, "全能工具箱"));
+        mineNavBeans.add(new MineNavBean(R.mipmap.ic_quan, "全网神券"));
 //        mineNavBeans.add(new MineNavBean(R.mipmap.ic_welcome, "开屏配置"));
 
         binding.rvMine.setLayoutManager(manager);
@@ -71,7 +73,7 @@ public class EatRiceActivity extends BaseActivity {
 //                        CommonUtil.INSTANCE.startActivityWithAnimate(getActivity(), ManageNavActivity.class);
                         break;
                     case 2:
-//                        CommonUtil.INSTANCE.startActivityWithAnimate(getActivity(), ManagePicActivity.class);
+                        Utils.jumpToDefaultBrowser(EatRiceActivity.this, DataDeal.getInstance(EatRiceActivity.this).getAppConfig().getBuyUrl());
                         break;
                     case 3:
 //                        CommonUtil.INSTANCE.startActivityWithAnimate(getActivity(), WelfareAddActivity.class);

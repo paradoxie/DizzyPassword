@@ -87,8 +87,6 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
     private NameAdapter nameAdapter;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -311,7 +309,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
             toolbar.setTitle("全部");
             fab.setImageResource(R.drawable.add);
             fab_1.setVisibility(View.VISIBLE);
-            fab_2.setVisibility(View.VISIBLE);
+//            fab_2.setVisibility(View.VISIBLE);
             search.setVisibility(View.VISIBLE);
 //            refresh.setVisibility(View.VISIBLE);
             sort.setVisibility(View.VISIBLE);
@@ -344,6 +342,14 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
                 if (rxBean.getAction().equals("done")) {
                     //点击新建/更新时间排序
                     closeStackView();
+                } else if (rxBean.getAction().equals("refresh")) {
+//                    if (MyApplication.isSign()) {
+//                        closeStackView();
+//                        findOffLineDate();
+//                        toolbar.setTitle("全部");
+//                    } else {
+                    MyApplication.showToast("本地数据有更新，请点击右上角刷新");
+//                    }
                 }
             }
         });

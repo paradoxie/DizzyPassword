@@ -79,7 +79,7 @@
 
         <PreferenceScreen
             android:key="about"
-            android:title="关于"></PreferenceScreen>
+            android:title="免责及隐私协议"></PreferenceScreen>
 
     </PreferenceCategory>
 </PreferenceScreen>

@@ -41,7 +41,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':searchview')
-    implementation project(path: ':FingerPrinter')
     implementation project(path: ':cardstack')
     implementation project(path: ':bubbleseekbar')
     implementation files('libs/smoothcompoundbuttonlibrary.jar')
@@ -86,4 +85,5 @@ dependencies {
     //网络
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
 //    implementation "com.github.kongzue.DialogX:DialogX:0.0.45.beta12"
+    implementation 'co.infinum:goldfinger:2.1.0'
 }

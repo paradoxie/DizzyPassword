@@ -22,7 +22,7 @@
             android:id="@+id/tv_notify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="未配置坚果云账号，点击右上角图标配置\账户密码获取教程：\n
+            android:text="坚果云账号密码获取教程：\n
 1.注册坚果云\n
 2.登录后点击右上角用户名，选择【账户信息】\n
 3.页面跳转后选择【安全选项】，右下方可见【第三方应用管理】\n
