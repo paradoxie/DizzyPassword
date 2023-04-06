@@ -37,6 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.base.Constans;
 import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
@@ -55,7 +56,7 @@ import cf.paradoxie.dizzypassword.wdsyncer.model.DavData;
 
 @SuppressLint("HandlerLeak")
 public class JianGuoActivity extends BaseActivity {
-    private TextView tv_local, tv_local_to_cloud, tv_cloud, tv_cloud_to_local, tv_time;
+    private TextView tv_local, tv_local_to_cloud, tv_cloud, tv_cloud_to_local, tv_time, tv_time_down;
     private DialogView mDialogView;
     private TextView tv_cloud_path;
     private SyncManager syncManager;
@@ -71,7 +72,14 @@ public class JianGuoActivity extends BaseActivity {
                 case 2:
                     String time = (String) msg.obj;
                     SPUtils.put("asyncTime", time);
-                    tv_time.setText("上次同步时间：\n" + time+"\n 请检查坚果云后台是否存在数据");
+                    SPUtils.put(Constans.UN_BACK, "0");
+                    tv_time.setText("已上传：\n" + time + "\n 请检查坚果云后台是否存在数据");
+                    break;
+                case 3:
+                    MyApplication.showToast("恢复完成，请回到列表界面点击右上角刷新按钮");
+                    String time1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                    SPUtils.put("asyncTimeDown", time1);
+                    tv_time_down.setText("已恢复：\n" + time1 + "\n 请回到列表界面点击右上角刷新按钮");
                     break;
             }
         }
@@ -131,7 +139,9 @@ public class JianGuoActivity extends BaseActivity {
         });
 
         tv_time = findViewById(R.id.tv_time);
-        tv_time.setText("上次同步时间：\n" + SPUtils.get("asyncTime", ""));
+        tv_time_down = findViewById(R.id.tv_time_down);
+        tv_time.setText("上次上传时间：\n" + SPUtils.get("asyncTime", ""));
+        tv_time_down.setText("上次恢复时间：\n" + SPUtils.get("asyncTimeDown", ""));
         tv_cloud = findViewById(R.id.tv_cloud);
         tv_cloud.setOnClickListener(view -> {
             if (checkPwd()) {
@@ -145,7 +155,7 @@ public class JianGuoActivity extends BaseActivity {
             if (tv_cloud_path.getText().toString().contains("dizzyPassword_security")) {
                 downloadFile(syncManager);
                 MyApplication.showToast("恢复完成，请回到列表界面点击右上角刷新按钮");
-                RxBus.getInstance().post(new RxBean("refresh"));
+//                RxBus.getInstance().post(new RxBean("refresh"));
             } else {
                 MyApplication.showToast("请先点击【检查云端文件】");
             }
@@ -343,7 +353,11 @@ public class JianGuoActivity extends BaseActivity {
                 }
                 Log.e("存入本地", "");
                 SPUtils.setDataList("beans", accountBeans);
+                SPUtils.put(Constans.UN_BACK, "0");
                 Log.e("完成", "");
+                Message msg = new Message();
+                msg.what = 3;
+                uiHandler.sendMessage(msg);
             }
 
             @Override

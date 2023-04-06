@@ -135,7 +135,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
             android:background="@drawable/bg_dotted_line"
-            android:layerType="software"></View>
+            android:layerType="software"/>
 
     </RelativeLayout>
 
@@ -202,7 +202,7 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@drawable/bg_dotted_line"
-            android:layerType="software"></View>
+            android:layerType="software"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -344,7 +344,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/bg_dotted_line"
-            android:layerType="software"></View>
+            android:layerType="software"/>
 
     </LinearLayout>
 

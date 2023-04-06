@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import android.text.Editable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import cf.paradoxie.dizzypassword.base.AppManager;
 import cf.paradoxie.dizzypassword.base.Constans;
@@ -42,6 +43,7 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
 
     private int theme;
     private SharedPreferences sp;
+    private ImageView jianguo_status;
 
     public SettingPreferenceFragment() {
     }
@@ -58,6 +60,18 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
         switch_preference_image.setOnPreferenceChangeListener(this);
 
         theme = sp.getInt("theme_change", R.style.Theme7);
+
+        Preference myPreference = findPreference("dav");
+        String back_status = (String) SPUtils.get(Constans.UN_BACK, "1");
+        if ("1".equals(back_status)) {
+            //未同步
+            myPreference.setWidgetLayoutResource(R.layout.layout_jianguo_unback);
+            myPreference.setSummary("本地数据有所更改，请及时同步");
+        } else {
+            //已同步
+            myPreference.setWidgetLayoutResource(R.layout.layout_jianguo);
+            myPreference.setSummary("当前本地数据与云端一致");
+        }
     }
 
 
@@ -208,6 +222,8 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
                                     MyApplication.showToast("你等着！");
                                 }).show();
                     });
+                }else {
+                    MyApplication.showToast("已经是最新版本啦~");
                 }
                 pDialog.dismiss();
 

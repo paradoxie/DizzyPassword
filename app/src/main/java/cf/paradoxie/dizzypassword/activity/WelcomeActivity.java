@@ -205,13 +205,13 @@ public class WelcomeActivity extends AppCompatActivity {
                     startActivity(new Intent(MyApplication.getContext(), JianGuoMainActivity.class));
                 }
                 finish();
-            }, 1000);
+            }, 500);
 
         } else {
             mHandler.postDelayed(() -> {
                 gotoActivity(ChoiceActivity.class);
                 finish();
-            }, 1000);
+            }, 500);
 
         }
     }

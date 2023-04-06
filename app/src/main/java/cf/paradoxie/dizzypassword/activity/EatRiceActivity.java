@@ -1,25 +1,32 @@
 package cf.paradoxie.dizzypassword.activity;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 
+import com.google.android.gms.common.util.CollectionUtils;
+import com.junmeng.lib.sharemodel.viewmodel.ShareViewModelProvider;
+import com.zhpan.bannerview.constants.IndicatorGravity;
+import com.zhpan.bannerview.constants.PageStyle;
+import com.zhpan.indicator.enums.IndicatorSlideMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.adapter.BannerAdapter;
 import cf.paradoxie.dizzypassword.adapter.GridMineAdapter;
-import cf.paradoxie.dizzypassword.adapter.RecyclerItemClickListener;
 import cf.paradoxie.dizzypassword.base.BaseActivity;
-import cf.paradoxie.dizzypassword.bean.MineNavBean;
-import cf.paradoxie.dizzypassword.data.DataDeal;
 import cf.paradoxie.dizzypassword.databinding.ActivityEatriceBinding;
+import cf.paradoxie.dizzypassword.http.HttpListener;
+import cf.paradoxie.dizzypassword.http.HttpUtils;
+import cf.paradoxie.dizzypassword.bean.CommonEntity;
+import cf.paradoxie.dizzypassword.room.CommonViewModel;
+import cf.paradoxie.dizzypassword.utils.JumpUtil;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
-import cf.paradoxie.dizzypassword.utils.Utils;
 
 /**
  * Created by xiehehe on 2017/10/28.
@@ -28,13 +35,15 @@ import cf.paradoxie.dizzypassword.utils.Utils;
 public class EatRiceActivity extends BaseActivity {
     private ActivityEatriceBinding binding;
     private GridMineAdapter gridAdapter;
-    private List<MineNavBean> mineNavBeans = new ArrayList<>();
+    private CommonViewModel commonViewModel;
+    private List<CommonEntity> commonEntities = new ArrayList<>();
+    private List<CommonEntity> bannerEntities = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = getBinding(R.layout.activity_eatrice);
-
+        commonViewModel = ShareViewModelProvider.get(this, CommonViewModel.class);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("好东西😏");
         setSupportActionBar(toolbar);
@@ -45,7 +54,19 @@ public class EatRiceActivity extends BaseActivity {
     }
 
     private void init() {
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL) {
+
+        binding.bannerView.registerLifecycleObserver(getLifecycle())
+                .setAdapter(new BannerAdapter(bean->{
+                    JumpUtil.jump(EatRiceActivity.this, bean);
+                }))
+                .setScrollDuration(500)
+                .setPageStyle(PageStyle.MULTI_PAGE_SCALE)
+                .setIndicatorGravity(IndicatorGravity.END)
+                .setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
+                .setRoundCorner(30)
+                .create();
+
+        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL) {
             //每排3个，禁止竖向滑动 RecyclerView 为垂直状态（VERTICAL）
             @Override
             public boolean canScrollVertically() {
@@ -53,44 +74,50 @@ public class EatRiceActivity extends BaseActivity {
             }
         };
 
-        mineNavBeans.add(new MineNavBean(R.mipmap.ic_ele, "饿了么红包"));
-        mineNavBeans.add(new MineNavBean(R.mipmap.ic_mei, "美团红包"));
-        mineNavBeans.add(new MineNavBean(R.mipmap.ic_quan, "全网神券"));
-//        mineNavBeans.add(new MineNavBean(R.mipmap.ic_welcome, "开屏配置"));
-
         binding.rvMine.setLayoutManager(manager);
-        gridAdapter = new GridMineAdapter(this);
+        gridAdapter = new GridMineAdapter(this,bean->{
+            JumpUtil.jump(EatRiceActivity.this, bean);
+        });
         binding.rvMine.setAdapter(gridAdapter);
-        gridAdapter.setLists(mineNavBeans);
-        binding.rvMine.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                switch (position) {
-                    case 0:
-//                        CommonUtil.INSTANCE.startActivityWithAnimate(getActivity(), ManageBannerActivity.class);
-                        break;
-                    case 1:
-//                        CommonUtil.INSTANCE.startActivityWithAnimate(getActivity(), ManageNavActivity.class);
-                        break;
-                    case 2:
-                        Utils.jumpToDefaultBrowser(EatRiceActivity.this, DataDeal.getInstance(EatRiceActivity.this).getAppConfig().getBuyUrl());
-                        break;
-                    case 3:
-//                        CommonUtil.INSTANCE.startActivityWithAnimate(getActivity(), WelfareAddActivity.class);
-                        break;
-                    case 4:
-//                        CommonUtil.INSTANCE.startActivityWithAnimate(getActivity(), ManageWelcomeActivity.class);
-                        break;
 
+        getAds();
+
+        commonViewModel.getAll().observe(this, entities -> {
+            if (entities != null) {
+                commonEntities.clear();
+                bannerEntities.clear();
+                commonEntities.addAll(entities);
+                for(CommonEntity commonEntity:commonEntities){
+                    if(commonEntity.isBanner()){
+                        bannerEntities.add(commonEntity);
+                    }
                 }
+                binding.bannerView.refreshData(bannerEntities);
+                gridAdapter.setLists(commonEntities);
+            }
+        });
 
+    }
+
+    private void getAds() {
+        HttpUtils.getInstance().getAds(new HttpListener<List<CommonEntity>>() {
+
+            @Override
+            public void success(List<CommonEntity> adBeans) {
+                if (!CollectionUtils.isEmpty(adBeans)) {
+                    commonViewModel.deleteAll();
+//                    Log.e("推广信息", adBeans.toString());
+                    for (CommonEntity ad : adBeans) {
+                        commonViewModel.insert(ad);
+                    }
+                }
             }
 
             @Override
-            public void onLongClick(View view, int posotion) {
+            public void failed() {
 
             }
-        }));
+        });
     }
 
 }

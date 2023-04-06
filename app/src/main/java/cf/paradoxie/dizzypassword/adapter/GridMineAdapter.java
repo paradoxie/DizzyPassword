@@ -8,31 +8,33 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.bean.MineNavBean;
+import cf.paradoxie.dizzypassword.bean.CommonEntity;
+import cf.paradoxie.dizzypassword.utils.Utils;
 
-public class GridMineAdapter extends RecyclerView.Adapter<GridMineAdapter.ViewHolder> {
+public class GridMineAdapter extends RecyclerView.Adapter<GridMineAdapter.ViewHolder> implements View.OnClickListener {
     private Activity context;
-    private List<MineNavBean> lists = new ArrayList<>();
+    private List<CommonEntity> lists = new ArrayList<>();
+    private Onclick onclick;
 
-    public GridMineAdapter(Activity context) {
+    public GridMineAdapter(Activity context, Onclick onclick) {
         this.context = context;
+        this.onclick = onclick;
     }
 
 
-    public void setLists(List<MineNavBean> newLists) {
-       if (newLists!=null){
-           lists.clear();
-           lists.addAll(newLists);
-           notifyDataSetChanged();
-       }
+    public void setLists(List<CommonEntity> newLists) {
+        if (newLists != null) {
+            lists.clear();
+            lists.addAll(newLists);
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -44,9 +46,14 @@ public class GridMineAdapter extends RecyclerView.Adapter<GridMineAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MineNavBean homeGridBean = lists.get(position);
-        holder.tv_info.setText("" + homeGridBean.getText());
-        Glide.with(context).load(homeGridBean.getLogo()).into(holder.iv_icon);
+        CommonEntity homeGridBean = lists.get(position);
+        holder.tv_info.setText("" + homeGridBean.getName());
+//        Glide.with(context).load(homeGridBean.getLogo()).into(holder.iv_icon);
+        Utils.loadImg(holder.iv_icon, homeGridBean.getPicUrl(), false);
+
+        holder.card.setOnClickListener(this);
+        holder.card.setTag(homeGridBean);
+
     }
 
     @Override
@@ -54,14 +61,30 @@ public class GridMineAdapter extends RecyclerView.Adapter<GridMineAdapter.ViewHo
         return lists.size();
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.card) {
+            CommonEntity orderBean = (CommonEntity) v.getTag();
+            onclick.click(orderBean);
+        }
+
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tv_info;
         ImageView iv_icon;
+        CardView card;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_info = itemView.findViewById(R.id.tv_info);
             iv_icon = itemView.findViewById(R.id.iv_icon);
+            card = itemView.findViewById(R.id.card);
         }
     }
 
+
+ public    interface Onclick {
+        void click(CommonEntity entity);
+    }
 }

@@ -14,8 +14,8 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:background="@mipmap/ic_logo" />
@@ -76,7 +76,7 @@
             android:layout_above="@+id/right"
             android:layout_marginBottom="10dp"
             android:gravity="center"
-            android:text="我的github主页:\n https://github.com/paradoxie"
+            android:text="github主页:\n https://github.com/paradoxie"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 

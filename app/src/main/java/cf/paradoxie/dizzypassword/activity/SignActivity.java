@@ -36,15 +36,7 @@ public class SignActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(view -> {
             finish();
         });
-        toolbar.setOnMenuItemClickListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.action_change) {
-                Intent intent = new Intent(AppManager.getAppManager().currentActivity(), TeachActivity.class);
-                startActivity(intent);
 
-            }
-            return false;
-        });
         ThemeUtils.initStatusBarColor(SignActivity.this, ThemeUtils.getPrimaryDarkColor(SignActivity.this));
 
         pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);

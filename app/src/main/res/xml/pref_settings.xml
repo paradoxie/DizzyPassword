@@ -7,7 +7,10 @@
         <PreferenceScreen
             android:key="dav"
             android:summary="坚果云同步"
-            android:title="您自己的私有云同步"></PreferenceScreen>
+            android:title="您自己的私有云同步"
+            android:widgetLayout="@layout/layout_jianguo">
+
+        </PreferenceScreen>
 
     </PreferenceCategory>
     <PreferenceCategory
@@ -45,7 +48,7 @@
             android:maxLength="6"
             android:paddingLeft="5dp"
             android:summary="更换进入App时的六位安全码"
-            android:title="更换安全码"></EditTextPreference>
+            android:title="更换安全码"/>
 
     </PreferenceCategory>
 
@@ -56,30 +59,30 @@
         <PreferenceScreen
             android:key="red_package"
             android:summary=""
-            android:title="捐赠"></PreferenceScreen>
+            android:title="捐赠"/>
 
         <PreferenceScreen
             android:key="group"
             android:summary="反馈bug，一起玩耍"
-            android:title="加群"></PreferenceScreen>
+            android:title="加群"/>
         <PreferenceScreen
             android:key="update"
             android:summary="点击检查更新"
-            android:title="更新"></PreferenceScreen>
+            android:title="更新"/>
 
         <PreferenceScreen
             android:key="share"
             android:summary="希望也能帮到其他人啦"
-            android:title="分享"></PreferenceScreen>
+            android:title="分享"/>
 
         <PreferenceScreen
             android:key="back_up"
             android:summary="导出支持json和csv格式"
-            android:title="导出导入"></PreferenceScreen>
+            android:title="导出导入"/>
 
         <PreferenceScreen
             android:key="about"
-            android:title="免责及隐私协议"></PreferenceScreen>
+            android:title="免责及隐私协议"/>
 
     </PreferenceCategory>
 </PreferenceScreen>

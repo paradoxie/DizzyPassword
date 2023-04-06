@@ -7,13 +7,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.widget.RadioButton;
 
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.SizeUtils;
 
 
-public class ThemeChoiceRadioButton extends RadioButton {
+public class ThemeChoiceRadioButton extends androidx.appcompat.widget.AppCompatRadioButton {
 
     private int backgroundColor;
 

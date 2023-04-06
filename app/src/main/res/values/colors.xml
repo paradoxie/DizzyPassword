@@ -7,6 +7,7 @@
     <color name="all_translucent">#00000000</color>
     <color name="half_translucent">#e0000000</color>
 
+    <color name="half_translucent_white">#4D524B4B</color>
     <color name="bg_color">#FFFFFF</color>
     <color name="pressed_color">#433f3f</color>
 

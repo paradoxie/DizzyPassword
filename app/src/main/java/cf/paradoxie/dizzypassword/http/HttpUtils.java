@@ -1,39 +1,28 @@
 package cf.paradoxie.dizzypassword.http;
 
-import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import cf.paradoxie.dizzypassword.base.Constans;
-import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.bean.AppConfig;
+import cf.paradoxie.dizzypassword.bean.CommonEntity;
 import cf.paradoxie.dizzypassword.utils.Base64Util;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import retrofit2.Retrofit;
 
@@ -63,8 +52,7 @@ public class HttpUtils {
     }
 
     /**
-     * 大淘客数据
-     * 京东 获取转链后数据
+     * APP配置信息
      */
     public void getAppConfigUrl(HttpListener<AppConfig> httpListener) {
 
@@ -93,12 +81,46 @@ public class HttpUtils {
                         String witty = string.split("&&&")[5];
 
 
-                        httpListener.success(new AppConfig(version_code, appDownLoadUrl, buyUrl, avatarUrl, maxim,witty));
+                        httpListener.success(new AppConfig(version_code, appDownLoadUrl, buyUrl, avatarUrl, maxim, witty));
                     } catch (Exception e) {
                         Log.e("app配置信息出错了", e.toString());
                         httpListener.success(new AppConfig(1, "", "https://buy.tantuk.cn/",
                                 "http://cdn-hw-static.shanhutech.cn/bizhi/staticwp/202208/4ef2da444cc9f23a36df8a8f22cb9edb--1348394357.jpg",
-                                "幽默是藏身于笑话之后的严肃。","世上无难事，只要肯放弃"));
+                                "幽默是藏身于笑话之后的严肃。", "世上无难事，只要肯放弃"));
+                    }
+//                    JsonObject obj = g.fromJson(string, JsonObject.class);
+                }
+            }
+        });
+    }
+
+    /**
+     * APP配置信息
+     */
+    public void getAds(HttpListener<List<CommonEntity>> httpListener) {
+
+        request = new Request.Builder().url(Constans.AD).build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                httpListener.failed();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        String string = response.body().string();
+                        Log.e("推广信息json", string);
+                        JsonObject jobj = new Gson().fromJson(string, JsonObject.class);
+                        String result = jobj.get("data").toString();
+                        List<CommonEntity> adBeans = new Gson().fromJson(result, new TypeToken<List<CommonEntity>>() {
+                        }.getType());
+                        Log.e("推广信息", adBeans.toString());
+                        httpListener.success(adBeans);
+                    } catch (Exception e) {
+                        httpListener.success(new ArrayList<>());
                     }
 //                    JsonObject obj = g.fromJson(string, JsonObject.class);
                 }

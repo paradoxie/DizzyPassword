@@ -3,9 +3,9 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="cf.paradoxie.dizzypassword.activity.MainActivity">
     <item
-        android:id="@+id/action_change"
+        android:id="@+id/action_open"
         android:orderInCategory="80"
-        android:title="修改ID"
+        android:title="浏览器打开"
         app:showAsAction="ifRoom"/>
 
 </menu>

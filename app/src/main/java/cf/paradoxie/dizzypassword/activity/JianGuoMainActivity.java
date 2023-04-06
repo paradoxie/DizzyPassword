@@ -250,39 +250,42 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
         fab.setOnClickListener(view -> {
 
             if (MyApplication.isSign()) {
-                if (!MyApplication.isNetworkAvailable(JianGuoMainActivity.this)) {
-                    MyApplication.showToast(R.string.error_offline);
-                    return;
-                }
+//                if (!MyApplication.isNetworkAvailable(JianGuoMainActivity.this)) {
+//                    MyApplication.showToast(R.string.error_offline);
+//                    return;
+//                }
                 //不允许修改，直接返回
-                if (!MyApplication.allowChange()) return;
-                if (MyApplication.first_check == 0) {
-                    checkActivity();
-                    mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
-                        @Override
-                        public void posClickListener(String value) {
-                            //校验密码
-                            if (value.equals(SPUtils.get("password", "") + "")) {
-                                Intent intent = new Intent(JianGuoMainActivity.this, AddActivity.class);
-                                startActivity(intent);
-                                MyApplication.first_check = 1;
-                                hideInputWindow();
-                                mDialogView.dismiss();
-                                fab_1.setImageResource(R.drawable.yep);
-                            } else {
-                                MyApplication.showToast(R.string.error_pwd);
-                            }
-                        }
+//                if (!MyApplication.allowChange()) return;
+//                if (MyApplication.first_check == 0) {
+//                    checkActivity();
+//                    mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+//                        @Override
+//                        public void posClickListener(String value) {
+//                            //校验密码
+//                            if (value.equals(SPUtils.get("password", "") + "")) {
+//                                Intent intent = new Intent(JianGuoMainActivity.this, AddActivity.class);
+//                                startActivity(intent);
+//                                MyApplication.first_check = 1;
+//                                hideInputWindow();
+//                                mDialogView.dismiss();
+//                                fab_1.setImageResource(R.drawable.yep);
+//                            } else {
+//                                MyApplication.showToast(R.string.error_pwd);
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void negCliclListener(String value) {
+//                            //取消查看
+//                        }
+//                    });
+//                } else {
+//                    Intent intent = new Intent(JianGuoMainActivity.this, AddActivity.class);
+//                    startActivity(intent);
+//                }
 
-                        @Override
-                        public void negCliclListener(String value) {
-                            //取消查看
-                        }
-                    });
-                } else {
-                    Intent intent = new Intent(JianGuoMainActivity.this, AddActivity.class);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(JianGuoMainActivity.this, AddActivity.class);
+                startActivity(intent);
             } else {
                 //缓存用户对象为空时， 可打开用户注册界面…
                 Intent intent = new Intent(JianGuoMainActivity.this, SignActivity.class);
@@ -309,7 +312,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
             toolbar.setTitle("全部");
             fab.setImageResource(R.drawable.add);
             fab_1.setVisibility(View.VISIBLE);
-//            fab_2.setVisibility(View.VISIBLE);
+            fab_2.setVisibility(View.VISIBLE);
             search.setVisibility(View.VISIBLE);
 //            refresh.setVisibility(View.VISIBLE);
             sort.setVisibility(View.VISIBLE);

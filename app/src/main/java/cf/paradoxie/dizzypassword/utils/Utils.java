@@ -172,14 +172,14 @@ public class Utils {
                     .load(imgUrl)
                     .apply(options)
                     .error(R.mipmap.ic_logo)
-                    .placeholder(R.mipmap.ic_logo)
+                    .placeholder(R.mipmap.ic_loading)
                     .into(imageView);
         } else {
             Glide.with(MyApplication.getContext())
                     .load(imgUrl)
 //                .apply(options)
                     .error(R.mipmap.ic_logo)
-                    .placeholder(R.mipmap.ic_logo)
+                    .placeholder(R.mipmap.ic_loading)
                     .into(imageView);
         }
 

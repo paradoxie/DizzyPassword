@@ -16,6 +16,11 @@
     <!--允许读取手机状态 用于创建BmobInstallation-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+    <!-- 请求跳转的app包名 -->
+    <queries>
+        <package android:name="com.taobao.taobao" />
+        <package android:name="com.jingdong.app.mall" />
+    </queries>
 
     <application
         android:name=".base.MyApplication"
@@ -74,7 +79,15 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.EatRiceActivity"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden" >
+<!--            <intent-filter>-->
+<!--                <action-->
+<!--                    android:name="android.intent.action.MAIN"-->
+<!--                    android:configChanges="orientation|keyboardHidden"-->
+<!--                    android:theme="@style/AppTheme.NoActionBar" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
         <activity android:name=".activity.SafeActivity">
 
         </activity>
@@ -92,7 +105,7 @@
 
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="cf.paradoxie.dizzypassword.BmobContentProvider"></provider>
+            android:authorities="cf.paradoxie.dizzypassword.BmobContentProvider"/>
     </application>
 
 </manifest>

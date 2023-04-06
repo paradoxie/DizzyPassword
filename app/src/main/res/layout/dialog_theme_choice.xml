@@ -183,39 +183,6 @@
             app:backgroundColor="@color/lightgreen500"
             />
 
-        <!--<cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton-->
-        <!--android:id="@+id/rdobtn_12"-->
-        <!--android:layout_width="40dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:gravity="center"-->
-        <!--android:paddingTop="30dp"-->
-        <!--android:text="酷安绿"-->
-        <!--android:textSize="12sp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:button="@null"-->
-        <!--android:drawableTop="@drawable/rdo_btn_theme_transparent"-->
-        <!--app:backgroundColor="@color/lime500"/>-->
-
-        <!--<cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton-->
-        <!--android:id="@+id/rdobtn_13"-->
-        <!--android:layout_width="40dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_weight="1"-->
-        <!--android:button="@null"-->
-        <!--android:drawableTop="@drawable/rdo_btn_theme_transparent"-->
-        <!--app:backgroundColor="@color/yellow500"/>-->
-
-        <!--<cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton-->
-        <!--android:id="@+id/rdobtn_14"-->
-        <!--android:layout_width="40dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_weight="1"-->
-        <!--android:button="@null"-->
-        <!--android:drawableTop="@drawable/rdo_btn_theme_transparent"-->
-        <!--app:backgroundColor="@color/amber500"/>-->
-
         <cf.paradoxie.dizzypassword.view.ThemeChoiceRadioButton
             android:id="@+id/rdobtn_15"
             android:layout_width="wrap_content"

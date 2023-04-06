@@ -25,6 +25,7 @@ import java.util.Random;
 
 import cf.paradoxie.dizzypassword.base.AppManager;
 import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.base.Constans;
 import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
@@ -174,7 +175,7 @@ public class AddActivity extends BaseActivity {
         beans.add(accountBean);
         //储存新的list
         SPUtils.setDataList("beans", beans);
-
+        SPUtils.put(Constans.UN_BACK, "1");
         pDialog.dismiss();
         MyApplication.showToast("更新成功");
         AppManager.getAppManager().finishActivity(JianGuoMainActivity.class);
@@ -193,6 +194,7 @@ public class AddActivity extends BaseActivity {
         beans.add(accountBean);
         //储存新的list
         SPUtils.setDataList("beans", beans);
+        SPUtils.put(Constans.UN_BACK, "1");
 
         pDialog.dismiss();
         MyApplication.showToast("保存成功");
