@@ -16,6 +16,7 @@ import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
+import cf.paradoxie.dizzypassword.utils.Utils;
 import cf.paradoxie.dizzypassword.view.DialogView;
 import cn.bmob.v3.BmobUser;
 
@@ -36,6 +37,7 @@ public class SettingActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());
+
         pwd = String.valueOf(SPUtils.get("password", ""));
         mDialogView = new DialogView(SettingActivity.this);
 
@@ -105,7 +107,7 @@ public class SettingActivity extends BaseActivity {
 
     private void checkActivity() {
         mDialogView = new DialogView(SettingActivity.this);
-        mDialogView.setMeaasge("确定退出当前帐号？", "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + getCodePwd(pwd));
+        mDialogView.setMeaasge("确定退出当前帐号？", "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + Utils.getCodePwd(pwd));
         try {
             if (!SettingActivity.this.isFinishing()) {
                 mDialogView.show();
@@ -117,15 +119,5 @@ public class SettingActivity extends BaseActivity {
     }
 
 
-    private String getCodePwd(String string) {
-        if (string.isEmpty() || string == null) {
-            return null;
-        } else {
-            return replaceAction(string, "(?<=\\w{2})\\w(?=\\w{2})");
-        }
-    }
 
-    private static String replaceAction(String username, String regular) {
-        return username.replaceAll(regular, "*");
-    }
 }

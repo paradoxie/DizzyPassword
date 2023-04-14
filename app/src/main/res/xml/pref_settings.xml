@@ -16,7 +16,8 @@
     <PreferenceCategory
         android:key="pref_cate_base"
         android:title="通用">
-        <cf.paradoxie.dizzypassword.view.ThemeChoice android:key="theme_change" />
+        <cf.paradoxie.dizzypassword.view.ThemeChoice
+            android:key="theme_change" />
 
 
         <SwitchPreference

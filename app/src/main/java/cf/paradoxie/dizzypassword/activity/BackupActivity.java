@@ -27,6 +27,7 @@ import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
+import cf.paradoxie.dizzypassword.utils.Utils;
 import cf.paradoxie.dizzypassword.view.DialogView;
 
 public class BackupActivity extends BaseActivity {
@@ -151,7 +152,8 @@ public class BackupActivity extends BaseActivity {
 
     private void checkActivity() {
         mDialogView = new DialogView(BackupActivity.this);
-        mDialogView.setAccount(SPUtils.get("name", "") + "");
+        mDialogView.setMeaasge(SPUtils.get("name", "") + "","\n密码:" + Utils.getCodePwd(String.valueOf(SPUtils.get("password", ""))));
+
         try {
             if (!BackupActivity.this.isFinishing()) {
                 mDialogView.show();

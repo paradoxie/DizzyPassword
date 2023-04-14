@@ -407,7 +407,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
 
     private void checkActivity() {
         mDialogView = new DialogView(JianGuoMainActivity.this);
-        mDialogView.setAccount(SPUtils.get("name", "") + "");
+        mDialogView.setMeaasge(SPUtils.get("name", "") + "","\n密码:" + Utils.getCodePwd(String.valueOf(SPUtils.get("password", ""))));
         try {
             if (!JianGuoMainActivity.this.isFinishing()) {
                 mDialogView.show();

@@ -12,14 +12,18 @@ import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 
 import android.widget.Toast;
 
 
 import com.google.android.material.snackbar.Snackbar;
+import com.hjq.toast.ToastUtils;
+import com.hjq.toast.style.WhiteToastStyle;
 
 
+import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.CrashLogActivity;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.Utils;
@@ -35,8 +39,6 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
     public static MyApplication mInstance;
     public static Context mContext;
     public static int first_check = 0;
-    public static boolean isShow = true;
-    private static Toast mToast;
     public static String killTime;
     private int mFinalCount;
     Handler handler;
@@ -48,7 +50,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         super.onCreate();
         mInstance = this;
         mContext = getApplicationContext();
-
+        initToast();
         //开启抓取错误信息
         Thread.setDefaultUncaughtExceptionHandler(this);
         configDavSync();
@@ -67,6 +69,13 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         checkStatus();//监听前后台状态
     }
 
+    private void initToast() {
+        ToastUtils.init(this);
+        ToastUtils.setStyle(new WhiteToastStyle());
+//        ToastUtils.setView(R.layout.toast_view);
+        ToastUtils.setGravity(Gravity.CENTER);
+    }
+
     /**
      * 配置坚果云sync
      */
@@ -76,7 +85,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
 
         if (!"".equals(jianguo_account)) {
             SyncConfig config = new SyncConfig(this);
-            config.setPassWord("https://dav.jianguoyun.com/dav/");
+            config.setServerUrl("https://dav.jianguoyun.com/dav/");
             config.setPassWord(pwd);
             config.setUserAccount(jianguo_account);
         }
@@ -121,7 +130,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
             showToast("本地账号没有登录噢");
             return false;
         }
-        if (getUser() != null){
+        if (getUser() != null) {
             showToast("当前仅提供个人坚果云操作，请备份坚果云后退出，登录界面点击【直接使用坚果云】");
             return false;
         }
@@ -324,13 +333,13 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
      * @param error_pwd
      */
     public static void showToast(int error_pwd) {
-        if (isShow && !Utils.isStrNull(error_pwd + ""))
-            if (mToast == null) {
-                mToast = Toast.makeText(getContext(), error_pwd, Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText(error_pwd);
-            }
-        mToast.show();
+        if (TextUtils.isEmpty(error_pwd + "")) {
+            return;
+        }
+
+        if (ToastUtils.isInit()) {
+            ToastUtils.show(error_pwd);
+        }
     }
 
     /**
@@ -340,13 +349,13 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
      */
     public static void showToast(CharSequence message) {
 
-        if (isShow && message != null && !Utils.isStrNull(message + ""))
-            if (mToast == null) {
-                mToast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText(message);
-            }
-        mToast.show();
+        if (TextUtils.isEmpty(message)) {
+            return;
+        }
+
+        if (ToastUtils.isInit()) {
+            ToastUtils.show(message);
+        }
     }
 
 

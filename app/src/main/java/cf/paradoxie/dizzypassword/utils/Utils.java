@@ -205,4 +205,17 @@ public class Utils {
         intent.setData(content_url);
         context.startActivity(intent);
     }
+
+    public static String getCodePwd(String string) {
+        if (string.isEmpty() || string == null) {
+            return null;
+        } else {
+            return replaceAction(string, "(?<=\\w{2})\\w(?=\\w{2})");
+        }
+    }
+
+    private static String replaceAction(String username, String regular) {
+        return username.replaceAll(regular, "*");
+    }
+
 }

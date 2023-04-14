@@ -2,7 +2,6 @@ package cf.paradoxie.dizzypassword.view;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
@@ -19,7 +18,7 @@ import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 
 
-public class ThemeChoice extends DialogPreference {
+public class ThemeChoice extends DialogPreference implements RadioGroup.OnCheckedChangeListener {
 
 
     private RadioGroup mGroup1;
@@ -49,17 +48,16 @@ public class ThemeChoice extends DialogPreference {
         super(context, attrs);
         mSp = PreferenceManager.getDefaultSharedPreferences(context);
         mTheme = mSp.getInt("theme_change", R.style.Theme7);
-
     }
 
     @Override
     protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
         super.onPrepareDialogBuilder(builder);
         View view = LayoutInflater.from(MyApplication.getContext()).inflate(R.layout.dialog_theme_choice, null);
-        mGroup1 = (RadioGroup) view.findViewById(R.id.group1);
-        mGroup2 = (RadioGroup) view.findViewById(R.id.group2);
-        mGroup3 = (RadioGroup) view.findViewById(R.id.group3);
-        mGroup4 = (RadioGroup) view.findViewById(R.id.group4);
+        mGroup1 = view.findViewById(R.id.group1);
+        mGroup2 = view.findViewById(R.id.group2);
+        mGroup3 = view.findViewById(R.id.group3);
+        mGroup4 = view.findViewById(R.id.group4);
         mThemes = new int[]{R.style.Theme1, R.style.Theme2, R.style.Theme3
                 , R.style.Theme4, R.style.Theme5, R.style.Theme6
                 , R.style.Theme7, R.style.Theme8, R.style.Theme9
@@ -80,43 +78,24 @@ public class ThemeChoice extends DialogPreference {
                 , R.id.rdobtn_19};
         for (int i = 0; i < mThemes.length; i++) {
             if (mTheme == mThemes[i]) {
-                RadioButton radioButton = (RadioButton) view.findViewById(mRdoBtns[i]);
+                RadioButton radioButton = view.findViewById(mRdoBtns[i]);
                 radioButton.setChecked(true);
                 break;
             }
         }
-        mGroup1.setOnCheckedChangeListener(mCheckedChangeListener);
-        mGroup2.setOnCheckedChangeListener(mCheckedChangeListener);
-        mGroup3.setOnCheckedChangeListener(mCheckedChangeListener);
-        mGroup4.setOnCheckedChangeListener(mCheckedChangeListener);
-        builder.setView(view).setTitle("主题更换").setNegativeButton("", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
 
-            }
-        }).setPositiveButton("", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
+        mGroup1.setOnCheckedChangeListener(this);
+        mGroup2.setOnCheckedChangeListener(this);
+        mGroup3.setOnCheckedChangeListener(this);
+        mGroup4.setOnCheckedChangeListener(this);
+        builder.setView(view)
+                .setTitle("主题更换")
+                .setNegativeButton("", (dialog, which) -> {
+                })
+                .setPositiveButton("", (dialog, which) -> {
+                });
     }
 
-    RadioGroup.OnCheckedChangeListener mCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            if (group != null && checkedId != -1 && changeGroup == false) {
-                for (int i = 0; i < mRdoBtns.length; i++) {
-                    if (checkedId == mRdoBtns[i]) {
-                        mNewValue = mThemes[i];
-                        group.check(mRdoBtns[i]);
-                        persistInt(mNewValue);
-                        getDialog().cancel();
-                    }
-                }
-            }
-        }
-    };
 
     @Override
     protected View onCreateView(ViewGroup parent) {
@@ -131,16 +110,12 @@ public class ThemeChoice extends DialogPreference {
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
         if (restorePersistedValue) {
-            // Restore existing state
-
             mCurrentValue = this.getPersistedInt(DEFAULT_VALUE);
-            mNewValue = mCurrentValue;
         } else {
-            // Set default state from the XML attribute
             mCurrentValue = (Integer) defaultValue;
             persistInt(mCurrentValue);
-            mNewValue = mCurrentValue;
         }
+        mNewValue = mCurrentValue;
     }
 
     @Override
@@ -150,8 +125,21 @@ public class ThemeChoice extends DialogPreference {
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
-        // When the user selects "OK", persist the new value
         Log.d("currentValue", mCurrentValue + "");
         Log.d("newValue", mNewValue + "");
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        if (group != null && checkedId != -1 && changeGroup == false) {
+            for (int i = 0; i < mRdoBtns.length; i++) {
+                if (checkedId == mRdoBtns[i]) {
+                    mNewValue = mThemes[i];
+                    group.check(mRdoBtns[i]);
+                    persistInt(mNewValue);
+                    getDialog().cancel();
+                }
+            }
+        }
     }
 }

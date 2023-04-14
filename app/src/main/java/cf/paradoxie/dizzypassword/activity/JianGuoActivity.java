@@ -46,6 +46,7 @@ import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
+import cf.paradoxie.dizzypassword.utils.Utils;
 import cf.paradoxie.dizzypassword.view.DialogView;
 import cf.paradoxie.dizzypassword.view.MyDialog;
 import cf.paradoxie.dizzypassword.wdsyncer.SyncConfig;
@@ -229,7 +230,7 @@ public class JianGuoActivity extends BaseActivity {
 
             pwd = SPUtils.get("jianguo_pwd", "") + "";
             tv_account.setText("账号：" + jianguo_account);
-            tv_pwd.setText("密码：" + getCodePwd(pwd));
+            tv_pwd.setText("密码：" + Utils.getCodePwd(pwd));
             configDavSync();
         }
     }
@@ -399,7 +400,7 @@ public class JianGuoActivity extends BaseActivity {
 
     private void checkActivity() {
         mDialogView = new DialogView(JianGuoActivity.this);
-        mDialogView.setAccount(SPUtils.get("name", "") + "");
+        mDialogView.setMeaasge(SPUtils.get("name", "") + "", "\n密码:" + Utils.getCodePwd(String.valueOf(SPUtils.get("password", ""))));
         try {
             if (!JianGuoActivity.this.isFinishing()) {
                 mDialogView.show();
@@ -477,15 +478,5 @@ public class JianGuoActivity extends BaseActivity {
         return true;
     }
 
-    private String getCodePwd(String string) {
-        if (string.isEmpty() || string == null) {
-            return null;
-        } else {
-            return replaceAction(string, "(?<=\\w{2})\\w(?=\\w{2})");
-        }
-    }
 
-    private static String replaceAction(String username, String regular) {
-        return username.replaceAll(regular, "*");
-    }
 }
