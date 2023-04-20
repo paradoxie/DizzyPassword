@@ -11,6 +11,7 @@ import com.google.gson.JsonParser;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cf.paradoxie.dizzypassword.base.MyApplication;
@@ -131,6 +132,7 @@ public class SPUtils {
         for (final JsonElement elem : array) {
             datalist.add(new Gson().fromJson(elem, clazz));
         }
+        Collections.reverse(datalist);
         return datalist;
 
     }

@@ -3,6 +3,7 @@ package cf.paradoxie.dizzypassword.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.appcompat.widget.Toolbar;
@@ -23,6 +24,7 @@ public class SignActivity extends BaseActivity {
     private EditText et_username, et_password;
     private Button bt_sign_on, bt_sign_up;
     private String username, password;
+    private CheckBox cb;
     private SweetAlertDialog pDialog = null;
 
     @Override
@@ -38,6 +40,7 @@ public class SignActivity extends BaseActivity {
         });
 
         ThemeUtils.initStatusBarColor(SignActivity.this, ThemeUtils.getPrimaryDarkColor(SignActivity.this));
+        cb = findViewById(R.id.cb);
 
         pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryDarkColor(SignActivity.this));
@@ -54,6 +57,11 @@ public class SignActivity extends BaseActivity {
         });
         bt_sign_up =  findViewById(R.id.bt_sign_up);
         bt_sign_up.setOnClickListener(view -> {
+            if (!cb.isChecked()) {
+                MyApplication.showToast("请点击阅读隐私协议，勾选后登录~");
+                return;
+            }
+
             username = et_username.getText().toString().trim();
             password = et_password.getText().toString().trim();
             if (!DesUtil.isEmail(username)) {
@@ -92,6 +100,11 @@ public class SignActivity extends BaseActivity {
                     pDialog.dismiss();
                 }
             });
+        });
+
+        findViewById(R.id.tv_private).setOnClickListener(v -> {
+            Intent intent1 = new Intent(AppManager.getAppManager().currentActivity(), AboutActivity.class);
+            startActivity(intent1);
         });
     }
 

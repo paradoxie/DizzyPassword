@@ -5,12 +5,12 @@ group='com.github.limuyang2'
 
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion rootProject.ext.TARGETSDK_VERSION
 //    buildToolsVersion "29.0.3"
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 30
+        minSdkVersion rootProject.ext.MINSDK_VERSION
+        targetSdkVersion rootProject.ext.TARGETSDK_VERSION
         versionCode 10
         versionName "1.0.6.9"
 

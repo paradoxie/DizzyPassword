@@ -172,7 +172,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTime.setText(time + "  创建");
             mTime_up.setText(time_up + "  更新");
             mAccount.setText(account);
-            mPassword.setText("**********");
+            mPassword.setText("**********(点击小眼睛图标展示明文)");
             mNote.setText(note);
             String website;
             //网址记录
@@ -197,13 +197,13 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     if (MyApplication.first_check == 0) {
                         MyToast.show(mContext, "请先点击右下角解锁操作权限", ThemeUtils.getPrimaryColor(mContext));
                     } else {
-                        if (mPassword.getText().equals("**********")) {
+                        if (mPassword.getText().equals("**********(点击小眼睛图标展示明文)")) {
                             mPassword.setText(password);
                             setDrawableLeft(R.drawable.password_open);
                             iv_copy.setVisibility(View.VISIBLE);
                         } else {
                             setDrawableLeft(R.drawable.password);
-                            mPassword.setText("**********");
+                            mPassword.setText("**********(点击小眼睛图标展示明文)");
                             iv_copy.setVisibility(View.GONE);
                         }
                     }

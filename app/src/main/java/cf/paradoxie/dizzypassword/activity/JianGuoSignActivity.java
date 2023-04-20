@@ -49,7 +49,7 @@ public class JianGuoSignActivity extends BaseActivity {
         bt_sign_up = findViewById(R.id.bt_sign_up);
         bt_sign_up.setOnClickListener(view -> {
             if (!cb.isChecked()) {
-                MyApplication.showToast("请仔细阅读注意事项，勾选后登录~");
+                MyApplication.showToast("请点击阅读隐私协议，勾选后登录~");
                 return;
             }
             username = et_username.getText().toString().trim();
@@ -72,6 +72,11 @@ public class JianGuoSignActivity extends BaseActivity {
             AppManager.getAppManager().finishAllActivity();
             finish();
 
+        });
+
+        findViewById(R.id.tv_private).setOnClickListener(v -> {
+            Intent intent1 = new Intent(AppManager.getAppManager().currentActivity(), AboutActivity.class);
+            startActivity(intent1);
         });
     }
 

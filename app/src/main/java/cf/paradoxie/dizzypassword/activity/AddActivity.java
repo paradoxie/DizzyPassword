@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,7 +34,9 @@ import cf.paradoxie.dizzypassword.bean.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cf.paradoxie.dizzypassword.view.DialogView;
 import cf.paradoxie.dizzypassword.view.FlowLayout;
+import cn.bmob.v3.BmobUser;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
@@ -66,8 +69,15 @@ public class AddActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(view -> finish());
 
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> actionDone());
+
+
+        toolbar.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.action_yes) {
+                actionDone();
+            }
+            return false;
+        });
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -231,7 +241,7 @@ public class AddActivity extends BaseActivity {
         accountWrapper.setHint("帐户,邮箱、电话、用户名");
         passwordWrapper.setHint("密码,点击左侧图标可自动生成哦");
         noteWrapper.setHint("备注,回车即可换行");
-        tagWrapper.setHint("标记,点击选择,输入请用空格隔开,注:可用于归类检索");
+        tagWrapper.setHint("tag,点击选择,输入请用空格隔开,用于归类检索");
 
 
         et_name = findViewById(R.id.et_name);
@@ -277,12 +287,19 @@ public class AddActivity extends BaseActivity {
                 }
                 et_tag.setText(string + " " + str);
                 tv.setTextSize(10);
-                tv.setTextColor(getResources().getColor(R.color.pressed_color));
-                tv.setBackgroundResource(R.drawable.search_label);
+                tv.setPressed(true);
+                tv.setTextColor(getResources().getColor(R.color.white));
+                tv.setBackgroundResource(R.drawable.search_label_bg_press);
             });
             mFlowLayout.addView(tv);
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_add, menu);
+        return true;
     }
 
     /**

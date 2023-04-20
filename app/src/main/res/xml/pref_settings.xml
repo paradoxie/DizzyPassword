@@ -51,6 +51,13 @@
             android:summary="更换进入App时的六位安全码"
             android:title="更换安全码"/>
 
+
+        <PreferenceScreen
+            android:key="is_key_for_pwd"
+            android:summary="密码数据启用指纹访问，7天后自动关闭"
+            android:title="指纹访问数据"
+            android:widgetLayout="@layout/layout_jianguo"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -83,7 +90,7 @@
 
         <PreferenceScreen
             android:key="about"
-            android:title="免责及隐私协议"/>
+            android:title="隐私协议及免责声明"/>
 
     </PreferenceCategory>
 </PreferenceScreen>

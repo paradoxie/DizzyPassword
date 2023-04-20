@@ -9,7 +9,6 @@ android {
         applicationId "cf.paradoxie.dizzypassword"
         minSdkVersion rootProject.ext.MINSDK_VERSION
 
-
         targetSdkVersion rootProject.ext.TARGETSDK_VERSION
         versionCode rootProject.ext.VERSION_CODE
         versionName rootProject.ext.VERSION_NAME
@@ -90,6 +89,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.github.zhpanvip:bannerviewpager:3.5.11'
     implementation 'com.gitee.hijunmeng:share-model:1.0.0'
+
+
 
 
 }

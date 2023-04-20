@@ -34,11 +34,10 @@ task clean(type: Delete) {
 }
 
 ext {
-    MINSDK_VERSION = 23//最小支持SDK
+    MINSDK_VERSION = 21//最小支持SDK
     TARGETSDK_VERSION = 29//目标支持SDK
     VERSION_CODE = gitVersionCode()//版本号
     VERSION_NAME = gitVersionInfo()//版本名称
-
 
 }
 

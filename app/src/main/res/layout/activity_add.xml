@@ -62,6 +62,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="名称"
+                            android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            android:nextFocusForward="@+id/et_account"
                             android:lineSpacingExtra="4dp"
                             android:maxLines="1"/>
                     </com.google.android.material.textfield.TextInputLayout>
@@ -92,6 +95,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="账户"
+                            android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            android:nextFocusForward="@+id/et_password"
                             android:maxLines="1"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
@@ -123,6 +129,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="密码"
+                            android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            android:nextFocusForward="@+id/et_website"
                             android:inputType="textVisiblePassword"
                             android:maxLines="1"/>
                     </com.google.android.material.textfield.TextInputLayout>
@@ -145,15 +154,17 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        validation:passwordToggleEnabled="true">
+                        android:layout_marginRight="10dp">
 
                         <cf.paradoxie.dizzypassword.view.ClearableEditText
                             android:id="@+id/et_website"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="域名网址"
-                            android:inputType="textEmailAddress"
+                            android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            android:nextFocusForward="@+id/et_web"
+                            android:inputType="textWebEditText"
                             android:maxLines="1"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
@@ -190,18 +201,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="-22dp"
-            android:elevation="5dp"
-            android:src="@drawable/yes"
-            android:translationZ="5dp"
-            validation:borderWidth="0dp"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -209,7 +208,7 @@
             android:layout_marginBottom="12dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:layout_marginTop="-22dp"
+            android:layout_marginTop="12dp"
             android:layout_weight="1"
             android:background="@color/bg_color"
             validation:cardCornerRadius="8dp">

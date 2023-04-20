@@ -169,7 +169,7 @@ public class JumpUtil {
         wb.getSettings().setUseWideViewPort(true);//自适应屏幕
         wb.getSettings().setDomStorageEnabled(true);
         wb.getSettings().setAllowFileAccess(true);
-        wb.getSettings().setAppCacheEnabled(true);
+        wb.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         wb.getSettings().setSupportZoom(true); //支持缩放
         wb.getSettings().setDefaultTextEncodingName("utf-8");//设置编码
         wb.requestFocus();

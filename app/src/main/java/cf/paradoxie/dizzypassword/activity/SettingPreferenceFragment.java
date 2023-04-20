@@ -1,6 +1,7 @@
 package cf.paradoxie.dizzypassword.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import android.text.Editable;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import cf.paradoxie.dizzypassword.base.AppManager;
@@ -22,21 +24,17 @@ import cf.paradoxie.dizzypassword.base.Constans;
 import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.bean.AppConfig;
-import cf.paradoxie.dizzypassword.bean.BaseConfig;
 import cf.paradoxie.dizzypassword.data.DataDeal;
 import cf.paradoxie.dizzypassword.http.HttpListener;
 import cf.paradoxie.dizzypassword.http.HttpUtils;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cf.paradoxie.dizzypassword.utils.SpUtil;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.utils.Utils;
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.QueryListener;
+import cf.paradoxie.dizzypassword.view.DialogView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-
-import static cf.paradoxie.dizzypassword.base.MyApplication.launchAppDetail;
 
 @SuppressLint("ValidFragment")
 public class SettingPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
@@ -44,6 +42,10 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
     private int theme;
     private SharedPreferences sp;
     private ImageView jianguo_status;
+    private DialogView mDialogView;
+    private String isKeyForPwd = "isKeyForPwd";
+    private Preference is_key_for_pwd;
+    private Object isKey;
 
     public SettingPreferenceFragment() {
     }
@@ -59,7 +61,24 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
         SwitchPreference switch_preference_image = (SwitchPreference) findPreference("is_head_image");
         switch_preference_image.setOnPreferenceChangeListener(this);
 
+        is_key_for_pwd = findPreference("is_key_for_pwd");
+//        is_key_for_pwd.setOnPreferenceChangeListener(this);
+        isKey = SpUtil.getInstance(AppManager.getAppManager().currentActivity()).getString(isKeyForPwd, "0");
+//        Log.e("---能否指纹访问--", isKey + "");
+
+        if ("1".equals(isKey)) {
+            //指纹
+            is_key_for_pwd.setWidgetLayoutResource
+                    (R.layout.layout_per_finger);
+            is_key_for_pwd.setSummary("当前数据使用指纹验证，有效期3天");
+        } else {
+            //密码
+            is_key_for_pwd.setWidgetLayoutResource(R.layout.layout_per_pwd);
+            is_key_for_pwd.setSummary("当前需要密码访问");
+        }
+
         theme = sp.getInt("theme_change", R.style.Theme7);
+
 
         Preference myPreference = findPreference("dav");
         String back_status = (String) SPUtils.get(Constans.UN_BACK, "1");
@@ -137,8 +156,34 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
             case "is_finger":
 
                 break;
-            case "is_head_image":
+            case "is_key_for_pwd":
+                if (isKey.equals("1")) {
+                    isKey = "0";
+                    SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(isKeyForPwd, "0");
+                    is_key_for_pwd.setWidgetLayoutResource(R.layout.layout_per_pwd);
+                    is_key_for_pwd.setSummary("当前为密码访问");
+                } else {
+                    checkActivity();
+                    mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+                        @Override
+                        public void posClickListener(String value) {
+                            //校验密码
+                            if (value.equals(SPUtils.get("password", "") + "")) {
+                                SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(isKeyForPwd, "1", 60 * 60 * 24 * 3);
+                                is_key_for_pwd.setWidgetLayoutResource(R.layout.layout_per_finger);
+                                is_key_for_pwd.setSummary("当前数据使用指纹验证，有效期3天");
+                                mDialogView.dismiss();
+                            } else {
+                                MyApplication.showToast(R.string.error_pwd);
+                            }
+                        }
 
+                        @Override
+                        public void negCliclListener(String value) {
+
+                        }
+                    });
+                }
                 break;
             case "about":
                 Intent intent1 = new Intent(AppManager.getAppManager().currentActivity(), AboutActivity.class);
@@ -188,11 +233,28 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
                 Log.d("-----", newValue + "");
                 SPUtils.put("isHeadImage", newValue + "");
                 break;
-
             default:
                 break;
         }
         return true;
+    }
+
+    private void checkActivity() {
+        mDialogView = new DialogView(AppManager.getAppManager().currentActivity());
+        mDialogView.setMeaasge(SPUtils.get("name", "") + "", "\n密码:" + Utils.getCodePwd(String.valueOf(SPUtils.get("password", ""))));
+        try {
+            if (!AppManager.getAppManager().currentActivity().isFinishing()) {
+                mDialogView.show();
+                hideInputWindow();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void hideInputWindow() {
+        InputMethodManager imm = (InputMethodManager) (AppManager.getAppManager().currentActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void getVersion() {
@@ -222,7 +284,7 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
                                     MyApplication.showToast("你等着！");
                                 }).show();
                     });
-                }else {
+                } else {
                     MyApplication.showToast("已经是最新版本啦~");
                 }
                 pDialog.dismiss();

@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -53,6 +54,7 @@ import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.SortUtils;
+import cf.paradoxie.dizzypassword.utils.SpUtil;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.utils.Utils;
 import cf.paradoxie.dizzypassword.view.DialogView;
@@ -60,6 +62,7 @@ import cf.paradoxie.dizzypassword.view.MyDialog;
 import cf.paradoxie.dizzypassword.view.MyLetterSortView;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import co.infinum.goldfinger.Goldfinger;
 import km.lmy.searchview.SearchView;
 
 @SuppressLint("RestrictedApi")
@@ -85,7 +88,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
     private MyLetterSortView left_letter;
     private String url;
     private NameAdapter nameAdapter;
-
+    private Goldfinger goldfinger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +97,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
 
 
         ThemeUtils.initStatusBarColor(JianGuoMainActivity.this, ThemeUtils.getPrimaryDarkColor(JianGuoMainActivity.this));
-
+        goldfinger = new Goldfinger.Builder(this).build();
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("全部");
@@ -201,26 +204,67 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
 
             fab_1.setOnClickListener(view -> {
                 if (MyApplication.first_check == 0) {
-                    checkActivity();
-                    mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
-                        @Override
-                        public void posClickListener(String value) {
-                            //校验密码
-                            if (value.equals(SPUtils.get("password", "") + "")) {
-                                MyApplication.first_check = 1;
-                                hideInputWindow();
-                                fab_1.setImageResource(R.drawable.yep);
-                                mDialogView.dismiss();
-                            } else {
-                                MyApplication.showToast(R.string.error_pwd);
+                    Object isKey = SpUtil.getInstance(this).getString("isKeyForPwd", "0");
+                    if ("1".equals(isKey)) {
+                        Goldfinger.PromptParams params = new Goldfinger.PromptParams.Builder(this)
+                                .title("使用指纹验证")
+                                .negativeButtonText("使用数据密码")
+                                .description("如指纹认证失败，可使用数据密码")
+                                .subtitle("")
+                                .build();
+                        goldfinger.authenticate(params, new Goldfinger.Callback() {
+                            @Override
+                            public void onError(@NonNull Exception e) {
+                                /* Critical error happened */
+                                MyApplication.showToast("验证失败");
                             }
-                        }
 
-                        @Override
-                        public void negCliclListener(String value) {
-                            //取消查看
-                        }
-                    });
+                            @Override
+                            public void onResult(@NonNull Goldfinger.Result result) {
+                                /* Result received */
+                                if (result.reason() == Goldfinger.Reason.NEGATIVE_BUTTON) {
+                                    gotoActivity(SafeActivity.class);
+                                } else if (result.reason() == Goldfinger.Reason.USER_CANCELED) {
+
+                                } else if (result.reason() == Goldfinger.Reason.CANCELED) {
+
+                                } else if (result.reason() == Goldfinger.Reason.AUTHENTICATION_START) {
+
+                                } else if (result.reason() == Goldfinger.Reason.HARDWARE_UNAVAILABLE) {
+                                    MyApplication.showToast("指纹不可用");
+                                } else if (result.reason() == Goldfinger.Reason.AUTHENTICATION_SUCCESS) {
+                                    MyApplication.first_check = 1;
+                                    fab_1.setImageResource(R.drawable.yep);
+                                    goldfinger.cancel();
+                                } else {
+                                    MyApplication.showToast("验证失败");
+
+                                }
+                            }
+                        });
+                    } else {
+                        checkActivity();
+                        mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+                            @Override
+                            public void posClickListener(String value) {
+                                //校验密码
+                                if (value.equals(SPUtils.get("password", "") + "")) {
+                                    MyApplication.first_check = 1;
+                                    hideInputWindow();
+                                    fab_1.setImageResource(R.drawable.yep);
+                                    mDialogView.dismiss();
+                                } else {
+                                    MyApplication.showToast(R.string.error_pwd);
+                                }
+                            }
+
+                            @Override
+                            public void negCliclListener(String value) {
+                                //取消查看
+                            }
+                        });
+                    }
+
                 } else {
                     new SweetAlertDialog(JianGuoMainActivity.this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("锁定数据操作")
@@ -250,39 +294,6 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
         fab.setOnClickListener(view -> {
 
             if (MyApplication.isSign()) {
-//                if (!MyApplication.isNetworkAvailable(JianGuoMainActivity.this)) {
-//                    MyApplication.showToast(R.string.error_offline);
-//                    return;
-//                }
-                //不允许修改，直接返回
-//                if (!MyApplication.allowChange()) return;
-//                if (MyApplication.first_check == 0) {
-//                    checkActivity();
-//                    mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
-//                        @Override
-//                        public void posClickListener(String value) {
-//                            //校验密码
-//                            if (value.equals(SPUtils.get("password", "") + "")) {
-//                                Intent intent = new Intent(JianGuoMainActivity.this, AddActivity.class);
-//                                startActivity(intent);
-//                                MyApplication.first_check = 1;
-//                                hideInputWindow();
-//                                mDialogView.dismiss();
-//                                fab_1.setImageResource(R.drawable.yep);
-//                            } else {
-//                                MyApplication.showToast(R.string.error_pwd);
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void negCliclListener(String value) {
-//                            //取消查看
-//                        }
-//                    });
-//                } else {
-//                    Intent intent = new Intent(JianGuoMainActivity.this, AddActivity.class);
-//                    startActivity(intent);
-//                }
 
                 Intent intent = new Intent(JianGuoMainActivity.this, AddActivity.class);
                 startActivity(intent);
@@ -407,7 +418,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
 
     private void checkActivity() {
         mDialogView = new DialogView(JianGuoMainActivity.this);
-        mDialogView.setMeaasge(SPUtils.get("name", "") + "","\n密码:" + Utils.getCodePwd(String.valueOf(SPUtils.get("password", ""))));
+        mDialogView.setMeaasge(SPUtils.get("name", "") + "", "\n密码:" + Utils.getCodePwd(String.valueOf(SPUtils.get("password", ""))));
         try {
             if (!JianGuoMainActivity.this.isFinishing()) {
                 mDialogView.show();
@@ -535,8 +546,9 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
             e.printStackTrace();
         }
 
-        Collections.sort(mAccountBeans, Collections.reverseOrder(sortUtils));
-        MyToast.show(JianGuoMainActivity.this, "短按，已按最近更新时间排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
+//        Collections.sort(mAccountBeans, Collections.reverseOrder(sortUtils));
+        Collections.reverse(mAccountBeans);
+        MyToast.show(JianGuoMainActivity.this, "短按，已按添加顺序排序", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
 
         mTestStackAdapter = new TestStackAdapter(JianGuoMainActivity.this, mAccountBeans);
         mStackView.setAdapter(mTestStackAdapter);
@@ -697,7 +709,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
                     });
 
                     mListNames.setAdapter(nameAdapter);
-                    ArrayAdapter<String> adapterTimes = new ArrayAdapter<>(JianGuoMainActivity.this, android.R.layout.simple_list_item_1, strings);
+                    ArrayAdapter<String> adapterTimes = new ArrayAdapter<>(JianGuoMainActivity.this, R.layout.simple_list_item_1, strings);
                     mListTimes.setAdapter(adapterTimes);
                 });
             }

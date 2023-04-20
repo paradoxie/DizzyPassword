@@ -9,7 +9,7 @@ import cn.bmob.v3.BmobUser;
  * Created by xiehehe on 2017/10/28.
  */
 
-public class AccountBean extends BmobObject{
+public class AccountBean extends BmobObject implements Comparable {
     private String id;
     private String name;//名字
     private List<String> tag;//标记
@@ -19,7 +19,7 @@ public class AccountBean extends BmobObject{
     private String note;//备注
 
 
-    public void setCreateAtTime(String time){
+    public void setCreateAtTime(String time) {
         super.setCreatedAt(time);
     }
 
@@ -105,5 +105,10 @@ public class AccountBean extends BmobObject{
                 ", createTime=" + getCreatedAt() +
                 ", updateTime=" + getUpdatedAt() +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return getUpdatedAt().compareTo(((AccountBean) o).getUpdatedAt());
     }
 }

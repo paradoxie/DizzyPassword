@@ -38,48 +38,61 @@
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden"
+            android:exported="true">
 
         </activity>
         <activity
             android:name=".activity.JianGuoMainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden"
+            android:exported="true">
 
         </activity>
 
         <activity
             android:name=".activity.SignActivity"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+            android:exported="true"/>
         <activity
             android:name=".activity.JianGuoSignActivity"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+            android:exported="true"/>
 
         <activity
             android:name=".activity.AddActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:exported="true"/>
 
         <activity
             android:name=".activity.GetPwdActivity"
-            android:theme="@style/AppTheme_Dialog" />
+            android:theme="@style/AppTheme_Dialog"
+            android:exported="true"/>
 
-        <activity android:name=".activity.AboutActivity" />
+        <activity android:name=".activity.AboutActivity"
+            android:exported="true"/>
         <activity
             android:name=".activity.BackupActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            android:exported="true"/>
 
-        <activity android:name=".activity.CrashLogActivity" />
-        <activity android:name=".activity.JianGuoActivity" />
-        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.CrashLogActivity"
+            android:exported="true"/>
+        <activity android:name=".activity.JianGuoActivity"
+            android:exported="true"/>
+        <activity android:name=".activity.SettingActivity"
+            android:exported="true"/>
 
         <activity
             android:name=".activity.TeachActivity"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+            android:exported="true"/>
         <activity
             android:name=".activity.EatRiceActivity"
-            android:windowSoftInputMode="stateHidden" >
+            android:windowSoftInputMode="stateHidden"
+            android:exported="true">
 <!--            <intent-filter>-->
 <!--                <action-->
 <!--                    android:name="android.intent.action.MAIN"-->
@@ -88,12 +101,14 @@
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
 <!--            </intent-filter>-->
         </activity>
-        <activity android:name=".activity.SafeActivity">
+        <activity android:name=".activity.SafeActivity"
+            android:exported="true">
 
         </activity>
         <activity android:name=".activity.ChoiceActivity"/>
 
-        <activity android:name=".activity.WelcomeActivity">
+        <activity android:name=".activity.WelcomeActivity"
+            android:exported="true">
             <intent-filter>
                 <action
                     android:name="android.intent.action.MAIN"

@@ -18,8 +18,8 @@ public class Constans {
 
     public static String pic_url = "https://ghproxy.com/https://raw.githubusercontent.com/lingyia/APIIMG/master/pure/";
 
-    public static String APP_CONFIG_URL = "https://docs.qq.com/doc/DTWR2ZXBIdHJkZURO";
-    public static String AD = "http://fluff.paradoxie.top:2334/pwd/getCommonPwds";
+    public static String APP_CONFIG_URL = "";
+    public static String AD = "";
     public static String UN_BACK = "UN_BACK";
 
     public static String getUrl() {

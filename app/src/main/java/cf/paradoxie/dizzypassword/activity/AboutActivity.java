@@ -25,20 +25,20 @@ public class AboutActivity extends BaseActivity {
         setContentView(R.layout.activity_about);
 
         Toolbar toolbar =findViewById(R.id.toolbar);
-        toolbar.setTitle("免责及隐私协议");
+        toolbar.setTitle("隐私协议及免责声明");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());
 
-        if (SPUtils.get("first_in", "") + "" == "") {
-            showNote();
-        }
+//        if (SPUtils.get("first_in", "") + "" == "") {
+//            showNote();
+//        }
         note =   findViewById(R.id.note);
         note.setOnClickListener(view -> showNote());
         version_info =   findViewById(R.id.version_info);
 
-        version_info.setText(Utils.GetVersionName());
+        version_info.setText("v"+Utils.GetVersionName());
         ThemeUtils.initStatusBarColor(AboutActivity.this, ThemeUtils.getPrimaryDarkColor(AboutActivity.this));
     }
 
@@ -47,9 +47,9 @@ public class AboutActivity extends BaseActivity {
                 .setTitleText("免责声明")
                 .setContentText(
                                 "1.本app为非盈利开源项目，任何拷贝复制的相同项目与本app无关" +
-                                "\n2.后台数据储存由Bmob云服务提供，作者承诺不会对后台用户数据进行任何操作" +
+                                "\n2.后台数据储存由用户本人webdav服务提供" +
                                 "\n3.任何加密技术都有被破解的可能性，由此造成的损失与本app及作者无关" +
-                                "\n4.作为作者，建议用户自己申请Bmob云服务进行私人信息储存，相关教程请点击登录界面右上角")
+                                "\n4.webdav同步备份服务相关教程请查看设置页面")
                 .setConfirmText("好的我知道啦")
                 .setConfirmClickListener(sDialog -> {
                     SPUtils.put("first_in", "第一次进入app");
