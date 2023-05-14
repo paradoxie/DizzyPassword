@@ -1,7 +1,9 @@
 package cf.paradoxie.dizzypassword.view;
 
+
 import android.app.Activity;
 
+import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -21,6 +23,7 @@ public class MyDialog {
         pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(ThemeUtils.getPrimaryDarkColor(context));
         pDialog.setTitleText(title);
+        pDialog.setCustomImage(context.getResources().getDrawable(R.drawable.loading));
         pDialog.show();
     }
 

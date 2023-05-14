@@ -73,7 +73,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         ToastUtils.init(this);
         ToastUtils.setStyle(new WhiteToastStyle());
 //        ToastUtils.setView(R.layout.toast_view);
-        ToastUtils.setGravity(Gravity.CENTER);
+        ToastUtils.setGravity(Gravity.BOTTOM, 0, 50);
     }
 
     /**

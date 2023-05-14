@@ -38,6 +38,7 @@ import java.util.TimerTask;
 
 import cf.paradoxie.dizzypassword.base.AppManager;
 import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.base.Constans;
 import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.adapter.NameAdapter;
@@ -204,7 +205,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
 
             fab_1.setOnClickListener(view -> {
                 if (MyApplication.first_check == 0) {
-                    Object isKey = SpUtil.getInstance(this).getString("isKeyForPwd", "0");
+                    Object isKey = SpUtil.getInstance(this).getString(Constans.IS_KEY_FOR_PWD, "0");
                     if ("1".equals(isKey)) {
                         Goldfinger.PromptParams params = new Goldfinger.PromptParams.Builder(this)
                                 .title("使用指纹验证")
@@ -223,7 +224,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
                             public void onResult(@NonNull Goldfinger.Result result) {
                                 /* Result received */
                                 if (result.reason() == Goldfinger.Reason.NEGATIVE_BUTTON) {
-                                    gotoActivity(SafeActivity.class);
+                                   useDataKey();
                                 } else if (result.reason() == Goldfinger.Reason.USER_CANCELED) {
 
                                 } else if (result.reason() == Goldfinger.Reason.CANCELED) {
@@ -243,26 +244,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
                             }
                         });
                     } else {
-                        checkActivity();
-                        mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
-                            @Override
-                            public void posClickListener(String value) {
-                                //校验密码
-                                if (value.equals(SPUtils.get("password", "") + "")) {
-                                    MyApplication.first_check = 1;
-                                    hideInputWindow();
-                                    fab_1.setImageResource(R.drawable.yep);
-                                    mDialogView.dismiss();
-                                } else {
-                                    MyApplication.showToast(R.string.error_pwd);
-                                }
-                            }
-
-                            @Override
-                            public void negCliclListener(String value) {
-                                //取消查看
-                            }
-                        });
+                        useDataKey();
                     }
 
                 } else {
@@ -375,6 +357,36 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
             tv_words_chicken.setText(appConfig.getWitty());
         }
 
+    }
+
+    private void useDataKey() {
+        checkActivity();
+        mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+            @Override
+            public void posClickListener(String value) {
+                //校验密码
+                if (value.equals(SPUtils.get("password", "") + "")) {
+                    MyApplication.first_check = 1;
+                    //重新启用指纹
+                    String isKeyDay = (String) SpUtil.getInstance(AppManager.getAppManager().currentActivity()).getString(Constans.IS_KEY_FOR_PWD_DAY, "3");
+                    int day = Integer.parseInt(isKeyDay);
+                    SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(Constans.IS_KEY_FOR_PWD, "1", 60 * 60 * 24 * day);
+                    if (day != 0) {
+                        MyApplication.showToast("启用指纹验证，有效期" + day + "天");
+                    }
+                    hideInputWindow();
+                    fab_1.setImageResource(R.drawable.yep);
+                    mDialogView.dismiss();
+                } else {
+                    MyApplication.showToast(R.string.error_pwd);
+                }
+            }
+
+            @Override
+            public void negCliclListener(String value) {
+                //取消查看
+            }
+        });
     }
 
     //收起StackView

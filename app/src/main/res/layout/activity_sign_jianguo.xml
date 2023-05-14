@@ -26,11 +26,17 @@
             android:inputType="textEmailAddress" />
 
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请注意，以下填写数据密钥，并非坚果云密码，请仔细阅读注意事项"
+            android:textColor="@color/red500" />
+
         <cf.paradoxie.dizzypassword.view.ClearableEditText
             android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="密码:请输入您设置的密码,至少8位哟"
+            android:hint="密钥:请输入数据密钥,至少8位,非常重要！"
             android:inputType="textPassword" />
 
     </LinearLayout>
@@ -70,10 +76,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginRight="20dp">
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
 
                 <CheckBox
                     android:id="@+id/cb"
@@ -85,9 +91,9 @@
                     android:id="@+id/tv_private"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_18"
+                    android:text="@string/action_note"
                     android:textColor="?colorAccent"
-                    android:text="@string/action_note"/>
+                    android:textSize="@dimen/text_size_18" />
             </LinearLayout>
 
 
@@ -96,10 +102,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="60dp"
                 android:layout_marginTop="15dp"
-                android:textSize="18sp"
                 android:layout_marginRight="20dp"
                 android:text="@string/action_note_jianguo_5"
-                android:textColor="@color/red500" />
+                android:textColor="@color/red500"
+                android:textSize="18sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -107,7 +114,9 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:text="@string/action_note_jianguo_6"
-                android:textColor="@color/red500" />
+                android:textColor="@color/red500"
+                android:textSize="18sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,8 +136,7 @@
                 android:textColor="@color/red600" />
 
 
-
-           </LinearLayout>
+        </LinearLayout>
 
     </ScrollView>
 

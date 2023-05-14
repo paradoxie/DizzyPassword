@@ -9,8 +9,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.MINSDK_VERSION
         targetSdkVersion rootProject.ext.TARGETSDK_VERSION
-        versionCode 1
-        versionName VERSION_NAME
     }
 
     buildTypes {
@@ -19,6 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.xw.repo.bubbleseekbar'
 }
 
 dependencies {

@@ -104,6 +104,7 @@ public class AccountBean extends BmobObject implements Comparable {
                 ", user=" + user +
                 ", createTime=" + getCreatedAt() +
                 ", updateTime=" + getUpdatedAt() +
+                ", objectId=" + getObjectId() +
                 '}';
     }
 

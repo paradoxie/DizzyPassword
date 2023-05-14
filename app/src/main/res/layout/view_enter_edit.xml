@@ -57,7 +57,7 @@
         android:layout_marginLeft="20dip"
         android:layout_marginRight="20dip"
         android:gravity="center"
-        android:hint="请输入账户密码"
+        android:hint="请输入数据密钥"
         android:inputType="textPassword"
         android:singleLine="true"
         android:textSize="18dip"/>
@@ -68,7 +68,7 @@
         android:layout_margin="20dip"
         android:orientation="horizontal">
 
-        <Button
+        <TextView
             android:id="@+id/btn_neg"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
@@ -86,7 +86,7 @@
             android:background="#1bbc9b"
             android:visibility="gone"/>
 
-        <Button
+        <TextView
             android:id="@+id/btn_pos"
             android:layout_width="wrap_content"
             android:layout_height="50dp"

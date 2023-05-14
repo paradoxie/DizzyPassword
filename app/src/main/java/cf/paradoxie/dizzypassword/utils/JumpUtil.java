@@ -36,7 +36,6 @@ import cf.paradoxie.dizzypassword.bean.CommonEntity;
  */
 public class JumpUtil {
 
-
     /**
      * 跳转
      *

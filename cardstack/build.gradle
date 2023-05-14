@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 
 
 android {
@@ -9,8 +8,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.MINSDK_VERSION
         targetSdkVersion rootProject.ext.TARGETSDK_VERSION
-        versionCode 1
-        versionName '1.0'
     }
     buildTypes {
         release {
@@ -18,6 +15,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.loopeer.cardstack'
 
 }
 
@@ -28,10 +26,11 @@ dependencies {
 }
 
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}/*
+//task sourcesJar(type: Jar) {
+//    from android.sourceSets.main.java.srcDirs
+//    classifier = 'sources'
+//}
+/*
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
@@ -40,10 +39,10 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
 }*/
-artifacts {
-//    archives javadocJar
-    archives sourcesJar
-}
+//artifacts {
+////    archives javadocJar
+//    archives sourcesJar
+//}
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 

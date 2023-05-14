@@ -75,7 +75,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
     static class ColorItemViewHolder extends CardStackView.ViewHolder {
         View mLayout;
         View mContainerContent;
-        SingleLineTextView mAccount, mPassword;
+        SingleLineTextView mAccount, mPassword,tv_id;
         TextView mTextTitle, mNum, mTime, mTime_up, mTag1, mTag2, mTag3, mTag4, mTag5, mPwdvisible, mNote, mWeb;
         ImageView mChange, mDelete;
         RxBean rxEvent, rxEvent_1, rxEvent_2;
@@ -95,6 +95,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTime_up = view.findViewById(R.id.text_list_card_up);
             mAccount = view.findViewById(R.id.tv_account);
             mPassword = view.findViewById(R.id.tv_password);
+            tv_id = view.findViewById(R.id.tv_id);
             mPwdvisible = view.findViewById(R.id.tv_password_visible);
             mNote = view.findViewById(R.id.tv_note);
             mWeb = view.findViewById(R.id.tv_web);
@@ -173,6 +174,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             mTime_up.setText(time_up + "  更新");
             mAccount.setText(account);
             mPassword.setText("**********(点击小眼睛图标展示明文)");
+            tv_id.setText(id);
             mNote.setText(note);
             String website;
             //网址记录
@@ -382,13 +384,6 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                     }
                 });
             } else {
-                Iterator<AccountBean> iterator = mBeanList.iterator();
-                while (iterator.hasNext()) {
-                    AccountBean next = iterator.next();
-                    if (id.equals(next.getObjectId())) {
-                        iterator.remove();
-                    }
-                }
 
                 mTextTitle.setText("本条帐号信息删除成功，请点击右上角刷新按钮");
                 mAccount.setText("已删除");
@@ -402,8 +397,9 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 mPwdvisible.setClickable(false);
                 setDrawableLeft(R.drawable.password);
                 iv_copy.setVisibility(View.GONE);
+                MyApplication.showToast("删除成功，请点击右上角刷新按钮");
+                SPUtils.removeItemFromList(id);
 
-                SPUtils.setDataList("beans", mBeanList);
                 SPUtils.put(Constans.UN_BACK, "1");
                 pDialog.dismiss();
             }

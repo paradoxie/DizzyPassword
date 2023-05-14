@@ -1,6 +1,7 @@
 package cf.paradoxie.dizzypassword.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
@@ -32,6 +33,7 @@ import java.util.Map;
 
 import cf.paradoxie.dizzypassword.activity.MainActivity;
 import cf.paradoxie.dizzypassword.adapter.NameAdapter;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
 import cf.paradoxie.dizzypassword.data.DataDeal;
 import km.lmy.searchview.SearchView;
@@ -46,7 +48,8 @@ public class DataUtils {
     //明文
     public static String backFilePath = Environment.getExternalStorageDirectory().getPath() + "/dizzyPassword.csv";
     //秘文
-    public static String backFilePath_security = Environment.getExternalStorageDirectory().getPath() + "/dizzyPassword_security.csv";
+//    public static String backFilePath_security = Environment.getExternalStorageDirectory().getPath() + "/dizzyPassword_security.csv";
+    public static String backFilePath_security = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/dizzyPassword_security.txt";
 
     /**
      * 标签操作
@@ -276,11 +279,16 @@ public class DataUtils {
      *
      * @return
      */
-    public static boolean exportCsvSecurity() {
+    public static boolean exportCsvSecurity(Context context) {
 
         //名称，帐号，密码，标签，网址，备注
         List<AccountBean> mAccountBeans = SPUtils.getDataList("beans", AccountBean.class);
-        File file = new File(backFilePath_security);
+        if (mAccountBeans.size()==0) {
+            MyApplication.showToast("本地没有数据哦");
+            return false;
+        }
+//        File file = new File(backFilePath_security);
+        File file = new File(context.getFilesDir(), "dizzyPassword_security.csv");
         boolean isSucess = false;
         FileOutputStream out = null;
         OutputStreamWriter osw = null;

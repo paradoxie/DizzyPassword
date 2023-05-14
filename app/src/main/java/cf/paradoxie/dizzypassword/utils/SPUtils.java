@@ -2,6 +2,7 @@ package cf.paradoxie.dizzypassword.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -12,9 +13,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import cf.paradoxie.dizzypassword.base.MyApplication;
+import cf.paradoxie.dizzypassword.bean.AccountBean;
 
 public class SPUtils {
 
@@ -108,6 +111,19 @@ public class SPUtils {
         editor.putString(tag, strJson);
         editor.commit();
 
+    }
+
+    public static void removeItemFromList(String id) {
+        List<AccountBean> beans = SPUtils.getDataList("beans", AccountBean.class);
+        Iterator<AccountBean> iterator = beans.iterator();
+        while (iterator.hasNext()) {
+            AccountBean next = iterator.next();
+            if (id.equals(next.getObjectId())) {
+                Log.e("这是被删除的id", next.getObjectId());
+                iterator.remove();
+            }
+        }
+        SPUtils.setDataList("beans", beans);
     }
 
     /**

@@ -18,9 +18,11 @@ public class Constans {
 
     public static String pic_url = "https://ghproxy.com/https://raw.githubusercontent.com/lingyia/APIIMG/master/pure/";
 
-    public static String APP_CONFIG_URL = "";
-    public static String AD = "";
+    public static String APP_CONFIG_URL = "https://docs.qq.com/doc/DTWR2ZXBIdHJkZURO";
+    public static String AD = "http://fluff.paradoxie.top:2334/pwd/getCommonPwds";
     public static String UN_BACK = "UN_BACK";
+    public static final String IS_KEY_FOR_PWD = "isKeyForPwd";
+    public static final String IS_KEY_FOR_PWD_DAY = "isKeyForPwdDay";
 
     public static String getUrl() {
         int num = (int) (Math.random() * 1000);

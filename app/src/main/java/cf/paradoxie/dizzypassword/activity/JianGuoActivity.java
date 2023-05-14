@@ -3,12 +3,14 @@ package cf.paradoxie.dizzypassword.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.ClipboardManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -36,6 +39,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cf.paradoxie.dizzypassword.base.AppManager;
 import cf.paradoxie.dizzypassword.base.BaseActivity;
 import cf.paradoxie.dizzypassword.base.Constans;
 import cf.paradoxie.dizzypassword.base.MyApplication;
@@ -45,6 +49,7 @@ import cf.paradoxie.dizzypassword.bean.RxBean;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
+import cf.paradoxie.dizzypassword.utils.SpUtil;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.utils.Utils;
 import cf.paradoxie.dizzypassword.view.DialogView;
@@ -54,6 +59,7 @@ import cf.paradoxie.dizzypassword.wdsyncer.SyncManager;
 import cf.paradoxie.dizzypassword.wdsyncer.api.OnListFileListener;
 import cf.paradoxie.dizzypassword.wdsyncer.api.OnSyncResultListener;
 import cf.paradoxie.dizzypassword.wdsyncer.model.DavData;
+import co.infinum.goldfinger.Goldfinger;
 
 @SuppressLint("HandlerLeak")
 public class JianGuoActivity extends BaseActivity {
@@ -62,6 +68,7 @@ public class JianGuoActivity extends BaseActivity {
     private TextView tv_cloud_path;
     private SyncManager syncManager;
     private boolean hasConfig;
+    private Goldfinger goldfinger;
     private final Handler uiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -98,6 +105,7 @@ public class JianGuoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jianguo);
+        goldfinger = new Goldfinger.Builder(this).build();
 //        configDavSync();
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("坚果云同步");
@@ -231,23 +239,78 @@ public class JianGuoActivity extends BaseActivity {
             pwd = SPUtils.get("jianguo_pwd", "") + "";
             tv_account.setText("账号：" + jianguo_account);
             tv_pwd.setText("密码：" + Utils.getCodePwd(pwd));
+
+            ll_jianguo.setOnLongClickListener(view -> {
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(jianguo_account + "\n" + pwd);
+
+                MyApplication.showToast("坚果云账户信息复制成功");
+                return false;
+            });
             configDavSync();
         }
     }
 
     private void outputFile() {
-        checkActivity();
         requestAllPower();
+
+        Object isKey = SpUtil.getInstance(this).getString(Constans.IS_KEY_FOR_PWD, "0");
+        if ("1".equals(isKey)) {
+            Goldfinger.PromptParams params = new Goldfinger.PromptParams.Builder(this)
+                    .title("使用指纹验证")
+                    .negativeButtonText("使用数据密码")
+                    .description("如指纹认证失败，可使用数据密码")
+                    .subtitle("")
+                    .build();
+            goldfinger.authenticate(params, new Goldfinger.Callback() {
+                @Override
+                public void onError(@NonNull Exception e) {
+                    /* Critical error happened */
+                    MyApplication.showToast("验证失败");
+                }
+
+                @Override
+                public void onResult(@NonNull Goldfinger.Result result) {
+                    /* Result received */
+                    if (result.reason() == Goldfinger.Reason.NEGATIVE_BUTTON) {
+                        useDataKey();
+                    } else if (result.reason() == Goldfinger.Reason.USER_CANCELED) {
+
+                    } else if (result.reason() == Goldfinger.Reason.CANCELED) {
+
+                    } else if (result.reason() == Goldfinger.Reason.AUTHENTICATION_START) {
+
+                    } else if (result.reason() == Goldfinger.Reason.HARDWARE_UNAVAILABLE) {
+                        MyApplication.showToast("指纹不可用");
+                    } else if (result.reason() == Goldfinger.Reason.AUTHENTICATION_SUCCESS) {
+                        goldfinger.cancel();
+                    } else {
+                        MyApplication.showToast("验证失败");
+
+                    }
+                }
+            });
+        } else {
+            useDataKey();
+        }
+    }
+
+    private void useDataKey() {
+        checkActivity();
         mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
             @Override
             public void posClickListener(String value) {
                 //校验密码
                 requestAllPower();
                 if (value.equals(SPUtils.get("password", "") + "")) {
-                    if (DataUtils.exportCsvSecurity()) {
+
+                    //重新启用指纹
+                    String isKeyDay = (String) SpUtil.getInstance(AppManager.getAppManager().currentActivity()).getString(Constans.IS_KEY_FOR_PWD_DAY, "3");
+                    int day = Integer.parseInt(isKeyDay);
+                    SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(Constans.IS_KEY_FOR_PWD, "1", 60 * 60 * 24 * day);
+                    MyApplication.showToast("启用指纹验证，有效期" + day + "天");
+                    if (DataUtils.exportCsvSecurity(JianGuoActivity.this)) {
                         MyApplication.showToast("成功导出至根目录");
-                    } else {
-                        MyApplication.showToast("导出失败,请检查应用是否具体权限读写手机储存");
                     }
                     mDialogView.dismiss();
                 } else {
@@ -276,36 +339,85 @@ public class JianGuoActivity extends BaseActivity {
      * 导出加密csv，并上传到坚果云
      */
     public void upLoad() {
-        if (DataUtils.exportCsvSecurity()) {
-            SyncManager syncManager = new SyncManager(this);
-            File saveFile = new File(DataUtils.backFilePath_security);
-            MyDialog.getInstance().show(this, "上传中...");
-            syncManager.uploadFile("dizzyPassword_security.csv", "去特么的密码", saveFile, new OnSyncResultListener() {
-                @Override
-                public void onSuccess(String result) {
-                    Looper.prepare();
+        checkActivity();
+        mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
+            @Override
+            public void posClickListener(String value) {
+                //校验密码
+                requestAllPower();
+                if (value.equals(SPUtils.get("password", "") + "")) {
 
-                    MyApplication.showToast("同步成功");
-                    String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                    Message msg = new Message();
-                    msg.what = 2;
-                    msg.obj = time;
-                    uiHandler.sendMessage(msg);
-                    MyDialog.getInstance().dismiss();
-                    Looper.loop();
-                }
+                    if (DataUtils.exportCsvSecurity(JianGuoActivity.this)) {
+                        SyncManager syncManager = new SyncManager(JianGuoActivity.this);
+//            File saveFile = new File(DataUtils.backFilePath_security);
+                        File saveFile = new File(JianGuoActivity.this.getFilesDir(), "dizzyPassword_security.csv");
+                        MyDialog.getInstance().show(JianGuoActivity.this, "上传中...");
+                        syncManager.uploadFile("dizzyPassword_security.csv", "去特么的密码", saveFile, new OnSyncResultListener() {
+                            @Override
+                            public void onSuccess(String result) {
+                                Looper.prepare();
 
-                @Override
-                public void onError(String errorMsg) {
-                    Looper.prepare();
-                    MyApplication.showToast("好像没有任何更改...");
-                    MyDialog.getInstance().dismiss();
-                    Looper.loop();
+                                MyApplication.showToast("同步成功");
+                                String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                                Message msg = new Message();
+                                msg.what = 2;
+                                msg.obj = time;
+                                uiHandler.sendMessage(msg);
+                                MyDialog.getInstance().dismiss();
+                                Looper.loop();
+                            }
+
+                            @Override
+                            public void onError(String errorMsg) {
+                                Looper.prepare();
+                                MyApplication.showToast("好像没有任何更改...");
+                                MyDialog.getInstance().dismiss();
+                                Looper.loop();
+                            }
+                        });
+                    }
+                    mDialogView.dismiss();
+                } else {
+                    MyApplication.showToast(R.string.error_pwd);
                 }
-            });
-        } else {
-            MyApplication.showToast("上传失败,请检查应用是否具体权限读写手机储存");
-        }
+            }
+
+            @Override
+            public void negCliclListener(String value) {
+                //取消查看
+            }
+        });
+
+
+//        if (DataUtils.exportCsvSecurity(this)) {
+//            SyncManager syncManager = new SyncManager(this);
+////            File saveFile = new File(DataUtils.backFilePath_security);
+//            File saveFile = new File(this.getFilesDir(), "dizzyPassword_security.csv");
+//            MyDialog.getInstance().show(this, "上传中...");
+//            syncManager.uploadFile("dizzyPassword_security.csv", "去特么的密码", saveFile, new OnSyncResultListener() {
+//                @Override
+//                public void onSuccess(String result) {
+//                    Looper.prepare();
+//
+//                    MyApplication.showToast("同步成功");
+//                    String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+//                    Message msg = new Message();
+//                    msg.what = 2;
+//                    msg.obj = time;
+//                    uiHandler.sendMessage(msg);
+//                    MyDialog.getInstance().dismiss();
+//                    Looper.loop();
+//                }
+//
+//                @Override
+//                public void onError(String errorMsg) {
+//                    Looper.prepare();
+//                    MyApplication.showToast("好像没有任何更改...");
+//                    MyDialog.getInstance().dismiss();
+//                    Looper.loop();
+//                }
+//            });
+//        }
 
 
     }
@@ -384,17 +496,17 @@ public class JianGuoActivity extends BaseActivity {
 
     //申请权限，需要使用之前申请
     public void requestAllPower() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.INTERNET}, 1);
-            }
-        }
+//        if (ContextCompat.checkSelfPermission(this,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//            } else {
+//                ActivityCompat.requestPermissions(this,
+//                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.INTERNET}, 1);
+//            }
+//        }
     }
 
 

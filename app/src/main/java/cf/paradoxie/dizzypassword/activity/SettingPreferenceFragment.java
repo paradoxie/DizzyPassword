@@ -43,9 +43,9 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
     private SharedPreferences sp;
     private ImageView jianguo_status;
     private DialogView mDialogView;
-    private String isKeyForPwd = "isKeyForPwd";
     private Preference is_key_for_pwd;
     private Object isKey;
+    private String isKeyDay;
 
     public SettingPreferenceFragment() {
     }
@@ -63,7 +63,7 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
 
         is_key_for_pwd = findPreference("is_key_for_pwd");
 //        is_key_for_pwd.setOnPreferenceChangeListener(this);
-        isKey = SpUtil.getInstance(AppManager.getAppManager().currentActivity()).getString(isKeyForPwd, "0");
+        isKey = SpUtil.getInstance(AppManager.getAppManager().currentActivity()).getString(Constans.IS_KEY_FOR_PWD, "0");
 //        Log.e("---能否指纹访问--", isKey + "");
 
         if ("1".equals(isKey)) {
@@ -141,6 +141,19 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
             }
 
             etp.getEditText().setText("");
+        } else if (key.equals("id_finger_day")) {
+            Preference pref = findPreference(key);
+            EditTextPreference etp = (EditTextPreference) pref;
+            Editable num = etp.getEditText().getText();
+            int day = Integer.parseInt(num.toString());
+            if (day < 0 || day > 30) {
+                MyToast.show(settingActivity, "修改失败，必须大于0或者小于30", ThemeUtils.getPrimaryColor(settingActivity));
+            } else {
+                SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(Constans.IS_KEY_FOR_PWD_DAY, day + "");
+                MyToast.show(settingActivity, "设置成功", ThemeUtils.getPrimaryColor(settingActivity));
+            }
+
+            etp.getEditText().setText("");
         }
     }
 
@@ -157,9 +170,15 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
 
                 break;
             case "is_key_for_pwd":
+                isKeyDay = (String) SpUtil.getInstance(AppManager.getAppManager().currentActivity()).getString(Constans.IS_KEY_FOR_PWD_DAY, "3");
+                int day = Integer.parseInt(isKeyDay);
+                if (day ==0){
+                    MyApplication.showToast("当前数据指纹有效期天数为0，无法设置");
+                    return false;
+                }
                 if (isKey.equals("1")) {
                     isKey = "0";
-                    SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(isKeyForPwd, "0");
+                    SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(Constans.IS_KEY_FOR_PWD, "0");
                     is_key_for_pwd.setWidgetLayoutResource(R.layout.layout_per_pwd);
                     is_key_for_pwd.setSummary("当前为密码访问");
                 } else {
@@ -167,11 +186,12 @@ public class SettingPreferenceFragment extends PreferenceFragment implements Sha
                     mDialogView.setOnPosNegClickListener(new DialogView.OnPosNegClickListener() {
                         @Override
                         public void posClickListener(String value) {
-                            //校验密码
+                            //这里必须校验密码
                             if (value.equals(SPUtils.get("password", "") + "")) {
-                                SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(isKeyForPwd, "1", 60 * 60 * 24 * 3);
+
+                                SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(Constans.IS_KEY_FOR_PWD, "1", 60 * 60 * 24 * day);
                                 is_key_for_pwd.setWidgetLayoutResource(R.layout.layout_per_finger);
-                                is_key_for_pwd.setSummary("当前数据使用指纹验证，有效期3天");
+                                is_key_for_pwd.setSummary("当前数据使用指纹验证，有效期" + day + "天");
                                 mDialogView.dismiss();
                             } else {
                                 MyApplication.showToast(R.string.error_pwd);

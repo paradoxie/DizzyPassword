@@ -25,8 +25,8 @@ public class DialogView extends Dialog implements View.OnClickListener {
     private LinearLayout mLinearLayout;
     private TextView mTitleTv, mTextView;
     private EditText mEditText;
-    private Button mButton;
-    private Button mPosBtn;
+    private TextView mButton;
+    private TextView mPosBtn;
 
 
     public DialogView(Context context) {
@@ -55,12 +55,12 @@ public class DialogView extends Dialog implements View.OnClickListener {
     }
 
     private void initView() {
-        mLinearLayout = (LinearLayout) mView.findViewById(R.id.lLayout_bg);
-        mTitleTv = (TextView) mView.findViewById(R.id.txt_title);
-        mTextView = (TextView) mView.findViewById(R.id.txt_title_account);
-        mEditText = (EditText) mView.findViewById(R.id.et_msg);
-        mButton = (Button) mView.findViewById(R.id.btn_neg);
-        mPosBtn = (Button) mView.findViewById(R.id.btn_pos);
+        mLinearLayout = mView.findViewById(R.id.lLayout_bg);
+        mTitleTv = mView.findViewById(R.id.txt_title);
+        mTextView =mView.findViewById(R.id.txt_title_account);
+        mEditText = mView.findViewById(R.id.et_msg);
+        mButton =mView.findViewById(R.id.btn_neg);
+        mPosBtn =mView.findViewById(R.id.btn_pos);
     }
 
     private void initData() {

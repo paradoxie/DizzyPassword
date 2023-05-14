@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 
 group='com.github.limuyang2'
 
@@ -11,8 +10,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.MINSDK_VERSION
         targetSdkVersion rootProject.ext.TARGETSDK_VERSION
-        versionCode 10
-        versionName "1.0.6.9"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
@@ -34,6 +31,7 @@ android {
             v2SigningEnabled true
         }
     }
+    namespace 'km.lmy.searchview'
 }
 
 dependencies {

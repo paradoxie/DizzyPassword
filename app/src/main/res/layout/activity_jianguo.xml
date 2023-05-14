@@ -31,7 +31,7 @@
 
         <LinearLayout
             android:id="@+id/ll_jianguo"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:visibility="gone">
@@ -39,7 +39,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="坚果云账户" />
+                android:text="坚果云账户，长按可复制" />
 
             <TextView
                 android:id="@+id/tv_account"
@@ -49,7 +49,7 @@
 
             <TextView
                 android:id="@+id/tv_pwd"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp" />
 
@@ -98,6 +98,7 @@
                 android:gravity="center"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:visibility="gone"
                 android:text="1.导出加密文件"
                 android:textSize="16sp" />
 
@@ -107,10 +108,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:background="@drawable/search_label_sure"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:text="2.上传到云端"
+                android:text="上传到云端"
                 android:textSize="16sp" />
 
         </LinearLayout>

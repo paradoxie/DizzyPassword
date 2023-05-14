@@ -51,13 +51,20 @@
             android:summary="更换进入App时的六位安全码"
             android:title="更换安全码"/>
 
-
         <PreferenceScreen
             android:key="is_key_for_pwd"
-            android:summary="密码数据启用指纹访问，7天后自动关闭"
+            android:summary="当前数据使用指纹验证，有效期3天"
             android:title="指纹访问数据"
             android:widgetLayout="@layout/layout_jianguo"/>
 
+        <EditTextPreference
+            android:hint="默认值为3天"
+            android:inputType="number"
+            android:key="id_finger_day"
+            android:maxLength="2"
+            android:paddingLeft="5dp"
+            android:summary="到达有效期后，使用密码验证后再次启用"
+            android:title="指纹访问数据有效期" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -69,10 +76,10 @@
             android:summary=""
             android:title="捐赠"/>
 
-        <PreferenceScreen
-            android:key="group"
-            android:summary="反馈bug，一起玩耍"
-            android:title="加群"/>
+<!--        <PreferenceScreen-->
+<!--            android:key="group"-->
+<!--            android:summary="反馈bug，一起玩耍"-->
+<!--            android:title="加群"/>-->
         <PreferenceScreen
             android:key="update"
             android:summary="点击检查更新"
