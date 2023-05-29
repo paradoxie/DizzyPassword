@@ -1,11 +1,15 @@
 package cf.paradoxie.dizzypassword.activity;
 
-import android.Manifest;
+import static cf.paradoxie.dizzypassword.base.Constants.INFINI_CLOUD_URL;
+import static cf.paradoxie.dizzypassword.base.Constants.JIANGUO_URL;
+import static cf.paradoxie.dizzypassword.base.Constants.WEBDAV_ACCOUNT;
+import static cf.paradoxie.dizzypassword.base.Constants.WEBDAV_PWD;
+import static cf.paradoxie.dizzypassword.base.Constants.WEBDAV_SERVER;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,15 +21,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,19 +39,21 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.base.AppManager;
 import cf.paradoxie.dizzypassword.base.BaseActivity;
-import cf.paradoxie.dizzypassword.base.Constans;
+import cf.paradoxie.dizzypassword.base.Constants;
 import cf.paradoxie.dizzypassword.base.MyApplication;
-import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
-import cf.paradoxie.dizzypassword.bean.RxBean;
+import cf.paradoxie.dizzypassword.bean.CommonEntity;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
-import cf.paradoxie.dizzypassword.utils.RxBus;
+import cf.paradoxie.dizzypassword.utils.JumpUtil;
+import cf.paradoxie.dizzypassword.utils.MyToast;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
 import cf.paradoxie.dizzypassword.utils.SpUtil;
 import cf.paradoxie.dizzypassword.utils.ThemeUtils;
 import cf.paradoxie.dizzypassword.utils.Utils;
+import cf.paradoxie.dizzypassword.view.ClearableEditText;
 import cf.paradoxie.dizzypassword.view.DialogView;
 import cf.paradoxie.dizzypassword.view.MyDialog;
 import cf.paradoxie.dizzypassword.wdsyncer.SyncConfig;
@@ -80,11 +82,11 @@ public class JianGuoActivity extends BaseActivity {
                 case 2:
                     String time = (String) msg.obj;
                     SPUtils.put("asyncTime", time);
-                    SPUtils.put(Constans.UN_BACK, "0");
-                    tv_time.setText("已上传：\n" + time + "\n 请检查坚果云后台是否存在数据");
+                    SPUtils.put(Constants.UN_BACK, "0");
+                    tv_time.setText("已上传：\n" + time + "\n 请检查webdav后台是否存在数据");
                     break;
                 case 3:
-                    MyApplication.showToast("恢复完成，请回到列表界面点击右上角刷新按钮");
+                    MyToast.show(JianGuoActivity.this, "恢复完成，请回到列表界面点击右上角刷新按钮", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
                     String time1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                     SPUtils.put("asyncTimeDown", time1);
                     tv_time_down.setText("已恢复：\n" + time1 + "\n 请回到列表界面点击右上角刷新按钮");
@@ -94,12 +96,13 @@ public class JianGuoActivity extends BaseActivity {
     };
     private StringBuffer sb;
 
-    private TextView tv_notify, tv_account, tv_pwd;
+    private TextView tv_notify, tv_server, tv_account, tv_pwd;
     private LinearLayout ll_jianguo;
-    private String jianguo_account, pwd;
-    private EditText edit_account, edit_pwd;
+    private String server, jianguo_account, pwd;
+    private ClearableEditText edit_server, edit_account, edit_pwd;
     SimpleDateFormat sdfSource = new SimpleDateFormat("yyyy/M/d HH:mm:ss");
     SimpleDateFormat sdfTarget = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SyncConfig config;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +111,7 @@ public class JianGuoActivity extends BaseActivity {
         goldfinger = new Goldfinger.Builder(this).build();
 //        configDavSync();
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("坚果云同步");
+        toolbar.setTitle("webdav云同步");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -129,6 +132,7 @@ public class JianGuoActivity extends BaseActivity {
 
         tv_notify = findViewById(R.id.tv_notify);
         tv_account = findViewById(R.id.tv_account);
+        tv_server = findViewById(R.id.tv_server);
         tv_pwd = findViewById(R.id.tv_pwd);
         ll_jianguo = findViewById(R.id.ll_jianguo);
 
@@ -163,7 +167,7 @@ public class JianGuoActivity extends BaseActivity {
         tv_cloud_to_local.setOnClickListener(v -> {
             if (tv_cloud_path.getText().toString().contains("dizzyPassword_security")) {
                 downloadFile(syncManager);
-                MyApplication.showToast("恢复完成，请回到列表界面点击右上角刷新按钮");
+                MyToast.show(JianGuoActivity.this, "恢复完成，请回到列表界面点击右上角刷新按钮", ThemeUtils.getPrimaryColor(AppManager.getAppManager().currentActivity()));
 //                RxBus.getInstance().post(new RxBean("refresh"));
             } else {
                 MyApplication.showToast("请先点击【检查云端文件】");
@@ -175,7 +179,7 @@ public class JianGuoActivity extends BaseActivity {
     }
 
     private boolean checkPwd() {
-        String pwd = SPUtils.get("jianguo_pwd", "") + "";
+        String pwd = SPUtils.get(WEBDAV_PWD, "") + "";
         return !TextUtils.isEmpty(pwd);
     }
 
@@ -184,10 +188,24 @@ public class JianGuoActivity extends BaseActivity {
         LayoutInflater factory = LayoutInflater.from(this);
 
         final View dialog = factory.inflate(R.layout.dialog, null);
+        edit_server = dialog.findViewById(R.id.dialog_ed_server);
         edit_account = dialog.findViewById(R.id.dialog_ed_account);
         edit_pwd = dialog.findViewById(R.id.dialog_ed_pwd);
-        builder.setTitle("配置坚果云");    //设置对话框标题
+        builder.setTitle("配置webdav");    //设置对话框标题
         builder.setIcon(R.drawable.jian_0);   //设置对话框标题前的图标
+
+        dialog.findViewById(R.id.tv_notify_2).setOnClickListener(v -> {
+            CommonEntity commonEntity = new CommonEntity();
+            commonEntity.setType(0);
+            commonEntity.setJumpUrl(INFINI_CLOUD_URL);
+            JumpUtil.jump(JianGuoActivity.this, commonEntity);
+        });
+        dialog.findViewById(R.id.tv_notify_3).setOnClickListener(v -> {
+            CommonEntity commonEntity = new CommonEntity();
+            commonEntity.setType(0);
+            commonEntity.setJumpUrl(JIANGUO_URL);
+            JumpUtil.jump(JianGuoActivity.this, commonEntity);
+        });
 
         builder.setView(dialog);
         builder.setPositiveButton("确认", null);
@@ -199,13 +217,15 @@ public class JianGuoActivity extends BaseActivity {
                 Button positionButton = mDialog.getButton(AlertDialog.BUTTON_POSITIVE);
                 Button negativeButton = mDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
                 positionButton.setOnClickListener(v -> {
+                    String s0 = edit_server.getText().toString();
                     String s = edit_account.getText().toString();
                     String s1 = edit_pwd.getText().toString();
-                    if (s.length() < 1 || s1.length() < 1) {
+                    if (s0.length() < 1 || s.length() < 1 || s1.length() < 1) {
                         MyApplication.showToast("云服务账户或密码不能为空");
                     } else {
-                        SPUtils.put("jianguo_account", s);
-                        SPUtils.put("jianguo_pwd", s1);
+                        SPUtils.put(WEBDAV_SERVER, s0);
+                        SPUtils.put(WEBDAV_ACCOUNT, s);
+                        SPUtils.put(WEBDAV_PWD, s1);
                         setJianGuoAccount();
                         mDialog.dismiss();
                     }
@@ -224,7 +244,8 @@ public class JianGuoActivity extends BaseActivity {
      * 设置坚果云账号
      */
     private void setJianGuoAccount() {
-        jianguo_account = SPUtils.get("jianguo_account", "") + "";
+        server = SPUtils.get(WEBDAV_SERVER, "https://dav.jianguoyun.com/dav/") + "";
+        jianguo_account = SPUtils.get(WEBDAV_ACCOUNT, "") + "";
 
         if ("".equals(jianguo_account)) {
             hasConfig = false;
@@ -236,25 +257,28 @@ public class JianGuoActivity extends BaseActivity {
             tv_notify.setVisibility(View.GONE);
             ll_jianguo.setVisibility(View.VISIBLE);
 
-            pwd = SPUtils.get("jianguo_pwd", "") + "";
+            pwd = SPUtils.get(WEBDAV_PWD, "") + "";
+            configDavSync();
+
+            tv_server.setText("地址：" + server);
             tv_account.setText("账号：" + jianguo_account);
             tv_pwd.setText("密码：" + Utils.getCodePwd(pwd));
 
             ll_jianguo.setOnLongClickListener(view -> {
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setText(jianguo_account + "\n" + pwd);
+                cm.setText(config.getServerUrl() + "\n" + jianguo_account + "\n" + pwd);
 
-                MyApplication.showToast("坚果云账户信息复制成功");
+                MyApplication.showToast("webdav 信息复制成功");
                 return false;
             });
-            configDavSync();
+
         }
     }
 
     private void outputFile() {
         requestAllPower();
 
-        Object isKey = SpUtil.getInstance(this).getString(Constans.IS_KEY_FOR_PWD, "0");
+        Object isKey = SpUtil.getInstance(this).getString(Constants.IS_KEY_FOR_PWD, "0");
         if ("1".equals(isKey)) {
             Goldfinger.PromptParams params = new Goldfinger.PromptParams.Builder(this)
                     .title("使用指纹验证")
@@ -305,9 +329,9 @@ public class JianGuoActivity extends BaseActivity {
                 if (value.equals(SPUtils.get("password", "") + "")) {
 
                     //重新启用指纹
-                    String isKeyDay = (String) SpUtil.getInstance(AppManager.getAppManager().currentActivity()).getString(Constans.IS_KEY_FOR_PWD_DAY, "3");
+                    String isKeyDay = (String) SpUtil.getInstance(AppManager.getAppManager().currentActivity()).getString(Constants.IS_KEY_FOR_PWD_DAY, "3");
                     int day = Integer.parseInt(isKeyDay);
-                    SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(Constans.IS_KEY_FOR_PWD, "1", 60 * 60 * 24 * day);
+                    SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(Constants.IS_KEY_FOR_PWD, "1", 60 * 60 * 24 * day);
                     MyApplication.showToast("启用指纹验证，有效期" + day + "天");
                     if (DataUtils.exportCsvSecurity(JianGuoActivity.this)) {
                         MyApplication.showToast("成功导出至根目录");
@@ -329,8 +353,8 @@ public class JianGuoActivity extends BaseActivity {
      * 配置sync
      */
     public void configDavSync() {
-        SyncConfig config = new SyncConfig(this);
-        config.setServerUrl("https://dav.jianguoyun.com/dav/");
+        config = new SyncConfig(this);
+        config.setServerUrl(server);
         config.setUserAccount(jianguo_account);
         config.setPassWord(pwd);
     }
@@ -423,13 +447,16 @@ public class JianGuoActivity extends BaseActivity {
     }
 
     public void checkDir() {
+
+
         MyDialog.getInstance().show(this, "读取中,请稍后...");
         syncManager.listAllFile("去特么的密码", new OnListFileListener() {
             @Override
             public void listAll(List<DavData> davResourceList) {
                 sb = new StringBuffer();
                 for (DavData i : davResourceList) {
-                    sb.append(i.getDisplayName() + "\n");
+//                    sb.append(i.getDisplayName() + "\n");
+                    sb.append(i + "\n");
                 }
                 Log.e("getActivity", sb.toString());
                 Message msg = new Message();
@@ -466,7 +493,7 @@ public class JianGuoActivity extends BaseActivity {
                 }
                 Log.e("存入本地", "");
                 SPUtils.setDataList("beans", accountBeans);
-                SPUtils.put(Constans.UN_BACK, "0");
+                SPUtils.put(Constants.UN_BACK, "0");
                 Log.e("完成", "");
                 Message msg = new Message();
                 msg.what = 3;
@@ -512,7 +539,7 @@ public class JianGuoActivity extends BaseActivity {
 
     private void checkActivity() {
         mDialogView = new DialogView(JianGuoActivity.this);
-        mDialogView.setMeaasge(SPUtils.get("name", "") + "", "\n密码:" + Utils.getCodePwd(String.valueOf(SPUtils.get("password", ""))));
+        mDialogView.setMeaasge(SPUtils.get("name", "") + "", "\n密钥:" + Utils.getCodePwd(String.valueOf(SPUtils.get("password", ""))));
         try {
             if (!JianGuoActivity.this.isFinishing()) {
                 mDialogView.show();

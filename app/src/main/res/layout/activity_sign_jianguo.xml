@@ -1,144 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_color"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    tools:context="cf.paradoxie.dizzypassword.activity.SignActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <include layout="@layout/toolbar_layout" />
+    <data>
 
-    <LinearLayout
-        android:id="@+id/edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:orientation="vertical">
-
-
-        <cf.paradoxie.dizzypassword.view.ClearableEditText
-            android:id="@+id/et_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="帐号:请输入您的常用邮箱地址"
-            android:inputType="textEmailAddress" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="请注意，以下填写数据密钥，并非坚果云密码，请仔细阅读注意事项"
-            android:textColor="@color/red500" />
-
-        <cf.paradoxie.dizzypassword.view.ClearableEditText
-            android:id="@+id/et_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="密钥:请输入数据密钥,至少8位,非常重要！"
-            android:inputType="textPassword" />
-
-    </LinearLayout>
-
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/edit"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="@color/bg_color"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        tools:context="cf.paradoxie.dizzypassword.activity.SignActivity">
 
-        <Button
-            android:id="@+id/bt_sign_up"
-            style="@style/dialog_blue_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/search_label_sure"
-            android:text="登录"
-            android:textSize="14sp" />
+        <include layout="@layout/toolbar_layout" />
 
-
-    </LinearLayout>
-
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="20dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <CheckBox
-                    android:id="@+id/cb"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/tv_private"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/edit"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/action_note"
-                    android:textColor="?colorAccent"
-                    android:textSize="@dimen/text_size_18" />
+                    android:layout_margin="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="webdav 信息"
+                        android:textColor="?colorAccent"
+                        android:textSize="@dimen/text_size_16" />
+
+                    <cf.paradoxie.dizzypassword.view.ClearableEditText
+                        android:id="@+id/et_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="请输入您的webdav服务器地址"
+                        android:inputType="textEmailAddress"
+                        android:text="https://dav.jianguoyun.com/dav/" />
+
+                    <cf.paradoxie.dizzypassword.view.ClearableEditText
+                        android:id="@+id/et_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="请输入您的webdav账号"
+                        android:inputType="textEmailAddress" />
+
+                    <cf.paradoxie.dizzypassword.view.ClearableEditText
+                        android:id="@+id/et_jianguo_pwd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="请输入您的webdav密码"
+                        android:inputType="textPassword" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="请注意，以下数据密钥，将用于访问校验和数据加密，请务必牢记！\n老用户请填写以前的app注册密码,若填写错误，也能正常进入主界面，但会造成数据无法解密"
+                        android:textColor="@color/red500" />
+
+                    <cf.paradoxie.dizzypassword.view.ClearableEditText
+                        android:id="@+id/et_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="密钥:请输入数据密钥,至少8位,非常重要！"
+                        android:inputType="textPassword" />
+
+                    <cf.paradoxie.dizzypassword.view.ClearableEditText
+                        android:id="@+id/et_password_confirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="请再次输入数据密钥"
+                        android:inputType="textPassword" />
+
+                    <TextView
+                        android:id="@+id/tv_encrypt_password_notify"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="两次密码不一致"
+                        android:textColor="@color/red400"
+                        android:textSize="@dimen/text_size_16"
+                        android:visibility="invisible" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_private"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/action_note"
+                        android:textColor="?colorAccent"
+                        android:textSize="@dimen/text_size_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edit"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/bt_sign_up"
+                        style="@style/dialog_blue_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/search_label_sure"
+                        android:text="登录"
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:paddingStart="25dp"
+                    android:paddingEnd="25dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/search_label_bg_15"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/tv_notify_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:text="@string/tv_notify_1"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/tv_notify_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="@string/tv_notify_2"
+                            android:textColor="?colorAccent" />
+
+                        <TextView
+                            android:id="@+id/tv_notify_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="@string/tv_notify_3"
+                            android:textColor="?colorAccent" />
+
+                        <TextView
+                            android:id="@+id/tv_notify_4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="@string/tv_notify_4"
+                            android:textColor="@color/black" />
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_notify"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/search_label_bg_15"
+                        android:padding="10dp"
+                        android:text="@string/tv_notify"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
             </LinearLayout>
+        </ScrollView>
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="60dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="20dp"
-                android:text="@string/action_note_jianguo_5"
-                android:textColor="@color/red500"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="60dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:text="@string/action_note_jianguo_6"
-                android:textColor="@color/red500"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="60dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:text="@string/action_note_jianguo_1"
-                android:textColor="@color/red500" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="60dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:text="@string/action_note_jianguo_2"
-                android:textColor="@color/red600" />
-
-
-        </LinearLayout>
-
-    </ScrollView>
-
-
-</LinearLayout>
+    </LinearLayout>
+</layout>

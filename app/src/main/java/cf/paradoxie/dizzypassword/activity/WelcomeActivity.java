@@ -1,5 +1,7 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import static cf.paradoxie.dizzypassword.base.Constants.WEBDAV_PWD;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -194,7 +196,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void fingerSuccess() {
-        String jianguo = SPUtils.get("jianguo_pwd", "") + "";
+        String jianguo = SPUtils.get(WEBDAV_PWD, "") + "";
         BmobUser user = MyApplication.getUser();
 
         if (!TextUtils.isEmpty(jianguo) || user != null) {

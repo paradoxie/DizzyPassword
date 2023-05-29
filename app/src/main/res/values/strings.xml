@@ -2,18 +2,18 @@
     <string name="app_name">去特么的密码</string>
     <string name="action_note">点击阅读【隐私协议及免责声明】</string>
     <string name="action_note_1">1.首次使用,请返回点击【纯纯新用户】</string>
-    <string name="action_note_2">2.老用户请登录后，前往设置配置自己的坚果云账号</string>
-    <string name="action_note_3">3.不再开放账号注册，老用户请尽快迁移数据至自己的坚果云</string>
-    <string name="action_note_4">4.本工具从当前版本开始，将完全转向纯工具应用，数据联网功能仅涉及用户本身的坚果云配置、软件版本管理等信息。
-        \n还在使用作者提供的数据存储服务的用户，请确认坚果云备份完成后，删除保存在作者这边的所有数据</string>
+    <string name="action_note_2">2.老用户请登录后，前往设置配置自己的webdav账号</string>
+    <string name="action_note_3">3.不再开放账号注册，老用户请尽快迁移数据至自己的webdav</string>
+    <string name="action_note_4">4.本工具从当前版本开始，将完全转向纯工具应用，数据联网功能仅涉及用户本身的webdav配置、软件版本管理等信息。
+        \n还在使用作者提供的数据存储服务的用户，请确认webdav备份完成后，删除保存在作者这边的所有数据</string>
     <string name="action_note_6">5.数据迁移截止时间为2023年6月底，届时APP将不再支持原账号登录功能和Bmob数据获取功能</string>
     <string name="action_note_7">6.去年就想让大家自己接管自己的数据了，一直懒~~/姚明笑</string>
     <string name="action_note_5">7.祝您食用开心(*^__^*)</string>
-    <string name="action_note_jianguo_5">-1.此页面须填写的账号密码与坚果云无关！！！</string>
+    <string name="action_note_jianguo_5">-1.此页面须填写的账号密码与webdav无关！！！</string>
     <string name="action_note_jianguo_6">0.老用户，请在【密钥】行填写此前app的登录密码，用于数据解密\n  新用户，请务必记住此密钥，将用于数据访问权限和重要数据的加解密</string>
     <string name="action_note_jianguo_1">1.请注意，本次输入账号密码不再校验正确性，仅本地存储后用于数据解密</string>
     <string name="action_note_jianguo_2">2.对于老用户，若密码填写错误，也能正常进入主界面，但会造成数据无法解密</string>
-    <string name="action_note_jianguo_3">3.数据已在坚果云备份后，可在此重新登录</string>
+    <string name="action_note_jianguo_3">3.数据已在webdav备份后，可在此重新登录</string>
 
     <string name="error_pwd">密码错了哦~</string>
     <string name="error_no_item">好像没有这些Tag条目哟~</string>
@@ -76,4 +76,9 @@
 	\"tag\": [\"标签2\", \"标签3\", \"标签4\", \"标签1\"],\n
 	\"website\": \"网址信息\"\n
 }]</string>
+    <string name="tv_notify_1">已验证支持的webdav平台：(点击跳转查看教程)</string>
+    <string name="tv_notify_2">1. infinicloud (https://infini-cloud.net/en/) </string>
+    <string name="tv_notify_3">2. 坚果云 (https://www.jianguoyun.com/)</string>
+    <string name="tv_notify">以坚果云为例，账号密码获取教程：\n 1.注册坚果云\n 2.登录后点击右上角用户名，选择【账户信息】\n 3.页面跳转后选择【安全选项】，右下方可见【第三方应用管理】\n 4.点击添加应用，生成密码\n 5.成功后来到本界面填写</string>
+    <string name="tv_notify_4">其他平台请在酷安私我，验证后添加</string>
 </resources>

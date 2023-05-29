@@ -21,11 +21,10 @@ import android.widget.TextView;
 import com.loopeer.cardstack.CardStackView;
 import com.loopeer.cardstack.StackAdapter;
 
-import java.util.Iterator;
 import java.util.List;
 
 import cf.paradoxie.dizzypassword.base.AppManager;
-import cf.paradoxie.dizzypassword.base.Constans;
+import cf.paradoxie.dizzypassword.base.Constants;
 import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.AddActivity;
@@ -400,7 +399,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
                 MyApplication.showToast("删除成功，请点击右上角刷新按钮");
                 SPUtils.removeItemFromList(id);
 
-                SPUtils.put(Constans.UN_BACK, "1");
+                SPUtils.put(Constants.UN_BACK, "1");
                 pDialog.dismiss();
             }
 

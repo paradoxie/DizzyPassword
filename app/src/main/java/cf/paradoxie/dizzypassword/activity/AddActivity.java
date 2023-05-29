@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +25,7 @@ import java.util.Random;
 
 import cf.paradoxie.dizzypassword.base.AppManager;
 import cf.paradoxie.dizzypassword.base.BaseActivity;
-import cf.paradoxie.dizzypassword.base.Constans;
+import cf.paradoxie.dizzypassword.base.Constants;
 import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
@@ -34,9 +33,7 @@ import cf.paradoxie.dizzypassword.bean.RxBean;
 import cf.paradoxie.dizzypassword.utils.DesUtil;
 import cf.paradoxie.dizzypassword.utils.RxBus;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
-import cf.paradoxie.dizzypassword.view.DialogView;
 import cf.paradoxie.dizzypassword.view.FlowLayout;
-import cn.bmob.v3.BmobUser;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
@@ -185,7 +182,7 @@ public class AddActivity extends BaseActivity {
         beans.add(accountBean);
         //储存新的list
         SPUtils.setDataList("beans", beans);
-        SPUtils.put(Constans.UN_BACK, "1");
+        SPUtils.put(Constants.UN_BACK, "1");
         pDialog.dismiss();
         MyApplication.showToast("更新成功");
         AppManager.getAppManager().finishActivity(JianGuoMainActivity.class);
@@ -204,7 +201,7 @@ public class AddActivity extends BaseActivity {
         beans.add(accountBean);
         //储存新的list
         SPUtils.setDataList("beans", beans);
-        SPUtils.put(Constans.UN_BACK, "1");
+        SPUtils.put(Constants.UN_BACK, "1");
 
         pDialog.dismiss();
         MyApplication.showToast("保存成功");

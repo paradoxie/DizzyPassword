@@ -1,5 +1,7 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import static cf.paradoxie.dizzypassword.base.Constants.WEBDAV_PWD;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -36,13 +38,13 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cf.paradoxie.dizzypassword.base.AppManager;
-import cf.paradoxie.dizzypassword.base.BaseActivity;
-import cf.paradoxie.dizzypassword.base.Constans;
-import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.adapter.NameAdapter;
 import cf.paradoxie.dizzypassword.adapter.TestStackAdapter;
+import cf.paradoxie.dizzypassword.base.AppManager;
+import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.base.Constants;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
 import cf.paradoxie.dizzypassword.bean.AppConfig;
 import cf.paradoxie.dizzypassword.bean.BaseConfig;
@@ -61,7 +63,6 @@ import cf.paradoxie.dizzypassword.utils.Utils;
 import cf.paradoxie.dizzypassword.view.DialogView;
 import cf.paradoxie.dizzypassword.view.MyDialog;
 import cf.paradoxie.dizzypassword.view.MyLetterSortView;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import co.infinum.goldfinger.Goldfinger;
 import km.lmy.searchview.SearchView;
@@ -205,7 +206,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
 
             fab_1.setOnClickListener(view -> {
                 if (MyApplication.first_check == 0) {
-                    Object isKey = SpUtil.getInstance(this).getString(Constans.IS_KEY_FOR_PWD, "0");
+                    Object isKey = SpUtil.getInstance(this).getString(Constants.IS_KEY_FOR_PWD, "0");
                     if ("1".equals(isKey)) {
                         Goldfinger.PromptParams params = new Goldfinger.PromptParams.Builder(this)
                                 .title("使用指纹验证")
@@ -251,7 +252,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
                     new SweetAlertDialog(JianGuoMainActivity.this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("锁定数据操作")
                             .setContentText(
-                                    "帐号:" + (SPUtils.get("name", "")) + "\n密码:" + (SPUtils.get("password", "")) +
+                                    "帐号:" + (SPUtils.get("name", "")) + "\n密钥:" + (SPUtils.get("password", "")) +
                                             "\n\n确定要锁定当前操作权限么？")
                             .setConfirmText("锁定")
                             .setCancelText("算啦")
@@ -368,9 +369,9 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
                 if (value.equals(SPUtils.get("password", "") + "")) {
                     MyApplication.first_check = 1;
                     //重新启用指纹
-                    String isKeyDay = (String) SpUtil.getInstance(AppManager.getAppManager().currentActivity()).getString(Constans.IS_KEY_FOR_PWD_DAY, "3");
+                    String isKeyDay = (String) SpUtil.getInstance(AppManager.getAppManager().currentActivity()).getString(Constants.IS_KEY_FOR_PWD_DAY, "3");
                     int day = Integer.parseInt(isKeyDay);
-                    SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(Constans.IS_KEY_FOR_PWD, "1", 60 * 60 * 24 * day);
+                    SpUtil.getInstance(AppManager.getAppManager().currentActivity()).setString(Constants.IS_KEY_FOR_PWD, "1", 60 * 60 * 24 * day);
                     if (day != 0) {
                         MyApplication.showToast("启用指纹验证，有效期" + day + "天");
                     }
@@ -430,7 +431,7 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
 
     private void checkActivity() {
         mDialogView = new DialogView(JianGuoMainActivity.this);
-        mDialogView.setMeaasge(SPUtils.get("name", "") + "", "\n密码:" + Utils.getCodePwd(String.valueOf(SPUtils.get("password", ""))));
+        mDialogView.setMeaasge(SPUtils.get("name", "") + "", "\n密钥:" + Utils.getCodePwd(String.valueOf(SPUtils.get("password", ""))));
         try {
             if (!JianGuoMainActivity.this.isFinishing()) {
                 mDialogView.show();
@@ -494,11 +495,11 @@ public class JianGuoMainActivity extends BaseActivity implements CardStackView.I
     //弹窗去设置坚果云
     private void findOnLineDate() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        String pwd = SPUtils.get("jianguo_pwd", "") + "";
+        String pwd = SPUtils.get(WEBDAV_PWD, "") + "";
         if (TextUtils.isEmpty(pwd)) {
-            builder.setTitle("去配置坚果云");
+            builder.setTitle("去配置webdav");
         } else {
-            builder.setTitle("去恢复坚果云数据");
+            builder.setTitle("去恢复webdav数据");
         }
         //设置对话框标题
         builder.setIcon(R.drawable.jian_0);   //设置对话框标题前的图标

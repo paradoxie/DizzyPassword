@@ -1,5 +1,10 @@
 package cf.paradoxie.dizzypassword.base;
 
+import static cf.paradoxie.dizzypassword.base.Constants.WEBDAV_ACCOUNT;
+import static cf.paradoxie.dizzypassword.base.Constants.WEBDAV_PWD;
+import static cf.paradoxie.dizzypassword.base.Constants.WEBDAV_SERVER;
+import static cn.bmob.v3.BmobRealTimeData.TAG;
+
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -15,25 +20,15 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
-import android.widget.Toast;
-
-
 import com.google.android.material.snackbar.Snackbar;
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.WhiteToastStyle;
 
-
-import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.CrashLogActivity;
 import cf.paradoxie.dizzypassword.utils.SPUtils;
-import cf.paradoxie.dizzypassword.utils.Utils;
 import cf.paradoxie.dizzypassword.wdsyncer.SyncConfig;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
-import co.infinum.goldfinger.Goldfinger;
-
-
-import static cn.bmob.v3.BmobRealTimeData.TAG;
 
 public class MyApplication extends Application implements Thread.UncaughtExceptionHandler {
     public static MyApplication mInstance;
@@ -52,14 +47,14 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         mContext = getApplicationContext();
         initToast();
         //开启抓取错误信息
-        Thread.setDefaultUncaughtExceptionHandler(this);
+//        Thread.setDefaultUncaughtExceptionHandler(this);
         configDavSync();
 
 //        Bmob.resetDomain("http://xiepwd.ofcoder.com/8/");
         Bmob.resetDomain("http://bmob.paradoxie.top/8/");
         String key = SPUtils.get("key", "") + "";
         if (("").equals(key)) {
-            Bmob.initialize(this, Constans.APPLICATION_ID);
+            Bmob.initialize(this, Constants.APPLICATION_ID);
         } else {
             Bmob.initialize(this, key);
         }
@@ -80,12 +75,13 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
      * 配置坚果云sync
      */
     public void configDavSync() {
-        String jianguo_account = SPUtils.get("jianguo_account", "") + "";
-        String pwd = SPUtils.get("jianguo_pwd", "") + "";
+        String webdav_server = SPUtils.get(WEBDAV_SERVER, "") + "";
+        String jianguo_account = SPUtils.get(WEBDAV_ACCOUNT, "") + "";
+        String pwd = SPUtils.get(WEBDAV_PWD, "") + "";
 
         if (!"".equals(jianguo_account)) {
             SyncConfig config = new SyncConfig(this);
-            config.setServerUrl("https://dav.jianguoyun.com/dav/");
+            config.setServerUrl(webdav_server);
             config.setPassWord(pwd);
             config.setUserAccount(jianguo_account);
         }
@@ -131,7 +127,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
             return false;
         }
         if (getUser() != null) {
-            showToast("当前仅提供个人坚果云操作，请备份坚果云后退出，登录界面点击【直接使用坚果云】");
+            showToast("当前提供个人webdav操作，请备份webdav后退出，登录界面点击【直接使用webdav】");
             return false;
         }
         return true;
@@ -225,7 +221,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
      */
     public static boolean joinQQGroup() {
         Intent intent = new Intent();
-        intent.setData(Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D" + Constans.QQ_ID));
+        intent.setData(Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D" + Constants.QQ_ID));
         // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         try {
             getContext().startActivity(intent);

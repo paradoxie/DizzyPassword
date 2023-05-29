@@ -22,7 +22,7 @@
             android:id="@+id/et_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="帐号:请输入您的常用邮箱地址"
+            android:hint="帐号:请输入您的注册邮箱"
             android:inputType="textEmailAddress" />
 
 

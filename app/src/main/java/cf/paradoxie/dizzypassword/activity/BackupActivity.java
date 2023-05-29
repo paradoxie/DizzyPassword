@@ -152,7 +152,7 @@ public class BackupActivity extends BaseActivity {
 
     private void checkActivity() {
         mDialogView = new DialogView(BackupActivity.this);
-        mDialogView.setMeaasge(SPUtils.get("name", "") + "","\n密码:" + Utils.getCodePwd(String.valueOf(SPUtils.get("password", ""))));
+        mDialogView.setMeaasge(SPUtils.get("name", "") + "","\n密钥:" + Utils.getCodePwd(String.valueOf(SPUtils.get("password", ""))));
 
         try {
             if (!BackupActivity.this.isFinishing()) {

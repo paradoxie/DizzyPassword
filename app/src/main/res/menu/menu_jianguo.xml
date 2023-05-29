@@ -6,7 +6,7 @@
         android:id="@+id/action_jian"
         android:icon="@drawable/jian_selector"
         android:orderInCategory="80"
-        android:title="坚果云配置"
+        android:title="webdav配置"
         app:showAsAction="ifRoom"/>
 
 </menu>

@@ -30,46 +30,48 @@ public class SyncManager implements SyncApi {
     private Context context;
     private Sardine sardine;
     private SyncConfig syncConfig;
+
     public SyncManager(Context context) {
-        this.context=context;
-        sardine=new OkHttpSardine();
-        if(SyncConfig.getDiyEncryption(context)){
+        this.context = context;
+        sardine = new OkHttpSardine();
+        if (SyncConfig.getDiyEncryption(context)) {
             throw new RuntimeException("请配置Encryotion");
         }
-        syncConfig =new SyncConfig(context);
+        syncConfig = new SyncConfig(context);
     }
-    public SyncManager(Context context, @NotNull Encryption encryption){
-        this.context=context;
-        sardine=new OkHttpSardine();
-        if(!SyncConfig.getDiyEncryption(context)){
+
+    public SyncManager(Context context, @NotNull Encryption encryption) {
+        this.context = context;
+        sardine = new OkHttpSardine();
+        if (!SyncConfig.getDiyEncryption(context)) {
             throw new RuntimeException("Config中未配置Encryotion");
         }
-        syncConfig =new SyncConfig(context, encryption);
+        syncConfig = new SyncConfig(context, encryption);
     }
 
     @Override
     public void uploadFile(final String fileName, final String fileLoc, final File f, final OnSyncResultListener listener) {
-        if(syncConfig.canLogin()){
-            Thread T=new Thread(new Runnable() {
+        if (syncConfig.canLogin()) {
+            Thread T = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     sardine.setCredentials(syncConfig.getUserAccount(), syncConfig.getPassWord());
                     try {
-                        if(!sardine.exists(syncConfig.getServerUrl()+fileLoc+"/")){
+                        if (!sardine.exists(syncConfig.getServerUrl() + fileLoc + "/")) {
                             //若不存在需要创建目录
-                            sardine.createDirectory(syncConfig.getServerUrl()+fileLoc+"/");
+                            sardine.createDirectory(syncConfig.getServerUrl() + fileLoc + "/");
                         }
                         byte[] data = FileUtils.File2byte(f);
-                        sardine.put(syncConfig.getServerUrl()+fileLoc+"/"+fileName, data);
-                        listener.onSuccess(fileLoc+"/"+fileName+",上传成功");
+                        sardine.put(syncConfig.getServerUrl() + fileLoc + "/" + fileName, data);
+                        listener.onSuccess(fileLoc + "/" + fileName + ",上传成功");
                     } catch (IOException e) {
                         e.printStackTrace();
-                        listener.onError("出错了,"+e);
+                        listener.onError("出错了," + e);
                     }
                 }
             });
             T.start();
-        }else {
+        } else {
             listener.onError("请先配置账户和服务器地址！");
         }
 
@@ -77,81 +79,81 @@ public class SyncManager implements SyncApi {
 
     @Override
     public void uploadString(final String fileName, final String fileLoc, final String content, final OnSyncResultListener listener) {
-        if(syncConfig.canLogin()){
-            Thread T=new Thread(new Runnable() {
+        if (syncConfig.canLogin()) {
+            Thread T = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     sardine.setCredentials(syncConfig.getUserAccount(), syncConfig.getPassWord());
                     try {
-                        if(!sardine.exists(syncConfig.getServerUrl()+fileLoc+"/")){
+                        if (!sardine.exists(syncConfig.getServerUrl() + fileLoc + "/")) {
                             //若不存在需要创建目录
-                            sardine.createDirectory(syncConfig.getServerUrl()+fileLoc+"/");
+                            sardine.createDirectory(syncConfig.getServerUrl() + fileLoc + "/");
                         }
                         byte[] data = content.getBytes();
-                        sardine.put(syncConfig.getServerUrl()+fileLoc+"/"+fileName, data);
-                        listener.onSuccess(fileLoc+"/"+fileName+",上传成功");
+                        sardine.put(syncConfig.getServerUrl() + fileLoc + "/" + fileName, data);
+                        listener.onSuccess(fileLoc + "/" + fileName + ",上传成功");
                     } catch (IOException e) {
                         e.printStackTrace();
-                        listener.onError("出错了"+e);
+                        listener.onError("出错了" + e);
                     }
                 }
             });
             T.start();
-        }else {
+        } else {
             listener.onError("请先配置账户和服务器地址！");
         }
     }
 
     @Override
     public void downloadFile(final String fileName, final String fileLoc, final OnSyncResultListener listener) {
-        if(syncConfig.canLogin()){
-            Thread T=new Thread(new Runnable() {
+        if (syncConfig.canLogin()) {
+            Thread T = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     sardine.setCredentials(syncConfig.getUserAccount(), syncConfig.getPassWord());
                     try {
-                        InputStream is = sardine.get(syncConfig.getServerUrl()+fileLoc+"/"+fileName);
+                        InputStream is = sardine.get(syncConfig.getServerUrl() + fileLoc + "/" + fileName);
                         final File[] dirs = context.getExternalFilesDirs("Documents");
                         File primaryDir = null;
                         if (dirs != null && dirs.length > 0) {
                             primaryDir = dirs[0];
                         }
-                        if(primaryDir==null){
+                        if (primaryDir == null) {
                             listener.onError("读取文件异常");
                             return;
                         }
                         int index;
                         byte[] bytes = new byte[1024];
-                        FileOutputStream downloadFile = new FileOutputStream(primaryDir+"/"+fileName);
+                        FileOutputStream downloadFile = new FileOutputStream(primaryDir + "/" + fileName);
                         while ((index = is.read(bytes)) != -1) {
                             downloadFile.write(bytes, 0, index);
                             downloadFile.flush();
                         }
                         downloadFile.close();
                         is.close();
-                        listener.onSuccess(primaryDir+"/"+fileName);
+                        listener.onSuccess(primaryDir + "/" + fileName);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        listener.onError("出错了，"+e);
+                        listener.onError("出错了，" + e);
                     }
                 }
             });
             T.start();
-        }else {
+        } else {
             listener.onError("请先配置账户和服务器地址！");
         }
     }
 
     @Override
     public void downloadString(final String fileName, final String fileLoc, final OnSyncResultListener listener) {
-        if(syncConfig.canLogin()){
-            Thread T=new Thread(new Runnable() {
+        if (syncConfig.canLogin()) {
+            Thread T = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     sardine.setCredentials(syncConfig.getUserAccount(), syncConfig.getPassWord());
                     InputStream inputStream;
                     try {
-                        inputStream = sardine.get(syncConfig.getServerUrl()+fileLoc+"/"+fileName);
+                        inputStream = sardine.get(syncConfig.getServerUrl() + fileLoc + "/" + fileName);
                         //设置输入缓冲区
                         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)); // 实例化输入流，并获取网页代
                         String s; // 依次循环，至到读的值为空
@@ -165,64 +167,71 @@ public class SyncManager implements SyncApi {
                         listener.onSuccess(str);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        listener.onError("出错了,"+e);
+                        listener.onError("出错了," + e);
                     }
 
                 }
             });
             T.start();
-        }else {
+        } else {
             listener.onError("请先配置账户和服务器地址！");
         }
     }
 
     @Override
     public void listAllFile(final String dir, final OnListFileListener listFileListener) {
-        if(syncConfig.canLogin()){
-            Thread T=new Thread(new Runnable() {
+        if (syncConfig.canLogin()) {
+            Thread T = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    sardine.setCredentials(syncConfig.getUserAccount(), syncConfig.getPassWord());
+                    String url = syncConfig.getServerUrl();
+                    sardine.setCredentials(syncConfig.getUserAccount(), syncConfig.getPassWord(), !url.contains("jianguo"));
                     try {
-                        List<DavResource> resources = sardine.list(syncConfig.getServerUrl()+dir);//如果是目录一定别忘记在后面加上一个斜杠
-                        List<DavData> davData=new ArrayList<>();
-                        for(DavResource i:resources){
+//                        if (url.contains("teracloud")) {
+//                            url = url;
+//                        } else {
+//                            url = url + "dizzyPassword";
+//                        }
+                        List<DavResource> resources = sardine.list(url + dir + "/");//如果是目录一定别忘记在后面加上一个斜杠
+
+                        List<DavData> davData = new ArrayList<>();
+                        for (DavResource i : resources) {
                             davData.add(new DavData(i));
                         }
                         listFileListener.listAll(davData);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        listFileListener.onError("出错了，"+e);
+                        listFileListener.onError("出错了，" + e);
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
                 }
             });
             T.start();
-        }else {
+        } else {
             listFileListener.onError("请先配置账户和服务器地址！");
         }
     }
 
     @Override
     public void deleteFile(final String fileDir, final OnSyncResultListener listener) {
-        if(syncConfig.canLogin()){
-            Thread T=new Thread(new Runnable() {
+        if (syncConfig.canLogin()) {
+            Thread T = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     sardine.setCredentials(syncConfig.getUserAccount(), syncConfig.getPassWord());
                     try {
-                        sardine.delete(syncConfig.getServerUrl()+fileDir);
+                        sardine.delete(syncConfig.getServerUrl() + fileDir);
                         listener.onSuccess("删除成功！");
                     } catch (IOException e) {
                         e.printStackTrace();
-                        listener.onError("出错了,"+e);
+                        listener.onError("出错了," + e);
                     }
 
                 }
             });
             T.start();
-        }else {
+        } else {
             listener.onError("请先配置账户和服务器地址！");
         }
     }

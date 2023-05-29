@@ -107,7 +107,7 @@ public class SettingActivity extends BaseActivity {
 
     private void checkActivity() {
         mDialogView = new DialogView(SettingActivity.this);
-        mDialogView.setMeaasge("确定退出当前帐号？", "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密码:" + Utils.getCodePwd(pwd));
+        mDialogView.setMeaasge("确定退出当前帐号？", "帐号:" + (String.valueOf(SPUtils.get("name", ""))) + "\n密钥:" + Utils.getCodePwd(pwd));
         try {
             if (!SettingActivity.this.isFinishing()) {
                 mDialogView.show();

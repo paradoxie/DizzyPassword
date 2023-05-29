@@ -1,5 +1,7 @@
 package cf.paradoxie.dizzypassword.wdsyncer;
 
+import static cf.paradoxie.dizzypassword.base.Constants.WEBDAV_SERVER;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -84,7 +86,7 @@ public class SyncConfig {
     }
 
     public String getServerUrl() {
-        serverUrl=sp.getString(SERVERURL,"https://dav.jianguoyun.com/dav/");
+        serverUrl=sp.getString(SERVERURL,WEBDAV_SERVER);
         return serverUrl;
     }
 

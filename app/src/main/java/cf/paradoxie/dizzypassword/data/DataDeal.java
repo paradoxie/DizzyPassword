@@ -18,14 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cf.paradoxie.dizzypassword.base.AppManager;
-import cf.paradoxie.dizzypassword.base.Constans;
+import cf.paradoxie.dizzypassword.base.Constants;
 import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
 import cf.paradoxie.dizzypassword.bean.AppConfig;
 import cf.paradoxie.dizzypassword.bean.BaseConfig;
 import cf.paradoxie.dizzypassword.bean.SortBean;
-import cf.paradoxie.dizzypassword.bean.WordsBean;
 import cf.paradoxie.dizzypassword.http.Http;
 import cf.paradoxie.dizzypassword.utils.AnimationUtil;
 import cf.paradoxie.dizzypassword.utils.DataUtils;
@@ -37,8 +36,6 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
-import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * 三层数据来源：
@@ -144,7 +141,7 @@ public class DataDeal {
 
     /***************鸡汤语录*****************/
     public void getWordsChicken(Handler handler1) {
-        Http.get(Constans.WORDS_ID_CHICKEN + Utils.getData(), s -> {
+        Http.get(Constants.WORDS_ID_CHICKEN + Utils.getData(), s -> {
             JSONObject obj = null;
             try {
                 obj = new JSONObject(s);
@@ -166,7 +163,7 @@ public class DataDeal {
     /***************获取版本信息*****************/
     public void getVersion(FloatingActionButton fb) {
         BmobQuery<BaseConfig> bmobQuery = new BmobQuery<>();
-        bmobQuery.getObject(Constans.CONFIG_ID, new QueryListener<BaseConfig>() {
+        bmobQuery.getObject(Constants.CONFIG_ID, new QueryListener<BaseConfig>() {
             @Override
             public void done(BaseConfig baseConfig, BmobException e) {
                 if (e == null) {

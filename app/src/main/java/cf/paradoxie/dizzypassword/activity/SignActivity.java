@@ -53,7 +53,7 @@ public class SignActivity extends BaseActivity {
         bt_sign_on.setOnClickListener(view -> {
 //            Intent intent = new Intent(SignActivity.this, JianGuoSignActivity.class);
 //            startActivity(intent);
-            MyApplication.showToast("仅限老用户登录使用，以完成私有坚果云数据备份~");
+            MyApplication.showToast("仅限老用户登录使用，以完成私有webdav数据备份~");
         });
         bt_sign_up =  findViewById(R.id.bt_sign_up);
         bt_sign_up.setOnClickListener(view -> {

@@ -9,13 +9,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.base.Constans;
+import cf.paradoxie.dizzypassword.base.Constants;
 import cf.paradoxie.dizzypassword.bean.AppConfig;
 import cf.paradoxie.dizzypassword.bean.CommonEntity;
 import cf.paradoxie.dizzypassword.utils.Base64Util;
@@ -56,7 +55,7 @@ public class HttpUtils {
      */
     public void getAppConfigUrl(HttpListener<AppConfig> httpListener) {
 
-        request = new Request.Builder().url(Constans.APP_CONFIG_URL).build();
+        request = new Request.Builder().url(Constants.APP_CONFIG_URL).build();
         call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -99,7 +98,7 @@ public class HttpUtils {
      */
     public void getAds(HttpListener<List<CommonEntity>> httpListener) {
 
-        request = new Request.Builder().url(Constans.AD).build();
+        request = new Request.Builder().url(Constants.AD).build();
         call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override

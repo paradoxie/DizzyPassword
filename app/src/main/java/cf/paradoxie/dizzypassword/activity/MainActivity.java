@@ -7,23 +7,21 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.annotation.RequiresApi;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -37,13 +35,13 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cf.paradoxie.dizzypassword.base.AppManager;
-import cf.paradoxie.dizzypassword.base.BaseActivity;
-import cf.paradoxie.dizzypassword.base.Constans;
-import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.adapter.NameAdapter;
 import cf.paradoxie.dizzypassword.adapter.TestStackAdapter;
+import cf.paradoxie.dizzypassword.base.AppManager;
+import cf.paradoxie.dizzypassword.base.BaseActivity;
+import cf.paradoxie.dizzypassword.base.Constants;
+import cf.paradoxie.dizzypassword.base.MyApplication;
 import cf.paradoxie.dizzypassword.bean.AccountBean;
 import cf.paradoxie.dizzypassword.bean.BaseConfig;
 import cf.paradoxie.dizzypassword.bean.RxBean;
@@ -258,7 +256,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("锁定数据操作")
                             .setContentText(
-                                    "帐号:" + (SPUtils.get("name", "")) + "\n密码:" + (SPUtils.get("password", "")) +
+                                    "帐号:" + (SPUtils.get("name", "")) + "\n密钥:" + (SPUtils.get("password", "")) +
                                             "\n\n确定要锁定当前操作权限么？")
                             .setConfirmText("锁定")
                             .setCancelText("算啦")
@@ -392,7 +390,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
                     if (iv_user_photo == null) {
                         iv_user_photo = findViewById(R.id.iv_user_photo);
                     }
-                    url = Constans.getUrl();
+                    url = Constants.getUrl();
                     Log.d("----pic", url);
                     Utils.loadImg(iv_user_photo, url, true);
                 }
@@ -566,7 +564,7 @@ public class MainActivity extends BaseActivity implements CardStackView.ItemExpe
     private void configWebDav() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("去配置坚果云");    //设置对话框标题
+        builder.setTitle("去配置webdav");    //设置对话框标题
         builder.setIcon(R.drawable.jian_0);   //设置对话框标题前的图标
 
         builder.setPositiveButton("确认", null);

@@ -1,5 +1,7 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import static cf.paradoxie.dizzypassword.base.Constants.WEBDAV_PWD;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,7 +60,7 @@ public class SafeActivity extends BaseActivity {
     }
 
     private void safeToIn() {
-        String jianguo = SPUtils.get("jianguo_pwd", "") + "";
+        String jianguo = SPUtils.get(WEBDAV_PWD, "") + "";
         BmobUser user = MyApplication.getUser();
 
         if (!TextUtils.isEmpty(jianguo) || user != null) {

@@ -54,9 +54,8 @@ public class EatRiceActivity extends BaseActivity {
     }
 
     private void init() {
-
         binding.bannerView.registerLifecycleObserver(getLifecycle())
-                .setAdapter(new BannerAdapter(bean->{
+                .setAdapter(new BannerAdapter(bean -> {
                     JumpUtil.jump(EatRiceActivity.this, bean);
                 }))
                 .setScrollDuration(500)
@@ -75,7 +74,7 @@ public class EatRiceActivity extends BaseActivity {
         };
 
         binding.rvMine.setLayoutManager(manager);
-        gridAdapter = new GridMineAdapter(this,bean->{
+        gridAdapter = new GridMineAdapter(this, bean -> {
             JumpUtil.jump(EatRiceActivity.this, bean);
         });
         binding.rvMine.setAdapter(gridAdapter);
@@ -87,8 +86,8 @@ public class EatRiceActivity extends BaseActivity {
                 commonEntities.clear();
                 bannerEntities.clear();
                 commonEntities.addAll(entities);
-                for(CommonEntity commonEntity:commonEntities){
-                    if(commonEntity.isBanner()){
+                for (CommonEntity commonEntity : commonEntities) {
+                    if (commonEntity.isBanner()) {
                         bannerEntities.add(commonEntity);
                     }
                 }
