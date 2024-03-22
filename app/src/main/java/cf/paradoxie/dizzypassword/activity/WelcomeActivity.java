@@ -211,7 +211,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
         } else {
             mHandler.postDelayed(() -> {
-                gotoActivity(ChoiceActivity.class);
+//                gotoActivity(ChoiceActivity.class);
+                gotoActivity(JianGuoSignActivity.class);
                 finish();
             }, 500);
 
